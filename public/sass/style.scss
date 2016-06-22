@@ -1,0 +1,56 @@
+html {
+	margin: 0;
+	body {
+		margin: 0;
+		font: {
+			family: Arial Black;
+			size: 20px;
+			line-height: 1.2em;
+		}
+	}
+}
+section {
+	padding: 50px;
+}
+form {
+	padding: 20px;
+	// border: 0.25em solid black;
+	label {
+		display: table;
+	}
+	input {
+		-webkit-appearance: none;
+		border: 0.2em solid black;
+		outline: none;
+		&[type="text"],
+		&[type="email"], 
+		&[type="password"] {
+			font-family: Arial Black;
+			padding: 0.5em;
+			font-size: 1em;
+		}
+		&[type="checkbox"] {
+			width: 20px;
+			height: 20px;
+			margin: 0 0 -0.3em 0;
+			border-radius: 50%;
+			&:hover, + span:hover {
+				cursor: pointer;
+			}
+			&:checked {
+				background: black;
+			}
+			& + span {
+				padding-left: 0.5em;
+			}
+		}
+	}
+	.sample {
+		display: none;
+	}
+}
+.row {
+	width: 100%;
+	display: block;
+	padding: 10px 0;
+}

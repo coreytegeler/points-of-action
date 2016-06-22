@@ -1,0 +1,23 @@
+.row
+	label(name='firstName') First Name
+	input(name='firstName' type='text' value=(object ? object.firstName : ''))
+	label(name='lastName') Last Name
+	input(name='lastName' type='text' value=(object ? object.lastName : ''))
+.row
+	label(name='type') Type
+	.module.checkboxes.type
+		label
+			input(type='checkbox' name='type' value='activist')
+			| Activist
+.row
+	label(name='organizations') Organization(s)
+	.module.checkboxes.organizations
+		label
+			input(type='checkbox' name='organization' value='brooklyn-core')
+			| Brooklyn CORE
+.row
+	label(name='locations') Location(s)
+	.module.checkboxes.locations
+		label
+			input(type='checkbox' name='location' value='brooklyn')
+			| Brooklyn

@@ -1,0 +1,30 @@
+.row
+	label(name='name') Name
+	input(name='name' type='text' value=(object ? object.name : ''))
+.row
+	label(name='actionType') Action Type
+	.module.checkboxes.actionType
+		label
+			input(type='checkbox' name='actionType' value='demonstration')
+			| Demonstration
+		label
+			input(type='checkbox' name='actionType' value='march')
+			| March
+.row
+	label(name='locations') Location(s)
+	.module.checkboxes.location
+		label
+			input(type='checkbox' name='location' value='boroughHall')
+			| Borough Hall
+.row
+	label(name='people') People
+	.module.checkboxes.people
+		label
+			input(type='checkbox' name='people' value='malcolmX')
+			| Malcolm X
+.row
+	label(name='people') Organization(s)
+	.module.checkboxes.organizations
+		label
+			input(type='checkbox' name='organizations' value='malcolmX')
+			| Brooklyn CORE

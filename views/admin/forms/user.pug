@@ -1,0 +1,11 @@
+.row
+	label(name='firstName') First Name
+	input(name='firstName' type='text' value=(object ? object.firstName : ''))
+	label(name='lastName') Last Name
+	input(name='lastName' type='text' value=(object ? object.lastName : ''))
+.row
+	label(name='email') Email
+	input(name='email' type='email' value=(object ? object.email : ''))
+.row
+	label(name='password') Password
+	input(name='password' type='password' value=(object ? object.password : ''))

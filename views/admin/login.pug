@@ -1,0 +1,13 @@
+include ../partials/head.pug
+h1 Login
+if (message)
+  h1 #{message}
+form(action='/admin/login' method='post')
+  label Email
+  input(type='email' name='email')
+  label Password
+  input(type='password' name='password')
+  button(type='submit') Login
+| Need an account?
+a(href='/admin/signup') Signup
+a(href='/') Home

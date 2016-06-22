@@ -1,0 +1,43 @@
+html {
+  margin: 0; }
+  html body {
+    margin: 0;
+    font-family: Arial Black;
+    font-size: 20px;
+    font-line-height: 1.2em; }
+
+section {
+  padding: 50px; }
+
+form {
+  padding: 20px; }
+  form label {
+    display: table; }
+  form input {
+    -webkit-appearance: none;
+    border: 0.2em solid black;
+    outline: none; }
+    form input[type="text"], form input[type="email"], form input[type="password"] {
+      font-family: Arial Black;
+      padding: 0.5em;
+      font-size: 1em; }
+    form input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin: 0 0 -0.3em 0;
+      border-radius: 50%; }
+      form input[type="checkbox"]:hover, form input[type="checkbox"] + span:hover {
+        cursor: pointer; }
+      form input[type="checkbox"]:checked {
+        background: black; }
+      form input[type="checkbox"] + span {
+        padding-left: 0.5em; }
+  form .sample {
+    display: none; }
+
+.row {
+  width: 100%;
+  display: block;
+  padding: 10px 0; }
+
+/*# sourceMappingURL=style.css.map */

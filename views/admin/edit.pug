@@ -1,0 +1,21 @@
+include ../partials/head.pug
+if(errors)
+	pre #{errors}
+form(method='post' action='/admin/'+type.s+'/'+action+'/'+(id ? id : ''))
+	case type.s
+		when 'user'
+			include ../admin/forms/user.pug
+		when 'action'
+			include ../admin/forms/action.pug
+		when 'location'
+			include ../admin/forms/location.pug
+		when 'person'
+			include ../admin/forms/person.pug
+		when 'organization'
+			include ../admin/forms/organization.pug
+		default
+			- var noForm = true
+			| No form for "#{type.s}"
+	-if(!noForm)
+		button(type='submit') #{action}
+a(href='/admin/'+type.p) View all #{type.p}

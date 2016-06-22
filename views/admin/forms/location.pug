@@ -1,0 +1,15 @@
+.row
+	label(name='name') Name
+	input(name='name' type='text' value=(object ? object.name : ''))
+.row
+	label(name='locationType') Location Type
+	select(name='locationType').locationType
+		option(value='point') Point
+		option(value='route') Route
+		option(value='area') Area
+.group.locationType(data-group='point')
+	include ./point.pug
+.group.locationType(data-group='route')
+	include ./route.pug
+.group.locationType(data-group='area')
+	include ./area.pug
