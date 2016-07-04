@@ -17,5 +17,6 @@ form(method='post' action='/admin/'+type.s+'/'+action+'/'+(id ? id : ''))
 			- var noForm = true
 			| No form for "#{type.s}"
 	-if(!noForm)
-		button(type='submit') #{action}
+		input(type='submit' value=action).submit
 a(href='/admin/'+type.p) View all #{type.p}
+.quickCreates

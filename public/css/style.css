@@ -40,4 +40,16 @@ form {
   display: block;
   padding: 10px 0; }
 
+.quickCreate {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow: auto;
+  display: none;
+  background: white; }
+  .quickCreate.open {
+    display: block; }
+
 /*# sourceMappingURL=style.css.map */

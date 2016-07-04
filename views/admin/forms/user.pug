@@ -5,7 +5,9 @@
 	input(name='lastName' type='text' value=(object ? object.lastName : ''))
 .row
 	label(name='email') Email
-	input(name='email' type='email' value=(object ? object.email : ''))
+	input(name='email' type='email' autocomplete=false value=(object ? object.email : ''))
 .row
 	label(name='password') Password
-	input(name='password' type='password' value=(object ? object.password : ''))
+	input(name='password' type='password' autocomplete=false)
+	label(name='confirmPassword') Confirm Password
+	input(name='confirmPassword' type='password' autocomplete=false)

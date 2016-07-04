@@ -3,9 +3,11 @@ var User = require('../models/user')
 var Action = require('../models/action')
 var Location = require('../models/location')
 var Organization = require('../models/organization')
+var OrganizationType = require('../models/organizationType')
 var Person = require('../models/person')
 var tools = require('../tools')
 var slugify = require('slug')
+
 module.exports = function(app) {
 
   app.get('/admin', function(req, res) {
@@ -48,7 +50,8 @@ module.exports = function(app) {
     ],
     function(err, results) { 
       var data = {}
-      res.render('admin/index.pug', {
+      console.log(results)
+      res.render('admin/overview.pug', {
         errors: err,
         models: {
           users: results[0],
@@ -70,7 +73,7 @@ module.exports = function(app) {
     model.find({}, function(err, data) {
       if(err)
         callback(err)
-      res.render('admin/overview.pug', {
+      res.render('admin/model.pug', {
         type: {
           s: tools.singularize(type),
           p: tools.pluralize(type)
@@ -129,6 +132,35 @@ module.exports = function(app) {
         console.log(object)
         res.redirect('/admin/'+type)
       }
+    })
+  })
+
+  app.post('/admin/:type/quick-create', function(req, res) {
+    var data = req.body
+    var type = req.params.type
+    var errors
+    switch(type) {
+      case 'user':
+        var object = new User(data)
+        break
+      case 'action':
+        var object = new Action(data)
+        break
+      case 'person':
+        var object = new Person(data)
+        break
+      case 'location':
+        var object = new Location(data)
+        break
+      case 'organization':
+        var object = new Organization(data) 
+        break  
+    }
+    object.save(function(err) {
+      if(err) {
+        return res.json(err)
+      }
+      return res.json(object)
     })
   })
 
@@ -200,6 +232,15 @@ module.exports = function(app) {
       if (err) throw err
       console.log(type+' successfully deleted!')
       res.redirect('/admin/'+type)
+    })
+  })
+
+  app.get('/admin/:type/quick-create', function(req, res) {
+    var type = req.params.type
+    if(!type)
+      return
+    res.render('admin/forms/partials/quickCreate.pug', {
+      type: type
     })
   })
 }

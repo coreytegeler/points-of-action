@@ -6,9 +6,9 @@ var Person = require('./models/person')
 var slug = require('slug')
 
 var isLoggedIn = function(req, res, next) {
-  if (req.isAuthenticated())
+  if(req.isAuthenticated())
     return next();
-  res.redirect('/admin');
+  res.redirect('/admin/login');
 }
 var singularize = function(string) {
   switch(string) {

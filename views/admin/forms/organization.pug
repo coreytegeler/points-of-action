@@ -1,17 +1,7 @@
 .row
-	label(name='name') Name
+	label(label='name') Name
 	input(name='name' type='text' value=(object ? object.name : ''))
 .row
-	label(name='organizationType') Organization Type
-	.module.checkboxes.organizationTypes(data-pop-type='checkboxes' data-pop-model='organizationTypes')
-		.item.checkbox.sample
-			label.organizationType
-				input(type='checkbox')
-				span.name(data-pop='name')
+	+checkboxes('organizationType', 'Organization Type')
 .row
-	label(name='location') Locations
-	.module.checkboxes.populate.locations(data-pop-type='checkboxes' data-pop-model='locations')
-		.item.checkbox.sample
-			label.location
-				input(type='checkbox')
-				span.name(data-pop='name')
+	+checkboxes('location', 'Location')

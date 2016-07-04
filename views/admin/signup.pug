@@ -1,19 +1,19 @@
 include ../partials/head.pug
 if (message)
-  h1 #{message}
+	h1 #{message}
 form(action='/admin/signup' method='post')
 	.row
-		label(name='firstName') First Name
-		input(name='firstName' type='text' value=(object ? object.firstName : ''))
-		label(name='lastName') Last Name
-		input(name='lastName' type='text' value=(object ? object.lastName : ''))
+		label First Name
+		input(type='text' name='firstName')
+		label Last Name
+		input(type='text' name='lastName')
 	.row
-  	label Email
-  	input(type='email' name='email' value=(object ? object.email : ''))
-  .row
-  	label Password
-  	input(type='password' name='password')
-  button(type='submit') Signup
+		label Email
+		input(type='text' name='email')
+	.row
+		label Password
+		input(type='password' name='password')
+	button(type='submit') Signup
 | Already have an account?
 a(href='/admin/login') Login
-a(href='/') Home  
+a(href='/') Home

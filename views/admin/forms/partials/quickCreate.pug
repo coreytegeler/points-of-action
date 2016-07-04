@@ -1,0 +1,7 @@
+.quickCreate(data-model=type)
+	h1 Create New #{name}
+	form(method='post' action='/admin/'+type+'/quick-create/')
+		.row
+			label(name='name') Name
+			input(name='name' type='text' value=(object ? object.name : ''))
+		input(type='submit' value='Create').submit

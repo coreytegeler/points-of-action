@@ -10,7 +10,8 @@ module.exports = function(app) {
     var slug = req.params.slug
     var format = req.params.format
     var model = tools.getModel(type)
-    
+    if(!model)
+      return res.json(null)
     model.find({}, function(err, items) {
       if(err)
         callback(err)

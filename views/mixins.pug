@@ -1,0 +1,8 @@
+mixin checkboxes(type, name)
+	label #{name}
+	.module.checkboxes.populate(data-pop-type='checkboxes', data-pop-model=type, class=type)
+		.item.checkbox.sample
+			label(class=type)
+				input(type='checkbox')
+				span.name(data-pop='name')
+	.add(data-model=type) Add New #{name}
