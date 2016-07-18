@@ -1,9 +1,10 @@
-include ../partials/head.pug
-h1 #{type.p}
-if items
-	ul.list
-	for item in items
-		li.item
-			a(href='/admin/'+type.s+'/edit/'+item.slug) #{item.name}
-			a(href='/admin/'+type.s+'/remove/'+item.slug) X
-a(href='/admin/'+type.s+'/new') Add new #{type.s}
+extends ../layout.pug
+block body
+	h1 #{type.p}
+	if objects
+		ul.list
+		for object in objects
+			li.item
+				a(href='/admin/'+type.s+'/edit/'+object.slug) #{object.name}
+				a(href='/admin/'+type.s+'/remove/'+object.slug) X
+	a(href='/admin/'+type.s+'/new') Add new #{type.s}

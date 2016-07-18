@@ -1,10 +1,53 @@
+@font-face {
+  font-family: 'Bookman Old Style';
+  src: url("../fonts/BookmanOldStyle.eot");
+  src: url("../fonts/BookmanOldStyle.eot?#iefix") format("embedded-opentype"), url("../fonts/BookmanOldStyle.woff2") format("woff2"), url("../fonts/BookmanOldStyle.woff") format("woff"), url("../fonts/BookmanOldStyle.ttf") format("truetype"), url("../fonts/BookmanOldStyle.svg#BookmanOldStyle") format("svg");
+  font-weight: 300;
+  font-style: normal; }
+@font-face {
+  font-family: 'Bookman Old Style Bold';
+  src: url("../fonts/BookmanOldStyle-Bold.eot");
+  src: url("../fonts/BookmanOldStyle-Bold.eot?#iefix") format("embedded-opentype"), url("../fonts/BookmanOldStyle-Bold.woff2") format("woff2"), url("../fonts/BookmanOldStyle-Bold.woff") format("woff"), url("../fonts/BookmanOldStyle-Bold.ttf") format("truetype"), url("../fonts/BookmanOldStyle-Bold.svg#BookmanOldStyle-Bold") format("svg");
+  font-weight: 300;
+  font-style: normal; }
 html {
-  margin: 0; }
+  margin: 0;
+  background: #f7f7fa; }
   html body {
     margin: 0;
-    font-family: Arial Black;
+    font-family: 'Bookman Old Style';
     font-size: 20px;
-    font-line-height: 1.2em; }
+    font-line-height: 1.2em;
+    text-rendering: geometricPrecision; }
+
+main {
+  width: calc(100% - 100px);
+  max-width: 900px;
+  padding: 100px 50px;
+  margin: auto;
+  display: table; }
+
+nav {
+  width: 100%;
+  display: table;
+  background: black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  clear: both; }
+  nav ul {
+    padding: 0;
+    margin: 0;
+    float: left;
+    list-style: none; }
+    nav ul li {
+      padding: 10px;
+      display: inline-block;
+      list-style: none; }
+      nav ul li a {
+        color: #f7f7fa;
+        text-decoration: none; }
 
 section {
   padding: 50px; }
@@ -12,33 +55,142 @@ section {
 form {
   padding: 20px; }
   form label {
+    font-family: Helvetica;
+    font-size: 1em;
+    line-height: 1.5em;
     display: table; }
+  form .input {
+    display: table;
+    position: relative; }
+    form .input::before, form .input::after {
+      width: 0.1em;
+      height: 0.5em;
+      position: absolute;
+      bottom: 0;
+      content: '';
+      background: black; }
+    form .input::before {
+      left: 0; }
+    form .input::after {
+      right: 0; }
+  form input, form textarea, form select {
+    font-size: 1em;
+    line-height: 1.1em; }
+    form input:-webkit-autofill, form textarea:-webkit-autofill, form select:-webkit-autofill {
+      background: none; }
   form input {
     -webkit-appearance: none;
-    border: 0.2em solid black;
-    outline: none; }
+    border: solid black;
+    border-width: 0 0 0.1em 0;
+    outline: none;
+    font-family: 'Bookman Old Style';
+    background: transparent; }
     form input[type="text"], form input[type="email"], form input[type="password"] {
-      font-family: Arial Black;
-      padding: 0.5em;
-      font-size: 1em; }
-    form input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      margin: 0 0 -0.3em 0;
-      border-radius: 50%; }
-      form input[type="checkbox"]:hover, form input[type="checkbox"] + span:hover {
-        cursor: pointer; }
-      form input[type="checkbox"]:checked {
-        background: black; }
-      form input[type="checkbox"] + span {
-        padding-left: 0.5em; }
+      padding: 0.15em 0.5em; }
+  form .group {
+    padding: 0 0 20px 0; }
   form .sample {
     display: none; }
+  form .row {
+    width: 100%;
+    display: table;
+    padding: 0 0 10px 0;
+    clear: both; }
+    form .row .cell {
+      float: left; }
+      form .row .cell:first-child {
+        margin-right: 1em; }
+  form [data-template] {
+    display: none; }
+    form [data-template].show {
+      display: block; }
+  form .button {
+    display: inline-table;
+    margin-right: 10px;
+    padding: 2px;
+    font-family: Helvetica;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: black;
+    text-decoration: none;
+    border: 0; }
+    form .button:hover {
+      cursor: pointer; }
+    form .button:last-child {
+      margin-right: 0; }
 
-.row {
-  width: 100%;
-  display: block;
-  padding: 10px 0; }
+.checkboxes, .options {
+  overflow: auto;
+  font-size: 1em;
+  line-height: 1.1em;
+  border: 0.1em solid black;
+  background: #f7f7fa; }
+  .checkboxes.populate .item, .options.populate .item {
+    opacity: 0; }
+  .checkboxes.populate.loaded .item, .options.populate.loaded .item {
+    opacity: 1; }
+  .checkboxes .checkbox, .options .checkbox {
+    padding: 5px 0; }
+    .checkboxes .checkbox:hover, .options .checkbox:hover {
+      cursor: pointer; }
+    .checkboxes .checkbox label, .options .checkbox label {
+      font-family: inherit;
+      font-size: inherit;
+      line-height: 1.1em;
+      display: table; }
+    .checkboxes .checkbox input[type="checkbox"], .checkboxes .checkbox input[type="radio"], .options .checkbox input[type="checkbox"], .options .checkbox input[type="radio"] {
+      display: none; }
+      .checkboxes .checkbox input[type="checkbox"]:checked ~ label::before, .checkboxes .checkbox input[type="radio"]:checked ~ label::before, .options .checkbox input[type="checkbox"]:checked ~ label::before, .options .checkbox input[type="radio"]:checked ~ label::before {
+        background: black; }
+
+.checkboxes {
+  height: 135px;
+  padding: 0 0.5em; }
+  .checkboxes .checkbox label::before {
+    width: 0.55em;
+    height: 0.55em;
+    margin-right: 0.5em;
+    border-radius: 50%;
+    border: solid black 0.1em;
+    font-size: inherit;
+    display: inline-block;
+    content: ''; }
+
+.selects {
+  display: flex;
+  border-bottom: solid black 0.1em;
+  padding: 0.15em 0; }
+  .selects .select {
+    background: transparent;
+    position: relative; }
+    .selects .select .display {
+      display: inline-block;
+      padding: 0 1.1em 0 0.6em;
+      cursor: pointer; }
+    .selects .select .options {
+      max-height: calc(1.8em * 10);
+      position: absolute;
+      left: 0;
+      top: calc(100% + 0.15em);
+      padding: 0 0.5em;
+      display: none; }
+      .selects .select .options.open {
+        display: block; }
+
+.selects.date .select {
+  position: relative; }
+  .selects.date .select.month .display {
+    width: 6em; }
+  .selects.date .select.day .display {
+    width: 1.5em; }
+  .selects.date .select.year .display {
+    width: 2.5em; }
+  .selects.date .select:not(:last-child) .display:after {
+    content: '/';
+    position: absolute;
+    right: 0;
+    top: 0; }
 
 .quickCreate {
   width: 100%;
@@ -48,7 +200,7 @@ form {
   top: 0;
   overflow: auto;
   display: none;
-  background: white; }
+  background: #f7f7fa; }
   .quickCreate.open {
     display: block; }
 

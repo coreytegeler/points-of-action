@@ -1,15 +1,21 @@
 .row
-	label Name
-	input(name='name' type='text' value=(object ? object.name : ''))
+	+input('name', 'Name', 'text', (object ? object.name : ''))
 .row
 	label Location Type
-	select(name='location-type').location-type
-		option(value='point') Point
-		option(value='route') Route
-		option(value='area') Area
-.group.location-type(data-group='point')
-	include ./point.pug
-.group.location-type(data-group='route')
-	include ./route.pug
-.group.location-type(data-group='area')
-	include ./area.pug
+	.module.checkboxes.locationType.updateTemplate
+		+checkbox('locationType', 'Point', 'point', false, false)
+		+checkbox('locationType', 'Area', 'area', false, false)
+		+checkbox('locationType', 'Route', 'route', false, false)
+.group(data-template='point')
+	+coords('point', 'Point')
+.group(data-template='route')
+	+coords('startPoint', 'Start Point')
+	+coords('endPoint', 'End Point')
+	.row
+		+input('routeData', 'Route Data', 'text', (object ? object.routeData : ''))
+.group(data-template='area')
+	.row
+		+input('areaData', 'Area Data', 'text')
+
+.row
+	+checkboxes('parentLocation', 'Parent Location', true, false)

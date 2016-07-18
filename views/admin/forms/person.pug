@@ -1,23 +1,11 @@
+.row.two
+	.cell
+		+input('firstName', 'First Name', 'text', (object ? object.firstName : ''))
+	.cell
+		+input('lastName', 'Last Name', 'text', (object ? object.lastName : ''))
 .row
-	label(name='firstName') First Name
-	input(name='firstName' type='text' value=(object ? object.firstName : ''))
-	label(name='lastName') Last Name
-	input(name='lastName' type='text' value=(object ? object.lastName : ''))
+	+checkboxes('personTypes', 'Person Type', true, true)
 .row
-	label(name='type') Type
-	.module.checkboxes.type
-		label
-			input(type='checkbox' name='type' value='activist')
-			| Activist
+	+checkboxes('organizations', 'Organizations', true, true)
 .row
-	label(name='organizations') Organization(s)
-	.module.checkboxes.organizations
-		label
-			input(type='checkbox' name='organization' value='brooklyn-core')
-			| Brooklyn CORE
-.row
-	label(name='locations') Location(s)
-	.module.checkboxes.locations
-		label
-			input(type='checkbox' name='location' value='brooklyn')
-			| Brooklyn
+	+checkboxes('location', 'Locations', true, true)

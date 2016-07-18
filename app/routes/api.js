@@ -1,8 +1,4 @@
 var Async = require('async')
-var Action = require('../models/action')
-var Location = require('../models/location')
-var Organization = require('../models/organization')
-var Person = require('../models/person')
 var tools = require('../tools')
 module.exports = function(app) {
 	app.get('/api/:type/:slug/:format', function(req, res) {
@@ -15,7 +11,6 @@ module.exports = function(app) {
     model.find({}, function(err, items) {
       if(err)
         callback(err)
-      console.log(items)
       res.json(items)
     })
   })

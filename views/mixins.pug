@@ -1,8 +1,47 @@
-mixin checkboxes(type, name)
+mixin input(name, label, type, value)
+	label(name=name) #{label}
+	.input
+		input(name=name, type=type, value=(value ? value : ''))
+
+mixin checkboxes(type, name, multiple, addable)
 	label #{name}
-	.module.checkboxes.populate(data-pop-type='checkboxes', data-pop-model=type, class=type)
-		.item.checkbox.sample
-			label(class=type)
-				input(type='checkbox')
-				span.name(data-pop='name')
-	.add(data-model=type) Add New #{name}
+	.module.checkboxes.populate(data-type='checkboxes', data-model=type, class=type)
+		+checkbox(type, null, null, multiple)
+	if(addable)
+		.add.button(data-model=type) Add New #{name}
+
+mixin checkbox(type, name, value, multiple)
+	.item.checkbox(class=(value ? value : 'sample'))
+		input(type=(multiple ? 'checkbox' : 'radio'), value=(value ? value : ''), name=type, id=(value ? value+'Checkbox' : ''))
+		label(class=type, data-pop='name', for=(value ? value+'Checkbox' : '')) #{(name ? name : '')}
+
+mixin dateselect(months, days)
+	.input
+		.item.date.selects
+			.select.month(data-datetype='month')
+				.display(data-datetype='month') Month
+				.module.options.months(data-type='checkboxes', data-datetype='month')
+					each month in months
+						+checkbox('month', month, month, false)
+			.select.day(data-datetype='day')
+				.display(data-datetype='day') Day
+				.module.options.days(data-type='checkboxes', data-datetype='day')
+					- var day = 0
+					while day < 31
+						- day = day+1
+						+checkbox('day', day, day, false)
+			.select.year(data-datetype='year')
+				.display(data-datetype='year') Year
+				.module.options.years(data-type='checkboxes', data-datetype='year')
+					-var year = parseInt(years.max)
+					while year >= parseInt(years.min)
+						+checkbox('year', year, year, false)
+						- year = year-1
+
+mixin coords(parent, title)
+	.row.two
+		label(name='point') #{title}
+		.cell
+			+input(parent+'.latitude', 'Latitude', 'text', (object ? object[parent].latitude : ''))
+		.cell
+			+input(parent+'.longitude', 'Longitude', 'text', (object ? object[parent].longitude : ''))

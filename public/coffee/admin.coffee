@@ -1,13 +1,18 @@
 $ ->	
 	getData()
 	$('.add').click(openQuickCreate)		
+	$('.select .display').click(openSelect)
+	$('.select .options input').change(updateSelectValue)
+	$('.updateTemplate input').change(updateTemplate)
 	return
 
 getData = () ->
 	$('.populate').each (i, container) ->
 		createQuickAddForms(container)
-		model = $(container).data('pop-model')
-		type = $(container).data('pop-type')
+		model = $(container).data('model')
+		if(model=='parentLocation')
+			model='location'
+		type = $(container).data('type')
 		$.ajax
 			url: '/api/'+model+'/all/json'
 			error:  (jqXHR, status, error) ->
@@ -19,27 +24,43 @@ getData = () ->
 				switch type
 					when 'checkboxes'
 						$(objects).each (i, object) ->
-							addCheckbox container, object
+							addCheckbox(container, object)
+				$(container).addClass('loaded')
 				return
 		return
 	return
 
 addCheckbox = (container, object) ->
 	$clone = $(container).find('.sample').clone().removeClass('sample')
-	$label = $clone.find('span')
+	$label = $clone.find('label')
 	$input = $clone.find('input')
-	$label
-		.attr('name', object.slug)
-		.text(object.name)
-	$input
-		.attr('name', object.slug)
+	$input.val(object.slug).attr('id', object.slug+'Checkbox')
+	$label.text(object.name).attr('for', object.slug+'Checkbox')
 	$clone
 		.attr('data-slug', object.slug)
 		.appendTo(container)
 	return
 
+openSelect = (event) ->
+	$select = $(event.target).parents('.select')
+	datetype = $select.attr('data-datetype')
+	$options = $select.find('.options')
+	$select.siblings('.select').find('.options').removeClass('open')
+	$options.toggleClass('open')
+	return
+
+updateSelectValue = (event) ->
+	option = event.target 
+	value = option.value
+	$select = $(option).parents('.select')
+	$options = $select.find('.options')
+	$display = $select.find('.display')
+	$display.html(value)
+	$options.removeClass('open')
+	return
+
 createQuickAddForms = (container) ->
-	type = $(container).data('pop-model')
+	type = $(container).data('model')
 	$.ajax
 		url: '/admin/'+type+'/quick-create'
 		error: (jqXHR, status, error) ->
@@ -57,7 +78,7 @@ openQuickCreate = (event) ->
 	$module = $button.parents('.module')
 	$addForm = $('.quickCreate[data-model="'+type+'"]')
 	$addForm.addClass('open')
-	$submit = $addForm.find('.submit')
+	$submit = $addForm.find('input[type="submit"]')
 	$submit.click(quickCreate)
 	return
 
@@ -78,8 +99,11 @@ quickCreate = (event) ->
 			return console.log(jqXHR, status, error)
 		success: (object, status, jqXHR) ->
 			$quickCreate.removeClass('open')
-			console.log(object)
-			return addCheckbox checkboxes, JSON.parse(object)
+			return addCheckbox(checkboxes, JSON.parse(object))
 	return
 
-	
+updateTemplate = (event) ->
+	$input = $(event.target)
+	value = $input.val()
+	$('[data-template]').removeClass('show')
+	$('[data-template="'+value+'"]').addClass('show')

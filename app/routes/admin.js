@@ -1,6 +1,7 @@
 var Async = require('async')
 var User = require('../models/user')
 var Action = require('../models/action')
+var Tactic = require('../models/tactic')
 var Location = require('../models/location')
 var Organization = require('../models/organization')
 var OrganizationType = require('../models/organizationType')
@@ -70,15 +71,16 @@ module.exports = function(app) {
       var model = User
     else
       var model = tools.getModel(type)
-    model.find({}, function(err, data) {
+    model.find({}, function(err, objects) {
       if(err)
         callback(err)
+      console.log(objects)
       res.render('admin/model.pug', {
         type: {
           s: tools.singularize(type),
           p: tools.pluralize(type)
         },
-        objects: data
+        objects: objects
       })
     })
   })
@@ -135,35 +137,6 @@ module.exports = function(app) {
     })
   })
 
-  app.post('/admin/:type/quick-create', function(req, res) {
-    var data = req.body
-    var type = req.params.type
-    var errors
-    switch(type) {
-      case 'user':
-        var object = new User(data)
-        break
-      case 'action':
-        var object = new Action(data)
-        break
-      case 'person':
-        var object = new Person(data)
-        break
-      case 'location':
-        var object = new Location(data)
-        break
-      case 'organization':
-        var object = new Organization(data) 
-        break  
-    }
-    object.save(function(err) {
-      if(err) {
-        return res.json(err)
-      }
-      return res.json(object)
-    })
-  })
-
   app.get('/admin/:type/edit/:slug', function(req, res) {
     var type = req.params.type
     var slug = req.params.slug
@@ -172,19 +145,23 @@ module.exports = function(app) {
       res.redirect('/admin/'+type+'/new')
     } else {
       model.findOne({slug: slug}, function(err, object) {
-        console.log(object)
         if (err)
           throw err
-        else
-          res.render('admin/edit.pug', {
-            object: object,
-            id: object._id,
-            action: 'update',
-            type: {
-              s: tools.singularize(type),
-              p: tools.pluralize(type)
-            }
-          })
+        var data = {
+          object: object,
+          id: object._id,
+          action: 'update',
+          type: {
+            s: tools.singularize(type),
+            p: tools.pluralize(type)
+          }
+        }
+        if (type == 'action')
+          data['months'] = tools.getMonths()
+          data['days'] = tools.getDays()
+          data['years'] = tools.getYears()
+        console.log(data)
+        res.render('admin/edit.pug', data)
       })
     }
   })
@@ -241,6 +218,42 @@ module.exports = function(app) {
       return
     res.render('admin/forms/partials/quickCreate.pug', {
       type: type
+    })
+  })
+
+  app.post('/admin/:type/quick-create', function(req, res) {
+    var data = req.body
+    var type = req.params.type
+    var errors
+    switch(type) {
+      case 'user':
+        var object = new User(data)
+        break
+      case 'action':
+        var object = new Action(data)
+        break
+      case 'tactic':
+        var object = new Tactic(data) 
+        break 
+      case 'person':
+        var object = new Person(data)
+        break
+      case 'location':
+        var object = new Location(data)
+        break
+      case 'organization':
+        var object = new Organization(data) 
+        break  
+      case 'organizationType':
+        var object = new OrganizationType(data) 
+        break  
+    }
+    object.save(function(err) {
+      if(err) {
+        return res.json(err)
+      }
+      console.log(object)
+      return res.json(object)
     })
   })
 }

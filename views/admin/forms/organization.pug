@@ -1,7 +1,6 @@
 .row
-	label(label='name') Name
-	input(name='name' type='text' value=(object ? object.name : ''))
+	+input('name', 'Name', 'text', (object ? object.name : ''))
 .row
-	+checkboxes('organizationType', 'Organization Type')
+	+checkboxes('organizationType', 'Organization Type', true, true)
 .row
-	+checkboxes('location', 'Location')
+	+checkboxes('location', 'Location', true, true)

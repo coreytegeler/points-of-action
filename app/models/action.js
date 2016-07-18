@@ -1,5 +1,4 @@
 var tools = require('../tools')
-var slugify = require('slug')
 var mongoose = require('mongoose')
 var Mixed = mongoose.Schema.Types.Mixed
 
@@ -11,11 +10,11 @@ var actionSchema = mongoose.Schema({
 	slug: String,
 	actionType: {
 		type: Mixed,
-		// required: true
+		required: true
 	},
 	locations: {
 		type: Mixed,
-		// required: true
+		required: true
 	},
 	people: Mixed,
 	organizations: Mixed,

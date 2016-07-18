@@ -1,6 +1,5 @@
 var tools = require('../tools')
 var mongoose = require('mongoose')
-var slug = require('slug')
 
 var locationSchema = mongoose.Schema({
 	name: {
@@ -8,6 +7,7 @@ var locationSchema = mongoose.Schema({
 		require: true
 	},
 	slug: String,
+	parentLocation: String,
 	locationType: String,
 	point: {
 		latitude: String,

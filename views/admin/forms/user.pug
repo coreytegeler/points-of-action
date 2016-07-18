@@ -1,13 +1,12 @@
+.row.two
+	.cell
+		+input('firstName', 'First Name', 'text', (object ? object.firstName : ''))
+	.cell
+		+input('lastName', 'Last Name', 'text', (object ? object.lastName : ''))
 .row
-	label(name='firstName') First Name
-	input(name='firstName' type='text' value=(object ? object.firstName : ''))
-	label(name='lastName') Last Name
-	input(name='lastName' type='text' value=(object ? object.lastName : ''))
+	+input('email', 'Email', 'email', (object ? object.email : ''))
 .row
-	label(name='email') Email
-	input(name='email' type='email' autocomplete=false value=(object ? object.email : ''))
-.row
-	label(name='password') Password
-	input(name='password' type='password' autocomplete=false)
-	label(name='confirmPassword') Confirm Password
-	input(name='confirmPassword' type='password' autocomplete=false)
+	.cell
+		+input('password', 'Password', 'password')
+	.cell
+		+input('confirmPassword', 'Confirm Password', 'password')
