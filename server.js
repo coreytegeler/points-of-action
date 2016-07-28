@@ -18,7 +18,8 @@ var coffeeScript = require('coffee-script');
 require('coffee-script').register();
 
 // configuration
-mongoose.connect(configDB.url); // connect to our database
+app.set('dbUrl', configDB[app.settings.env]);
+mongoose.connect(app.get('dbUrl')); // connect to our database
 
 require('./config/passport')(passport); // pass passport for configuration
 
