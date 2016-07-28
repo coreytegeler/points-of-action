@@ -1,3 +1,6 @@
+var slug = require('slug')
+var moment = require('moment')
+
 var User = require('./models/user')
 var Action = require('./models/action')
 var Tactic = require('./models/tactic')
@@ -5,8 +8,6 @@ var Location = require('./models/location')
 var Organization = require('./models/organization')
 var OrganizationType = require('./models/organizationType')
 var Person = require('./models/person')
-var slug = require('slug')
-var moment = require('moment')
 
 var isLoggedIn = function(req, res, next) {
   if(req.isAuthenticated())

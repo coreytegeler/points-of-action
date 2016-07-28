@@ -10,6 +10,7 @@ getData = () ->
 	$('.populate').each (i, container) ->
 		createQuickAddForms(container)
 		model = $(container).data('model')
+		checked = $(container).data('checked')
 		if(model=='parentLocation')
 			model='location'
 		type = $(container).data('type')
@@ -24,18 +25,21 @@ getData = () ->
 				switch type
 					when 'checkboxes'
 						$(objects).each (i, object) ->
-							addCheckbox(container, object)
+							addCheckbox(container, object, checked)
 				$(container).addClass('loaded')
 				return
 		return
 	return
 
-addCheckbox = (container, object) ->
+addCheckbox = (container, object, checked) ->
 	$clone = $(container).find('.sample').clone().removeClass('sample')
 	$label = $clone.find('label')
 	$input = $clone.find('input')
 	$input.val(object.slug).attr('id', object.slug+'Checkbox')
 	$label.text(object.name).attr('for', object.slug+'Checkbox')
+	if checked
+		if object.slug == checked || checked.indexOf(object.slug) > -1
+			$input.attr('checked', true)
 	$clone
 		.attr('data-slug', object.slug)
 		.appendTo(container)

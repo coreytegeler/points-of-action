@@ -5,10 +5,7 @@ var User = require('../models/user');
 var slugify = require('slug')
 
 module.exports = function(app, passport) {
-	app.get('/admin', function (req, res) {
-		res.render('index', { user : req.user });
-	});
-
+	
 	app.get('/admin/signup', function(req, res) {
 		if(req.user)
 			return res.redirect('/admin/profile')

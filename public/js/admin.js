@@ -12,9 +12,10 @@
 
   getData = function() {
     $('.populate').each(function(i, container) {
-      var model, type;
+      var checked, model, type;
       createQuickAddForms(container);
       model = $(container).data('model');
+      checked = $(container).data('checked');
       if (model === 'parentLocation') {
         model = 'location';
       }
@@ -31,7 +32,7 @@
           switch (type) {
             case 'checkboxes':
               $(objects).each(function(i, object) {
-                return addCheckbox(container, object);
+                return addCheckbox(container, object, checked);
               });
           }
           $(container).addClass('loaded');
@@ -40,13 +41,18 @@
     });
   };
 
-  addCheckbox = function(container, object) {
+  addCheckbox = function(container, object, checked) {
     var $clone, $input, $label;
     $clone = $(container).find('.sample').clone().removeClass('sample');
     $label = $clone.find('label');
     $input = $clone.find('input');
     $input.val(object.slug).attr('id', object.slug + 'Checkbox');
     $label.text(object.name).attr('for', object.slug + 'Checkbox');
+    if (checked) {
+      if (object.slug === checked || checked.indexOf(object.slug) > -1) {
+        $input.attr('checked', true);
+      }
+    }
     $clone.attr('data-slug', object.slug).appendTo(container);
   };
 

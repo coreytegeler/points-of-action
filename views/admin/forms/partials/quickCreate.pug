@@ -1,7 +1,9 @@
 include ../../../mixins
 .quickCreate(data-model=type)
-	h1 Create New #{name}
-	form(method='post' action='/admin/'+type+'/quick-create/')
-		.row
-			+input('name', 'Name', 'text')
-		input(type='submit' value='Create').button
+	.horz
+		.vert
+			h1 Create New #{name}
+			form(method='post' action='/admin/'+type+'/quick-create/')
+				.row
+					+input('name', 'Name', 'text')
+				input(type='submit' value='Create').button

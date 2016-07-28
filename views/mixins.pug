@@ -5,7 +5,7 @@ mixin input(name, label, type, value)
 
 mixin checkboxes(type, name, multiple, addable)
 	label #{name}
-	.module.checkboxes.populate(data-type='checkboxes', data-model=type, class=type)
+	.module.checkboxes.populate(data-type='checkboxes', data-model=type, class=type, data-checked=(object ? object[type] : ''))
 		+checkbox(type, null, null, multiple)
 	if(addable)
 		.add.button(data-model=type) Add New #{name}

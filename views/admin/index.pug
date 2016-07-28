@@ -1,0 +1,13 @@
+extends layout.pug
+block body
+	each model, key in models
+		.group(id=key)
+			h1 
+				a(href='/admin/'+key) #{uppercase(key)}
+			if model
+				ul.list
+					for object in model
+						li.item
+							a(href='/admin/'+key+'/edit/'+object.slug) #{object.name}
+							| &nbsp;
+							a(href='/admin/'+key+'/remove/'+object._id).button.x.remove X

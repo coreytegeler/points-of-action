@@ -10,6 +10,7 @@ var locationSchema = mongoose.Schema({
 	parentLocation: String,
 	locationType: String,
 	point: {
+		address: String,
 		latitude: String,
 		longitude: String
 	},

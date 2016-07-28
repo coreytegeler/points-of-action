@@ -1,4 +1,4 @@
-.row
+.row.header
 	+input('name', 'Name', 'text', (object ? object.name : ''))
 .row
 	label Location Type
@@ -7,6 +7,7 @@
 		+checkbox('locationType', 'Area', 'area', false, false)
 		+checkbox('locationType', 'Route', 'route', false, false)
 .group(data-template='point')
+	+input('address', 'Address', 'text', (object ? object.point.address : ''))
 	+coords('point', 'Point')
 .group(data-template='route')
 	+coords('startPoint', 'Start Point')

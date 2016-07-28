@@ -52,7 +52,7 @@ module.exports = function(app) {
     function(err, results) { 
       var data = {}
       console.log(results)
-      res.render('admin/overview.pug', {
+      res.render('admin/index.pug', {
         errors: err,
         models: {
           users: results[0],
@@ -115,7 +115,7 @@ module.exports = function(app) {
         break
       case 'organization':
         var object = new Organization(data) 
-        break  
+        break
     }
     object.save(function(err) {
       if(err) {

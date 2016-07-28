@@ -29,6 +29,9 @@ app.use(bodyParser()); // get information from html forms
 
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
+app.locals.uppercase = function(value){
+  return value.charAt(0).toUpperCase() + value.slice(1);
+};
 
 // required for passport
 var User = require('./app/models/user');

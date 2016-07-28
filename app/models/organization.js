@@ -8,7 +8,7 @@ var organizationSchema = mongoose.Schema({
 	organizationType: {
 		type: Mixed
 	},
-	locations: Mixed,
+	location: Mixed,
 	essay: String
 }, { 
 	timestamps: true

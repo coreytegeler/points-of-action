@@ -14,6 +14,22 @@ html {
 		text-rendering: geometricPrecision;
 	}
 }
+h1 {
+	font-family: Helvetica;
+	font-size: 2em;
+	margin: 0;
+}
+a, a:visited {
+	color: $black;
+	text-decoration: none;
+}
+ul {
+	padding: 0;
+	margin: 0;
+	li {
+		list-style: none;
+	}
+}
 main {
 	width: calc(100% - 100px);
 	max-width: 900px;
@@ -39,7 +55,7 @@ nav {
 			padding: 10px;
 			display: inline-block;
 			list-style: none;
-			a {
+			a, a:visited {
 				color: $white;
 				text-decoration: none;
 			}
@@ -59,6 +75,7 @@ form {
 		display: table;
 	}
 	.input {
+		width: 100%;
 		display: table;
 		position: relative;
 		&::before, &::after {
@@ -78,7 +95,7 @@ form {
 	}
 	input, textarea, select {
 		font-size: 1em;
-		line-height: 1.1em;
+		line-height: 1.3em;
 		&:-webkit-autofill {
 			background: none;
 		}
@@ -93,7 +110,8 @@ form {
 		&[type="text"],
 		&[type="email"], 
 		&[type="password"] {
-			padding: 0.15em 0.5em;
+			width: calc(100% - 0.8em);
+			padding: 0.1em 0.4em;
 		}
 	}
 	.group {
@@ -114,7 +132,9 @@ form {
 			}
 		}
 		&.two {
-
+			.cell {
+				width: calc(50% - .5em);
+			}
 		}
 	}
 	[data-template] {
@@ -145,6 +165,18 @@ form {
 	}
 }
 
+.row.header {
+	.input {
+		&::before, &::after {
+			height: 1em;
+		}
+		input {
+			font-size: 2em;
+			border-bottom-width: 0.05em;
+		}
+	}
+}
+ 
 .checkboxes, .options {
 	overflow: auto;
 	font-size: 1em;
@@ -251,6 +283,20 @@ form {
 	}
 }
 
+ul.list {
+	padding: 20px 0;
+	li {
+		position: relative;
+		padding: 5px 30px 5px 0;
+		border-bottom: solid black 0.1em;
+		.button {
+			position: absolute;
+			right: 5px;
+			top: 5px;
+		}
+	}
+}
+
 .quickCreate {
 	width: 100%;
 	height: 100%;
@@ -263,4 +309,19 @@ form {
 	&.open {
 		display: block;
 	}
+	.horz {
+		height: 100%;
+	}
+	form {
+		padding: 0;
+	}
+}
+.horz {
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+}
+.vert {
+	display: table-cell;
+	vertical-align: middle;
 }
