@@ -12,28 +12,31 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 
-var configDB = require('./config/database.js');
-var sass = require('node-sass');
-var coffeeScript = require('coffee-script');
-require('coffee-script').register();
+var db = {
+	development: 'localhost:27017/civil-rights',
+	test: 'localhost:27017/civil-rights',
+	production: 'mongodb://heroku_9lc8j8h8:TY5sKAFZT-3ijkBOj2hn8luf5Y9@ds029735.mlab.com:29735/heroku_9lc8j8h8'
+};
 
-// configuration
-app.set('dbUrl', configDB[app.settings.env]);
+app.set('dbUrl', db[app.settings.env]);
 mongoose.connect(app.get('dbUrl')); // connect to our database
 
 require('./config/passport')(passport); // pass passport for configuration
 
-// set up our express application
-app.use(morgan('dev')); // log every request to the console
-app.use(cookieParser()); // read cookies (needed for auth)
-app.use(bodyParser()); // get information from html forms
-
+var sass = require('node-sass');
+var coffeeScript = require('coffee-script');
+require('coffee-script').register();
 app.set('port', port);
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 app.locals.uppercase = function(value){
   return value.charAt(0).toUpperCase() + value.slice(1);
 };
+
+// set up our express application
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser()); // get information from html forms
 
 // required for passport
 var User = require('./app/models/user');
