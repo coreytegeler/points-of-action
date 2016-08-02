@@ -15,7 +15,7 @@ var session      = require('express-session');
 var db = {
 	development: 'localhost:27017/civil-rights',
 	test: 'localhost:27017/civil-rights',
-	production: process.env.MONGOLAB_URI
+	production: process.env.MONGODB_URI
 };
 
 app.set('dbUrl', db[app.settings.env]);
