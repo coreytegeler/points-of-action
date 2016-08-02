@@ -17,7 +17,8 @@ var userSchema = mongoose.Schema({
 	name: String,
 	slug: String,
 	password: String,
-	username: String
+	username: String,
+	type: String
 }, { 
 	timestamps: true
 });

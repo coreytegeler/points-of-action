@@ -26,7 +26,8 @@ var locationSchema = mongoose.Schema({
 		type: String,
 		value: mongoose.Schema.Types.Mixed
 	},
-	description: String
+	description: String,
+	type: String
 }, { 
 	timestamps: true
 })

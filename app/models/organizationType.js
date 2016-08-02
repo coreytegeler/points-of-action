@@ -4,7 +4,8 @@ var Mixed = mongoose.Schema.Types.Mixed
 
 var organizationTypeSchema = mongoose.Schema({
 	name: String,
-	slug: String
+	slug: String,
+	type: String
 }, { 
 	timestamps: true
 })

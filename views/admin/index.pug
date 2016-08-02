@@ -2,7 +2,7 @@ extends layout.pug
 block body
 	each model, key in models
 		.group(id=key)
-			h1 
+			h2
 				a(href='/admin/'+key) #{uppercase(key)}
 			if model
 				ul.list

@@ -3,21 +3,78 @@
 
 html {
 	margin: 0;
-	background: $white;
+	background: $lightGrey;
 	body {
 		margin: 0;
 		font: {
 			family: 'Bookman Old Style';
 			size: 20px;
-			line-height: 1.2em;
 		}
+		line-height: 1.2em;
 		text-rendering: geometricPrecision;
 	}
 }
-h1 {
+
+main {
+	padding-top: 100px;
+	padding-bottom: 100px;
+}
+.innerPadding {
+	max-width: 900px;
+	width: calc(100% - 100px);
+	margin: auto;
+	padding-left: 50px;
+	padding-right: 50px;
+	display: table;
+}
+
+nav {
+	width: 100%;
+	padding: 8px 0;
+	display: table;
+	background: $mediumGrey;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	clear: both;
+	.inner {
+		width: 100%;
+		padding: 0 0 5px 0;
+		display: table;
+		ul {
+			display: table;
+			padding: 0;
+			margin: auto;
+			float: left;
+			list-style: none;
+			li {
+				padding: 5px 15px;
+				display: inline-block;
+				list-style: none;
+				a, a:visited {
+					font-family: 'Bookman Old Style';
+					color: black;
+					text-decoration: none;
+				}
+			}
+		}
+	}
+}
+
+section {
+	padding: 50px;
+}
+
+h1, h2, h3, h4 {
 	font-family: Helvetica;
-	font-size: 2em;
 	margin: 0;
+}
+h1 {
+	font-size: 2em;
+}
+h2 {
+	font-size: 1.5em;
 }
 a, a:visited {
 	color: $black;
@@ -29,293 +86,21 @@ ul {
 	li {
 		list-style: none;
 	}
-}
-main {
-	width: calc(100% - 100px);
-	max-width: 900px;
-	padding: 100px 50px;
-	margin: auto;
-	display: table;
-}
-nav {
-	width: 100%;
-	display: table;
-	background: black;
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 10;
-	clear: both;
-	ul {
-		padding: 0;
-		margin: 0;
-		float: left;
-		list-style: none;
+	&.list {
+		padding: 20px 0;
 		li {
-			padding: 10px;
-			display: inline-block;
-			list-style: none;
-			a, a:visited {
-				color: $white;
-				text-decoration: none;
-			}
-		}
-	}
-}
-section {
-	padding: 50px;
-}
-form {
-	padding: 20px;
-	// border: 0.25em solid black;
-	label {
-		font-family: Helvetica;
-		font-size: 1em;
-		line-height: 1.5em;
-		display: table;
-	}
-	.input {
-		width: 100%;
-		display: table;
-		position: relative;
-		&::before, &::after {
-			width: 0.1em;
-			height: 0.5em;
-			position: absolute;
-			bottom: 0;
-			content: '';
-			background: black;
-		}
-		&::before {
-			left: 0;
-		}
-		&::after {
-			right: 0;
-		}
-	}
-	input, textarea, select {
-		font-size: 1em;
-		line-height: 1.3em;
-		&:-webkit-autofill {
-			background: none;
-		}
-	}
-	input {
-		-webkit-appearance: none;
-		border: solid black;
-		border-width: 0 0 0.1em 0;
-		outline: none;
-		font-family: 'Bookman Old Style';
-		background: transparent;
-		&[type="text"],
-		&[type="email"], 
-		&[type="password"] {
-			width: calc(100% - 0.8em);
-			padding: 0.1em 0.4em;
-		}
-	}
-	.group {
-		padding: 0 0 20px 0;
-	}
-	.sample {
-		display: none;
-	}
-	.row {
-		width: 100%;
-		display: table;
-		padding: 0 0 10px 0;
-		clear: both;
-		.cell {
-			float: left;
-			&:first-child {
-				margin-right: 1em;
-			}
-		}
-		&.two {
-			.cell {
-				width: calc(50% - .5em);
-			}
-		}
-	}
-	[data-template] {
-		display: none;
-		&.show {
-			display: block;
-		}
-	}
-	.button {
-		display: inline-table;
-		margin-right: 10px;
-		padding: 2px;
-		font: {
-			family: Helvetica;
-			size: 0.8em;
-			weight: bold;
-		}
-		text-transform: uppercase;
-		color: black;
-		text-decoration: none;
-		border: 0;
-		&:hover {
-			cursor: pointer;
-		}
-		&:last-child {
-			margin-right: 0;
-		}
-	}
-}
-
-.row.header {
-	.input {
-		&::before, &::after {
-			height: 1em;
-		}
-		input {
-			font-size: 2em;
-			border-bottom-width: 0.05em;
-		}
-	}
-}
- 
-.checkboxes, .options {
-	overflow: auto;
-	font-size: 1em;
-	line-height: 1.1em;
-	border: 0.1em solid black;
-	background: $white;
-	&.populate {
-		.item {
-			opacity: 0;
-		}
-		&.loaded .item {
-			opacity: 1;
-		}
-	}
-	.checkbox {
-		padding: 5px 0;
-		&:hover {
-			cursor: pointer;
-		}
-		label {
-			font-family: inherit;
-			font-size: inherit;
-			line-height: 1.1em;
-			display: table;
-		}
-		input[type="checkbox"], input[type="radio"] {
-			display: none;
-			&:checked~label {
-				&::before {
-					background: black;
-				}
-			}
-		}
-	}
-}	
-
-.checkboxes {
-	height: 135px;
-	padding: 0 0.5em;
-	.checkbox {
-		label::before {
-			width: 0.55em;
-			height: 0.55em;
-			margin-right: 0.5em;
-			border-radius: 50%;
-			border: solid black 0.1em;
-			font-size: inherit;
-			display: inline-block;
-			content: '';
-		}
-	}
-}
-
-.selects {
-	display: flex;
-	border-bottom: solid black 0.1em;
-	padding: 0.15em 0;
-	.select {
-		background: transparent;
-		position: relative;
-		.display {
-			display: inline-block;
-			padding: 0 1.1em 0 0.6em;
-			cursor: pointer;
-		}
-		.options {
-			max-height: calc(1.8em * 10);
-			position: absolute;
-			left: 0;
-			top: calc(100% + 0.15em);
-			padding: 0 0.5em;
-			display: none;
-			&.open {
-				display: block;
+			position: relative;
+			padding: 5px 30px 5px 0;
+			border-bottom: solid black 0.1em;
+			.button {
+				position: absolute;
+				right: 5px;
+				top: 5px;
 			}
 		}
 	}
 }
 
-.selects.date {
-	.select {
-		position: relative;
-		&.month {
-			.display {
-				width: 6em;
-			}
-		}
-		&.day {
-			.display {
-				width: 1.5em;
-			}
-		}
-		&.year {
-			.display {
-				width: 2.5em;
-			}
-		}
-		&:not(:last-child) .display:after {
-			content: '/';
-			position: absolute;
-			right: 0;
-			top: 0;
-		}
-	}
-}
-
-ul.list {
-	padding: 20px 0;
-	li {
-		position: relative;
-		padding: 5px 30px 5px 0;
-		border-bottom: solid black 0.1em;
-		.button {
-			position: absolute;
-			right: 5px;
-			top: 5px;
-		}
-	}
-}
-
-.quickCreate {
-	width: 100%;
-	height: 100%;
-	position: fixed;
-	left: 0;
-	top: 0;
-	overflow: auto;
-	display: none;
-	background: $white;
-	&.open {
-		display: block;
-	}
-	.horz {
-		height: 100%;
-	}
-	form {
-		padding: 0;
-	}
-}
 .horz {
 	display: table;
 	margin-left: auto;
@@ -325,3 +110,5 @@ ul.list {
 	display: table-cell;
 	vertical-align: middle;
 }
+
+@import 'admin';

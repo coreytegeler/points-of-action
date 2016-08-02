@@ -17,13 +17,62 @@ html {
     margin: 0;
     font-family: 'Bookman Old Style';
     font-size: 20px;
-    font-line-height: 1.2em;
+    line-height: 1.2em;
     text-rendering: geometricPrecision; }
 
-h1 {
+main {
+  padding-top: 100px;
+  padding-bottom: 100px; }
+
+.innerPadding {
+  max-width: 900px;
+  width: calc(100% - 100px);
+  margin: auto;
+  padding-left: 50px;
+  padding-right: 50px;
+  display: table; }
+
+nav {
+  width: 100%;
+  padding: 8px 0;
+  display: table;
+  background: #f0f0f3;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  clear: both; }
+  nav .inner {
+    width: 100%;
+    padding: 0 0 5px 0;
+    display: table; }
+    nav .inner ul {
+      display: table;
+      padding: 0;
+      margin: auto;
+      float: left;
+      list-style: none; }
+      nav .inner ul li {
+        padding: 5px 15px;
+        display: inline-block;
+        list-style: none; }
+        nav .inner ul li a, nav .inner ul li a:visited {
+          font-family: 'Bookman Old Style';
+          color: black;
+          text-decoration: none; }
+
+section {
+  padding: 50px; }
+
+h1, h2, h3, h4 {
   font-family: Helvetica;
-  font-size: 2em;
   margin: 0; }
+
+h1 {
+  font-size: 2em; }
+
+h2 {
+  font-size: 1.5em; }
 
 a, a:visited {
   color: #000000;
@@ -34,41 +83,28 @@ ul {
   margin: 0; }
   ul li {
     list-style: none; }
+  ul.list {
+    padding: 20px 0; }
+    ul.list li {
+      position: relative;
+      padding: 5px 30px 5px 0;
+      border-bottom: solid black 0.1em; }
+      ul.list li .button {
+        position: absolute;
+        right: 5px;
+        top: 5px; }
 
-main {
-  width: calc(100% - 100px);
-  max-width: 900px;
-  padding: 100px 50px;
-  margin: auto;
-  display: table; }
-
-nav {
-  width: 100%;
+.horz {
   display: table;
-  background: black;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  clear: both; }
-  nav ul {
-    padding: 0;
-    margin: 0;
-    float: left;
-    list-style: none; }
-    nav ul li {
-      padding: 10px;
-      display: inline-block;
-      list-style: none; }
-      nav ul li a, nav ul li a:visited {
-        color: #f7f7fa;
-        text-decoration: none; }
+  margin-left: auto;
+  margin-right: auto; }
 
-section {
-  padding: 50px; }
+.vert {
+  display: table-cell;
+  vertical-align: middle; }
 
 form {
-  padding: 20px; }
+  padding: 20px 0; }
   form label {
     font-family: Helvetica;
     font-size: 1em;
@@ -126,10 +162,12 @@ form {
   form .button {
     display: inline-table;
     margin-right: 10px;
-    padding: 2px;
+    padding: 8px 8px 6px 8px;
+    background: #f0f0f3;
     font-family: Helvetica;
-    font-size: 0.8em;
+    font-size: 0.65em;
     font-weight: bold;
+    line-height: 1.1em;
     text-transform: uppercase;
     color: black;
     text-decoration: none;
@@ -217,17 +255,6 @@ form {
     right: 0;
     top: 0; }
 
-ul.list {
-  padding: 20px 0; }
-  ul.list li {
-    position: relative;
-    padding: 5px 30px 5px 0;
-    border-bottom: solid black 0.1em; }
-    ul.list li .button {
-      position: absolute;
-      right: 5px;
-      top: 5px; }
-
 .quickCreate {
   width: 100%;
   height: 100%;
@@ -243,14 +270,5 @@ ul.list {
     height: 100%; }
   .quickCreate form {
     padding: 0; }
-
-.horz {
-  display: table;
-  margin-left: auto;
-  margin-right: auto; }
-
-.vert {
-  display: table-cell;
-  vertical-align: middle; }
 
 /*# sourceMappingURL=style.css.map */

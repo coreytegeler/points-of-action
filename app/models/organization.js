@@ -9,7 +9,8 @@ var organizationSchema = mongoose.Schema({
 		type: Mixed
 	},
 	location: Mixed,
-	essay: String
+	essay: String,
+	type: String
 }, { 
 	timestamps: true
 })

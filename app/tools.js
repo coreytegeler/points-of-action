@@ -78,33 +78,8 @@ var preSave = function(item) {
     item.slug = slug(item.name, {lower: true})
 }
 
-var getMonths = function() {
-  var months = []
-  for (var i = 0; i < 12; i++) {
-   months[i] = moment.months(i)
-  }
-  return months
-}
-var getDays = function() {
-  var days = []
-  for (var i = 0; i < 12; i++) {
-    days[i] = moment(i+1, 'M').daysInMonth()
-  }
-  return days
-}
-var getYears = function() {
-  var years = {
-    'min': '1900',
-    'max': moment().year()
-  }
-  return years
-}
-
 exports.isLoggedIn = isLoggedIn;
 exports.singularize = singularize;
 exports.pluralize = pluralize;
 exports.getModel = getModel;
 exports.preSave = preSave;
-exports.getMonths = getMonths;
-exports.getDays = getDays;
-exports.getYears = getYears;

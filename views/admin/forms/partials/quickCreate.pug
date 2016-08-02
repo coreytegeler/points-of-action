@@ -2,7 +2,7 @@ include ../../../mixins
 .quickCreate(data-model=type)
 	.horz
 		.vert
-			h1 Create New #{name}
+			h2 Create New #{name}
 			form(method='post' action='/admin/'+type+'/quick-create/')
 				.row
 					+input('name', 'Name', 'text')

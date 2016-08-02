@@ -4,11 +4,12 @@ mixin input(name, label, type, value)
 		input(name=name, type=type, value=(value ? value : ''))
 
 mixin checkboxes(type, name, multiple, addable)
-	label #{name}
+	label
+		| #{name}
+		if(addable)
+			.add.button(data-model=type) +
 	.module.checkboxes.populate(data-type='checkboxes', data-model=type, class=type, data-checked=(object ? object[type] : ''))
 		+checkbox(type, null, null, multiple)
-	if(addable)
-		.add.button(data-model=type) Add New #{name}
 
 mixin checkbox(type, name, value, multiple)
 	.item.checkbox(class=(value ? value : 'sample'))
@@ -21,22 +22,15 @@ mixin dateselect(months, days)
 			.select.month(data-datetype='month')
 				.display(data-datetype='month') Month
 				.module.options.months(data-type='checkboxes', data-datetype='month')
-					each month in months
-						+checkbox('month', month, month, false)
+					+checkbox('month', null, null, false)
 			.select.day(data-datetype='day')
 				.display(data-datetype='day') Day
 				.module.options.days(data-type='checkboxes', data-datetype='day')
-					- var day = 0
-					while day < 31
-						- day = day+1
-						+checkbox('day', day, day, false)
+					+checkbox('day', null, null, false)
 			.select.year(data-datetype='year')
 				.display(data-datetype='year') Year
 				.module.options.years(data-type='checkboxes', data-datetype='year')
-					-var year = parseInt(years.max)
-					while year >= parseInt(years.min)
-						+checkbox('year', year, year, false)
-						- year = year-1
+					+checkbox('year', null, null, false)
 
 mixin coords(parent, title)
 	.row.two

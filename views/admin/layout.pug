@@ -3,28 +3,11 @@ doctype html
 html(lang='en')
 	head
 		script(type='text/javascript' src='/js/jquery-3.0.0.min.js')
+		script(type='text/javascript' src='/js/moment.js')
 		script(type='text/javascript' src='/js/admin.js')
 		link(rel='stylesheet' href='/css/style.css')
 	body
+		include ./nav
 		main
-			//- if(user)
-			nav
-				ul.group.edit
-					li
-						a(href='/admin/actions/') Actions
-					li
-						a(href='/admin/locations/') Locations
-					li
-						a(href='/admin/organizations/') Organizations
-					li
-						a(href='/admin/people/') People
-				ul.group.account
-					li
-						a(href='/admin/signup/') Signup
-					li
-						a(href='/admin/profile/') Profile
-					li
-						a(href='/admin/login/') Login
-					li
-						a(href='/admin/logout/') Logout
-			block body
+			.innerPadding
+				block body

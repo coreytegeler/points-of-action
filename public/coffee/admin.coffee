@@ -1,8 +1,9 @@
 $ ->	
 	getData()
+	fillDateSelects()
 	$('.add').click(openQuickCreate)		
 	$('.select .display').click(openSelect)
-	$('.select .options input').change(updateSelectValue)
+	$('.select .options').on('change', 'input', updateSelectValue)
 	$('.updateTemplate input').change(updateTemplate)
 	return
 
@@ -43,7 +44,7 @@ addCheckbox = (container, object, checked) ->
 	$clone
 		.attr('data-slug', object.slug)
 		.appendTo(container)
-	return
+	return $clone
 
 openSelect = (event) ->
 	$select = $(event.target).parents('.select')
@@ -111,3 +112,26 @@ updateTemplate = (event) ->
 	value = $input.val()
 	$('[data-template]').removeClass('show')
 	$('[data-template="'+value+'"]').addClass('show')
+
+fillDateSelects = () ->
+	$('.date.selects').each (i, selects) ->
+		$monthOptions = $(selects).find('.options.months')
+		$sample = $monthOptions.find('.checkbox.sample')
+		for i in [0...12]
+			month = moment.months(i)
+			days = moment(i+1, 'M').daysInMonth()
+			object = {name: month, slug: month}
+			$checkbox = addCheckbox($monthOptions, object, [])
+			$checkbox.attr('data-days', days)
+
+		$dayOptions = $(selects).find('.options.days')
+		$sample = $dayOptions.find('.checkbox.sample')
+		for i in [1..31]
+			object = {name: i, slug: i}
+			$checkbox = addCheckbox($dayOptions, object, [])
+
+		$yearOptions = $(selects).find('.options.years')
+		$sample = $yearOptions.find('.checkbox.sample')
+		for i in [moment().year()...1899]
+			object = {name: i, slug: i}
+			$checkbox = addCheckbox($yearOptions, object, [])

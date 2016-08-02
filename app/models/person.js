@@ -13,10 +13,11 @@ var personSchema = mongoose.Schema({
 	},
 	name: String,
 	slug: String,
-	type: Mixed,
+	personType: Mixed,
 	locations: Mixed,
 	organizations: Mixed,
-	description: String
+	description: String,
+	type: String
 }, { 
 	timestamps: true
 })

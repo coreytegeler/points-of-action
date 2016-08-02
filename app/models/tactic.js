@@ -7,7 +7,8 @@ var tacticSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
-	slug: String
+	slug: String,
+	type: String
 }, { 
 	timestamps: true
 });

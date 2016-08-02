@@ -74,7 +74,6 @@ module.exports = function(app) {
     model.find({}, function(err, objects) {
       if(err)
         callback(err)
-      console.log(objects)
       res.render('admin/model.pug', {
         type: {
           s: tools.singularize(type),
@@ -100,6 +99,7 @@ module.exports = function(app) {
     var data = req.body
     var type = req.params.type
     var errors
+    data.type = tools.singularize(type)
     switch(type) {
       case 'user':
         var object = new User(data)
@@ -156,11 +156,6 @@ module.exports = function(app) {
             p: tools.pluralize(type)
           }
         }
-        if (type == 'action')
-          data['months'] = tools.getMonths()
-          data['days'] = tools.getDays()
-          data['years'] = tools.getYears()
-        console.log(data)
         res.render('admin/edit.pug', data)
       })
     }
@@ -180,6 +175,7 @@ module.exports = function(app) {
       var slug = slugify(data.name, {lower: true})
       data.slug = slug
     }
+    data.type = tools.singularize(type)
     model.findOneAndUpdate({_id: id}, data, {runValidators: true}, function(err, object) {
       if(err) {
         console.log('Failed:')
