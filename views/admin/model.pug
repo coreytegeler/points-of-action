@@ -7,6 +7,6 @@ block body
 		ul.list
 			for object in objects
 				li.item
-					a(href='/admin/'+object.type+'/edit/'+object.slug) #{object.name}
+					a(href='/admin/'+type.s+'/edit/'+object.slug) #{object.name}
 					| &nbsp;
-					a(href='/admin/tactic/remove/'+object._id).button.x.remove X
+					a(href='/admin/'+type.s+'/remove/'+object._id).button.x.remove X

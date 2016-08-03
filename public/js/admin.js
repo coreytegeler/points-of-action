@@ -5,10 +5,10 @@
   $(function() {
     getData();
     fillDateSelects();
-    $('.add').click(openQuickCreate);
-    $('.select .display').click(openSelect);
-    $('.select .options').on('change', 'input', updateSelectValue);
-    $('.updateTemplate input').change(updateTemplate);
+    $('body').on('click', '.add', openQuickCreate);
+    $('body').on('click', '.select .display', openSelect);
+    $('body').on('change', '.select .options input', updateSelectValue);
+    $('body').on('change', '.updateTemplate input', updateTemplate);
   });
 
   getData = function() {
@@ -106,20 +106,31 @@
     $cancelBtn = $addForm.find('input.cancel');
     $saveBtn.click(quickCreate);
     $cancelBtn.click(closeQuickCreate);
+    $('body').addClass('noScroll');
   };
 
   closeQuickCreate = function(event) {
-    var $addForm, $button, type;
+    var $addForm, $button;
+    event.preventDefault();
     $button = $(event.target);
-    type = $button.data('model');
-    $addForm = $('.quickCreate[data-model="' + type + '"]');
-    $addForm.addClass('close');
-    clearQuickCreate($quickCreate);
+    $addForm = $addForm = $button.parents('.quickCreate');
+    $addForm.removeClass('open');
+    $('body').removeClass('noScroll');
+    clearQuickCreate($addForm);
   };
 
   clearQuickCreate = function(addForm) {
-    $(addForm).find('input:not([type="submit"]), textarea').each(function(i, input) {
-      return $(input).val('');
+    $(addForm).find('input, textarea').each(function(i, input) {
+      var type;
+      type = $(input).attr('type');
+      if (type === 'text' || input === 'password' || input === 'email') {
+        return $(input).val('');
+      } else if (type === 'checkbox' || type === 'radio') {
+        return $(input).prop('checked', false);
+      }
+    });
+    $(addForm).find('[data-template]').each(function(i, group) {
+      return $(group).removeClass('show');
     });
   };
 
@@ -141,6 +152,7 @@
         return console.log(jqXHR, status, error);
       },
       success: function(object, status, jqXHR) {
+        $('body').removeClass('noScroll');
         $quickCreate.removeClass('open');
         clearQuickCreate($quickCreate);
         object = JSON.parse(object);
@@ -150,11 +162,13 @@
   };
 
   updateTemplate = function(event) {
-    var $input, value;
+    var $form, $input, value;
     $input = $(event.target);
+    $form = $input.parents('form');
     value = $input.val();
-    $('[data-template]').removeClass('show');
-    return $('[data-template="' + value + '"]').addClass('show');
+    console.log($input);
+    $form.find('[data-template]').removeClass('show');
+    return $form.find('[data-template="' + value + '"]').addClass('show');
   };
 
   fillDateSelects = function() {

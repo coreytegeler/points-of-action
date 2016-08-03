@@ -136,6 +136,9 @@ ul {
   display: table-cell;
   vertical-align: middle; }
 
+.noScroll {
+  overflow: hidden; }
+
 form {
   padding: 20px 0; }
   form label {
@@ -304,11 +307,15 @@ form {
   top: 0;
   overflow: auto;
   display: none;
-  background: #f7f7fa; }
+  background: rgba(255, 255, 255, 0.95); }
   .quickCreate.open {
     display: block; }
+  .quickCreate .checkboxes, .quickCreate .options {
+    background: rgba(255, 255, 255, 0.5); }
   .quickCreate .horz {
     height: 100%; }
+  .quickCreate .vert {
+    padding: 100px 0; }
   .quickCreate form {
     padding: 0; }
 

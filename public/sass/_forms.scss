@@ -218,12 +218,18 @@ form {
 	top: 0;
 	overflow: auto;
 	display: none;
-	background: $lightGrey;
+	background: rgba(255,255,255, 0.95);
 	&.open {
 		display: block;
 	}
+	.checkboxes, .options {
+		background: rgba(255,255,255, 0.5);
+	}
 	.horz {
 		height: 100%;
+	}
+	.vert {
+		padding: 100px 0;
 	}
 	form {
 		padding: 0;

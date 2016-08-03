@@ -1,10 +1,10 @@
 $ ->	
 	getData()
 	fillDateSelects()
-	$('.add').click(openQuickCreate)
-	$('.select .display').click(openSelect)
-	$('.select .options').on('change', 'input', updateSelectValue)
-	$('.updateTemplate input').change(updateTemplate)
+	$('body').on('click', '.add', openQuickCreate)
+	$('body').on('click', '.select .display', openSelect)
+	$('body').on('change', '.select .options input', updateSelectValue)
+	$('body').on('change', '.updateTemplate input', updateTemplate)
 	return
 
 getData = () ->
@@ -87,19 +87,27 @@ openQuickCreate = (event) ->
 	$cancelBtn = $addForm.find('input.cancel')
 	$saveBtn.click(quickCreate)
 	$cancelBtn.click(closeQuickCreate)
+	$('body').addClass('noScroll')
 	return
 
 closeQuickCreate = (event) ->
+	event.preventDefault()
 	$button = $(event.target)
-	type = $button.data('model')
-	$addForm = $('.quickCreate[data-model="'+type+'"]')
-	$addForm.addClass('close')
-	clearQuickCreate($quickCreate)
+	$addForm = $addForm = $button.parents('.quickCreate')
+	$addForm.removeClass('open')
+	$('body').removeClass('noScroll')
+	clearQuickCreate($addForm)
 	return
 
 clearQuickCreate = (addForm) ->
-	$(addForm).find('input:not([type="submit"]), textarea').each (i, input) ->
-		$(input).val('')
+	$(addForm).find('input, textarea').each (i, input) ->
+		type = $(input).attr('type')
+		if(type == 'text' || input == 'password' || input == 'email')
+			$(input).val('')
+		else if (type == 'checkbox' || type == 'radio')
+			$(input).prop('checked', false);
+	$(addForm).find('[data-template]').each (i, group) ->
+		$(group).removeClass('show')
 	return
 
 quickCreate = (event) ->
@@ -118,6 +126,7 @@ quickCreate = (event) ->
 		error: (jqXHR, status, error) ->
 			return console.log(jqXHR, status, error)
 		success: (object, status, jqXHR) ->
+			$('body').removeClass('noScroll')
 			$quickCreate.removeClass('open')
 			clearQuickCreate($quickCreate)
 			object = JSON.parse(object)
@@ -127,9 +136,11 @@ quickCreate = (event) ->
 
 updateTemplate = (event) ->
 	$input = $(event.target)
+	$form = $input.parents('form')
 	value = $input.val()
-	$('[data-template]').removeClass('show')
-	$('[data-template="'+value+'"]').addClass('show')
+	console.log($input)
+	$form.find('[data-template]').removeClass('show')
+	$form.find('[data-template="'+value+'"]').addClass('show')
 
 fillDateSelects = () ->
 	$('.date.selects').each (i, selects) ->
