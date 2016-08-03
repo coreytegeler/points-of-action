@@ -2,6 +2,7 @@ var Async = require('async')
 var User = require('../models/user')
 var Action = require('../models/action')
 var Tactic = require('../models/tactic')
+var Term = require('../models/term')
 var Location = require('../models/location')
 var Organization = require('../models/organization')
 var OrganizationType = require('../models/organizationType')
@@ -11,7 +12,7 @@ var slugify = require('slug')
 
 module.exports = function(app) {
 
-  app.get('/admin', function(req, res) {
+  app.get('/admin', tools.isLoggedIn, function(req, res) {
     Async.parallel([
       function(callback) {
         User.find({}, function(err, data) {
@@ -47,11 +48,23 @@ module.exports = function(app) {
             callback(err)
           callback(null, data)
         })
+      },
+      function(callback) {
+        Tactic.find({}, function(err, data) {
+          if(err)
+            callback(err)
+          callback(null, data)
+        })
+      },
+      function(callback) {
+        Term.find({}, function(err, data) {
+          if(err)
+            callback(err)
+          callback(null, data)
+        })
       }
     ],
     function(err, results) { 
-      var data = {}
-      console.log(results)
       res.render('admin/index.pug', {
         errors: err,
         models: {
@@ -59,13 +72,15 @@ module.exports = function(app) {
           actions: results[1],
           locations: results[2],
           organizations: results[3],
-          people: results[4]
-        }
+          people: results[4],
+          terms: results[5].concat(results[6])
+        },
+        user: req.user
       })
     })
   })
 
-  app.get('/admin/:type', function(req, res) {
+  app.get('/admin/:type', tools.isLoggedIn, function(req, res) {
     var type = req.params.type
     if(type == 'user' || type == 'users')
       var model = User
@@ -79,23 +94,25 @@ module.exports = function(app) {
           s: tools.singularize(type),
           p: tools.pluralize(type)
         },
-        objects: objects
+        objects: objects,
+        user: req.user
       })
     })
   })
 
-  app.get('/admin/:type/new', function(req, res) {
+  app.get('/admin/:type/new', tools.isLoggedIn, function(req, res) {
     var type = req.params.type
     res.render('admin/edit.pug', {
       type: {
         s: tools.singularize(type),
         p: tools.pluralize(type)
       },
-      action: 'create'
+      action: 'create',
+        user: req.user
     })
   })
 
-  app.post('/admin/:type/create', function(req, res) {
+  app.post('/admin/:type/create', tools.isLoggedIn, function(req, res) {
     var data = req.body
     var type = req.params.type
     var errors
@@ -115,6 +132,12 @@ module.exports = function(app) {
         break
       case 'organization':
         var object = new Organization(data) 
+        break
+      case 'tactic':
+        var object = new Tactic(data) 
+        break
+      case 'term':
+        var object = new Term(data) 
         break
     }
     object.save(function(err) {
@@ -137,7 +160,7 @@ module.exports = function(app) {
     })
   })
 
-  app.get('/admin/:type/edit/:slug', function(req, res) {
+  app.get('/admin/:type/edit/:slug', tools.isLoggedIn, function(req, res) {
     var type = req.params.type
     var slug = req.params.slug
     var model = tools.getModel(type)
@@ -154,14 +177,15 @@ module.exports = function(app) {
           type: {
             s: tools.singularize(type),
             p: tools.pluralize(type)
-          }
+          },
+          user: req.user
         }
         res.render('admin/edit.pug', data)
       })
     }
   })
 
-  app.post('/admin/:type/update/:id', function(req, res) {
+  app.post('/admin/:type/update/:id', tools.isLoggedIn, function(req, res) {
     var data = req.body
     var type = req.params.type
     var id = req.params.id
@@ -197,8 +221,8 @@ module.exports = function(app) {
     })
   })
 
-  app.get('/admin/:type/remove/:id', function(req, res) {
-    var type = req.params.type
+  app.get('/admin/:type/remove/:id', tools.isLoggedIn, function(req, res) {
+    var type = tools.singularize(req.params.type)
     var id = req.params.id
     var model = tools.getModel(type)
     model.findByIdAndRemove(id, function(err, object) {
@@ -208,7 +232,7 @@ module.exports = function(app) {
     })
   })
 
-  app.get('/admin/:type/quick-create', function(req, res) {
+  app.get('/admin/:type/quick-create', tools.isLoggedIn, function(req, res) {
     var type = req.params.type
     if(!type)
       return
@@ -217,10 +241,11 @@ module.exports = function(app) {
     })
   })
 
-  app.post('/admin/:type/quick-create', function(req, res) {
+  app.post('/admin/:type/quick-create', tools.isLoggedIn, function(req, res) {
     var data = req.body
-    var type = req.params.type
+    var type = tools.singularize(req.params.type)
     var errors
+    data.type = tools.singularize(type)
     switch(type) {
       case 'user':
         var object = new User(data)
@@ -242,7 +267,7 @@ module.exports = function(app) {
         break  
       case 'organizationType':
         var object = new OrganizationType(data) 
-        break  
+        break
     }
     object.save(function(err) {
       if(err) {
@@ -252,4 +277,5 @@ module.exports = function(app) {
       return res.json(object)
     })
   })
+
 }

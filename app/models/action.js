@@ -8,14 +8,8 @@ var actionSchema = mongoose.Schema({
 		required: true
 	},
 	slug: String,
-	actionType: {
-		type: Mixed,
-		required: true
-	},
-	locations: {
-		type: Mixed,
-		required: true
-	},
+	tactics: Mixed,
+	locations: Mixed,
 	people: Mixed,
 	organizations: Mixed,
 	essay: String,

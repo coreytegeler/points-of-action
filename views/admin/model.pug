@@ -1,11 +1,12 @@
 extends layout.pug
 block body
-	h2 #{uppercase(type.p)}
+	h2
+		| #{uppercase(type.p)}
+		a.button.add(href='/admin/'+type.s+'/new') +
 	if objects
 		ul.list
 			for object in objects
 				li.item
-					a(href='/admin/'+type.s+'/edit/'+object.slug) #{object.name}
+					a(href='/admin/'+object.type+'/edit/'+object.slug) #{object.name}
 					| &nbsp;
-					a(href='/admin/'+type.s+'/remove/'+object._id).button.x.remove X
-	a(href='/admin/'+type.s+'/new') Add new #{type.s}
+					a(href='/admin/tactic/remove/'+object._id).button.x.remove X

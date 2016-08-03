@@ -37,6 +37,7 @@ nav {
   padding: 8px 0;
   display: table;
   background: #f0f0f3;
+  color: #adaeb2;
   position: fixed;
   top: 0;
   left: 0;
@@ -58,8 +59,9 @@ nav {
         list-style: none; }
         nav .inner ul li a, nav .inner ul li a:visited {
           font-family: 'Bookman Old Style';
-          color: black;
-          text-decoration: none; }
+          color: #000000; }
+          nav .inner ul li a:hover, nav .inner ul li a:visited:hover {
+            color: #6e707c; }
 
 section {
   padding: 50px; }
@@ -76,7 +78,12 @@ h2 {
 
 a, a:visited {
   color: #000000;
-  text-decoration: none; }
+  text-decoration: none;
+  transition: color 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -moz-transition: color 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -webkit-transition: color 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
+  a:hover, a:visited:hover {
+    color: #adaeb2; }
 
 ul {
   padding: 0;
@@ -91,8 +98,34 @@ ul {
       border-bottom: solid black 0.1em; }
       ul.list li .button {
         position: absolute;
-        right: 5px;
-        top: 5px; }
+        right: 0px;
+        bottom: 0px; }
+
+.buttons .button {
+  margin-right: 10px; }
+  .buttons .button:last-child {
+    margin-right: 0; }
+
+.button {
+  display: inline-table;
+  color: #adaeb2 !important;
+  font-family: Helvetica;
+  font-size: 1em;
+  font-weight: bold;
+  line-height: 1.1em;
+  text-transform: uppercase;
+  color: black;
+  text-decoration: none;
+  border: 0;
+  text-rendering: geometricPrecision;
+  transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -moz-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -webkit-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
+  .button:hover {
+    color: #6e707c !important;
+    cursor: pointer; }
+  .button.add {
+    font-size: 1em; }
 
 .horz {
   display: table;
@@ -126,20 +159,25 @@ form {
     form .input::after {
       right: 0; }
   form input, form textarea, form select {
+    width: calc(100% - 0.8em);
+    padding: 0.1em 0.4em;
+    background: transparent;
+    border: solid black;
+    border-width: 0 0 0.1em 0;
     font-size: 1em;
-    line-height: 1.3em; }
+    line-height: 1.3em;
+    outline: none; }
     form input:-webkit-autofill, form textarea:-webkit-autofill, form select:-webkit-autofill {
       background: none; }
   form input {
     -webkit-appearance: none;
-    border: solid black;
-    border-width: 0 0 0.1em 0;
     outline: none;
-    font-family: 'Bookman Old Style';
-    background: transparent; }
-    form input[type="text"], form input[type="email"], form input[type="password"] {
-      width: calc(100% - 0.8em);
-      padding: 0.1em 0.4em; }
+    font-family: 'Bookman Old Style'; }
+    form input[type="submit"] {
+      width: auto;
+      display: inline-block; }
+  form textarea {
+    border: 0.1em solid black; }
   form .group {
     padding: 0 0 20px 0; }
   form .sample {
@@ -159,23 +197,6 @@ form {
     display: none; }
     form [data-template].show {
       display: block; }
-  form .button {
-    display: inline-table;
-    margin-right: 10px;
-    padding: 8px 8px 6px 8px;
-    background: #f0f0f3;
-    font-family: Helvetica;
-    font-size: 0.65em;
-    font-weight: bold;
-    line-height: 1.1em;
-    text-transform: uppercase;
-    color: black;
-    text-decoration: none;
-    border: 0; }
-    form .button:hover {
-      cursor: pointer; }
-    form .button:last-child {
-      margin-right: 0; }
 
 .row.header .input::before, .row.header .input::after {
   height: 1em; }
@@ -194,9 +215,13 @@ form {
   .checkboxes.populate.loaded .item, .options.populate.loaded .item {
     opacity: 1; }
   .checkboxes .checkbox, .options .checkbox {
-    padding: 5px 0; }
+    padding: 5px 0;
+    transition: color 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    -moz-transition: color 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    -webkit-transition: color 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
     .checkboxes .checkbox:hover, .options .checkbox:hover {
-      cursor: pointer; }
+      cursor: pointer;
+      color: #6e707c; }
     .checkboxes .checkbox label, .options .checkbox label {
       font-family: inherit;
       font-size: inherit;
@@ -230,19 +255,35 @@ form {
     .selects .select .display {
       display: inline-block;
       padding: 0 1.1em 0 0.6em;
-      cursor: pointer; }
+      transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+      -moz-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+      -webkit-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
+      .selects .select .display:hover {
+        color: #6e707c;
+        cursor: pointer; }
     .selects .select .options {
       max-height: calc(1.8em * 10);
       position: absolute;
       left: 0;
       top: calc(100% + 0.15em);
       padding: 0 0.5em;
-      display: none; }
+      opacity: 0;
+      pointer-events: none;
+      transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+      -moz-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+      -webkit-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
       .selects .select .options.open {
-        display: block; }
+        opacity: 1;
+        pointer-events: all; }
 
 .selects.date .select {
-  position: relative; }
+  position: relative;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
   .selects.date .select.month .display {
     width: 6em; }
   .selects.date .select.day .display {

@@ -14,11 +14,15 @@ block body
 				include ../admin/forms/person.pug
 			when 'organization'
 				include ../admin/forms/organization.pug
+			when 'tactic'
+				include ../admin/forms/tactic.pug
+			when 'term'
+				include ../admin/forms/term.pug
 			default
 				- var noForm = true
 				| No form for "#{type.s}"
 		.buttons
 			a.button(href='/admin/'+type.p) View all #{type.p}
-			-if(!noForm)
-				input(type='submit' value=action).button
+			if(!noForm)
+				input.button.save(type='submit', value=action)
 	.quickCreates

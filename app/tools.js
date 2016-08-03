@@ -4,15 +4,17 @@ var moment = require('moment')
 var User = require('./models/user')
 var Action = require('./models/action')
 var Tactic = require('./models/tactic')
+var Term = require('./models/term')
 var Location = require('./models/location')
 var Organization = require('./models/organization')
 var OrganizationType = require('./models/organizationType')
 var Person = require('./models/person')
 
 var isLoggedIn = function(req, res, next) {
-  if(req.isAuthenticated())
-    return next();
-  res.redirect('/admin/login');
+  // if(req.isAuthenticated())
+  //   return next();
+  // res.redirect('/admin/login');
+  return next();
 }
 var singularize = function(string) {
   switch(string) {
@@ -30,6 +32,8 @@ var singularize = function(string) {
       return 'organization'
     case 'organizationTypes':
       return 'organizationType'
+    case 'terms':
+      return 'term'
     default:
       return string
   }
@@ -50,6 +54,8 @@ var pluralize = function(string) {
       return 'organizations'
     case 'organizationType':
       return 'organizationTypes'
+    case 'term':
+      return 'terms'
     default:
       return string
   }
@@ -71,11 +77,13 @@ var getModel = function(type) {
       return Organization
     case 'organizationType':
       return OrganizationType
+    case 'term':
+      return Term
   }
 }
-var preSave = function(item) {
-  if(!item.slug)
-    item.slug = slug(item.name, {lower: true})
+var preSave = function(object) {
+  if(!object.slug)
+    object.slug = slug(object.name, {lower: true})
 }
 
 exports.isLoggedIn = isLoggedIn;

@@ -2,7 +2,7 @@ var tools = require('../tools')
 var mongoose = require('mongoose')
 var Mixed = mongoose.Schema.Types.Mixed
 
-var tacticSchema = mongoose.Schema({
+var termSchema = mongoose.Schema({
 	name: {
 		type: String,
 		required: true
@@ -14,9 +14,9 @@ var tacticSchema = mongoose.Schema({
 	timestamps: true
 });
 
-tacticSchema.pre('save', function(next) {
+termSchema.pre('save', function(next) {
 	tools.preSave(this)
 	next()
 })
 
-module.exports = mongoose.model('Tactic', tacticSchema)
+module.exports = mongoose.model('Term', termSchema)

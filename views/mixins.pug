@@ -3,6 +3,10 @@ mixin input(name, label, type, value)
 	.input
 		input(name=name, type=type, value=(value ? value : ''))
 
+mixin textarea(name, label, value, rows)
+	label(name=name) #{label}
+	textarea(name=name, rows=rows)= value
+
 mixin checkboxes(type, name, multiple, addable)
 	label
 		| #{name}

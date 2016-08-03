@@ -27,25 +27,29 @@ form {
 		}
 	}
 	input, textarea, select {
+		width: calc(100% - 0.8em);
+		padding: 0.1em 0.4em;
+		background: transparent;
+		border: solid black;
+		border-width: 0 0 0.1em 0;
 		font-size: 1em;
 		line-height: 1.3em;
+		outline: none;
 		&:-webkit-autofill {
 			background: none;
 		}
 	}
 	input {
 		-webkit-appearance: none;
-		border: solid black;
-		border-width: 0 0 0.1em 0;
 		outline: none;
 		font-family: 'Bookman Old Style';
-		background: transparent;
-		&[type="text"],
-		&[type="email"], 
-		&[type="password"] {
-			width: calc(100% - 0.8em);
-			padding: 0.1em 0.4em;
+		&[type="submit"] {
+			width: auto;
+			display: inline-block;
 		}
+	}
+	textarea {
+		border: 0.1em solid black;
 	}
 	.group {
 		padding: 0 0 20px 0;
@@ -74,28 +78,6 @@ form {
 		display: none;
 		&.show {
 			display: block;
-		}
-	}
-	.button {
-		display: inline-table;
-		margin-right: 10px;
-		padding: 8px 8px 6px 8px;
-		background: $mediumGrey;
-		font: {
-			family: Helvetica;
-			size: 0.65em;
-			weight: bold;
-		}
-		line-height: 1.1em;
-		text-transform: uppercase;
-		color: black;
-		text-decoration: none;
-		border: 0;
-		&:hover {
-			cursor: pointer;
-		}
-		&:last-child {
-			margin-right: 0;
 		}
 	}
 }
@@ -128,8 +110,10 @@ form {
 	}
 	.checkbox {
 		padding: 5px 0;
+		@include transition(color 250ms #{$fadeEase});
 		&:hover {
 			cursor: pointer;
+			color: $darkerGrey;
 		}
 		label {
 			font-family: inherit;
@@ -175,7 +159,11 @@ form {
 		.display {
 			display: inline-block;
 			padding: 0 1.1em 0 0.6em;
-			cursor: pointer;
+			@include transition(color 200ms $fadeEase);
+			&:hover {
+				color: $darkerGrey;
+				cursor: pointer;
+			}
 		}
 		.options {
 			max-height: calc(1.8em * 10);
@@ -183,9 +171,12 @@ form {
 			left: 0;
 			top: calc(100% + 0.15em);
 			padding: 0 0.5em;
-			display: none;
+			opacity: 0;
+			pointer-events: none;
+			@include transition(color 200ms $fadeEase);
 			&.open {
-				display: block;
+				opacity: 1;
+				pointer-events: all;
 			}
 		}
 	}
@@ -194,6 +185,7 @@ form {
 .selects.date {
 	.select {
 		position: relative;
+		@include noSelect;
 		&.month {
 			.display {
 				width: 6em;

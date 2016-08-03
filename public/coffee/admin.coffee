@@ -1,7 +1,7 @@
 $ ->	
 	getData()
 	fillDateSelects()
-	$('.add').click(openQuickCreate)		
+	$('.add').click(openQuickCreate)
 	$('.select .display').click(openSelect)
 	$('.select .options').on('change', 'input', updateSelectValue)
 	$('.updateTemplate input').change(updateTemplate)
@@ -83,8 +83,23 @@ openQuickCreate = (event) ->
 	$module = $button.parents('.module')
 	$addForm = $('.quickCreate[data-model="'+type+'"]')
 	$addForm.addClass('open')
-	$submit = $addForm.find('input[type="submit"]')
-	$submit.click(quickCreate)
+	$saveBtn = $addForm.find('input.save')
+	$cancelBtn = $addForm.find('input.cancel')
+	$saveBtn.click(quickCreate)
+	$cancelBtn.click(closeQuickCreate)
+	return
+
+closeQuickCreate = (event) ->
+	$button = $(event.target)
+	type = $button.data('model')
+	$addForm = $('.quickCreate[data-model="'+type+'"]')
+	$addForm.addClass('close')
+	clearQuickCreate($quickCreate)
+	return
+
+clearQuickCreate = (addForm) ->
+	$(addForm).find('input:not([type="submit"]), textarea').each (i, input) ->
+		$(input).val('')
 	return
 
 quickCreate = (event) ->
@@ -104,7 +119,10 @@ quickCreate = (event) ->
 			return console.log(jqXHR, status, error)
 		success: (object, status, jqXHR) ->
 			$quickCreate.removeClass('open')
-			return addCheckbox(checkboxes, JSON.parse(object))
+			clearQuickCreate($quickCreate)
+			object = JSON.parse(object)
+			addCheckbox(checkboxes, object, object.slug)
+			return
 	return
 
 updateTemplate = (event) ->

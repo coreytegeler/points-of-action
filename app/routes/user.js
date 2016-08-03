@@ -14,7 +14,8 @@ module.exports = function(app, passport) {
         s: 'user',
         p: 'users'
       },
-      action: 'create'
+      action: 'create',
+      user: req.user
     })
 	});
 
@@ -76,7 +77,7 @@ module.exports = function(app, passport) {
 	      	console.log('Error on login', err)
 	      	return next(err)
 	      }
-	      return res.redirect('/admin/profile')
+	      return res.redirect('/admin')
 	    });
 	  })(req, res, next)
 	});
@@ -92,6 +93,8 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/admin/profile', tools.isLoggedIn, function(req, res) {
+		if(!req.user)
+			return res.redirect('/admin/login')
 		var type = 'user'
 		var user = req.user
     res.render('admin/edit.pug', {
@@ -101,7 +104,8 @@ module.exports = function(app, passport) {
       type: {
         s: tools.singularize(type),
         p: tools.pluralize(type)
-      }
+      },
+      user: req.user
     })
   })
 

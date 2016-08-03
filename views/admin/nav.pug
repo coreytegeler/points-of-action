@@ -11,12 +11,16 @@ nav
 						a(href='/admin/organizations/') Organizations
 					li
 						a(href='/admin/people/') People
+					li
+						a(href='/admin/tactics/') Tactics
+					li
+						a(href='/admin/terms/') Terms
 				ul.account
 					li
-						a(href='/admin/signup/') Signup
-					li
 						a(href='/admin/profile/') Profile
-					li
-						a(href='/admin/login/') Login
-					li
-						a(href='/admin/logout/') Logout
+					if(user)
+						li
+							a(href='/admin/logout/') Logout
+					else
+						li
+							a(href='/admin/login/') Login

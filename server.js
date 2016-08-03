@@ -6,14 +6,15 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
-
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
+var database = require('./config/database.js');
 
 var db = {
-	development: 'localhost:27017/civil-rights',
+	// development: 'localhost:27017/civil-rights',
+	development: database.uri,
 	test: 'localhost:27017/civil-rights',
 	production: process.env.MONGODB_URI
 };
