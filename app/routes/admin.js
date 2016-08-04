@@ -217,7 +217,7 @@ module.exports = function(app) {
       } else {
         console.log('Updated:')
         console.log(object)
-        res.redirect('/admin/'+type+'/edit/'+object.slug)
+        res.redirect('/admin/'+type+'/edit/'+data.slug)
       }
     })
   })

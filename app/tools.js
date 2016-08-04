@@ -3,8 +3,8 @@ var moment = require('moment')
 
 var User = require('./models/user')
 var Action = require('./models/action')
-var Tactic = require('./models/tactic')
 var Term = require('./models/term')
+var Tactic = require('./models/tactic')
 var Location = require('./models/location')
 var Organization = require('./models/organization')
 var OrganizationType = require('./models/organizationType')
@@ -22,8 +22,6 @@ var singularize = function(string) {
       return 'user'
     case 'actions':
       return 'action'
-    case 'tactics':
-      return 'tactic'
     case 'people':
       return 'person'
     case 'locations':
@@ -34,6 +32,8 @@ var singularize = function(string) {
       return 'organizationType'
     case 'terms':
       return 'term'
+    case 'tactics':
+      return 'tactic'
     default:
       return string
   }
@@ -44,8 +44,6 @@ var pluralize = function(string) {
       return 'users'
     case 'action':
       return 'actions'
-    case 'tactic':
-      return 'tactics'
     case 'person':
       return 'people'
     case 'location':
@@ -56,6 +54,8 @@ var pluralize = function(string) {
       return 'organizationTypes'
     case 'term':
       return 'terms'
+    case 'tactic':
+      return 'tactics'
     default:
       return string
   }
@@ -67,8 +67,6 @@ var getModel = function(type) {
       return User
     case 'action':
       return Action
-    case 'tactic':
-      return Tactic
     case 'person':
       return Person
     case 'location':
@@ -79,6 +77,8 @@ var getModel = function(type) {
       return OrganizationType
     case 'term':
       return Term
+    case 'tactic':
+      return Tactic
   }
 }
 var preSave = function(object) {
