@@ -50,14 +50,14 @@ module.exports = function(app) {
         })
       },
       function(callback) {
-        Tactic.find({}, function(err, data) {
+        Term.find({}, function(err, data) {
           if(err)
             callback(err)
           callback(null, data)
         })
       },
       function(callback) {
-        Term.find({}, function(err, data) {
+        Tactic.find({}, function(err, data) {
           if(err)
             callback(err)
           callback(null, data)
@@ -73,7 +73,8 @@ module.exports = function(app) {
           locations: results[2],
           organizations: results[3],
           people: results[4],
-          terms: results[5].concat(results[6])
+          terms: results[5],
+          tactics: results[6]
         },
         user: req.user
       })
