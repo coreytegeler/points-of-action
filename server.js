@@ -13,16 +13,16 @@ var session      = require('express-session');
 var database = require('./config/database.js');
 
 var db = {
-	// development: 'localhost:27017/civil-rights',
+	development: 'localhost:27017/civil-rights',
 	development: database.uri,
 	test: 'localhost:27017/civil-rights',
 	production: process.env.MONGODB_URI
 };
 
 app.set('dbUrl', db[app.settings.env]);
-mongoose.connect(app.get('dbUrl')); // connect to our database
+mongoose.connect(app.get('dbUrl'));
 
-require('./config/passport')(passport); // pass passport for configuration
+require('./config/passport')(passport);
 
 var sass = require('node-sass');
 var coffeeScript = require('coffee-script');
