@@ -8,10 +8,10 @@ var actionSchema = mongoose.Schema({
 		required: true
 	},
 	slug: String,
-	tactics: Mixed,
-	locations: Mixed,
+	tactic: Mixed,
+	location: Mixed,
 	people: Mixed,
-	organizations: Mixed,
+	organization: Mixed,
 	essay: String,
 	type: String
 }, { 
@@ -19,7 +19,7 @@ var actionSchema = mongoose.Schema({
 });
 
 actionSchema.pre('save', function(next) {
-	tools.preSave(this)
+	tools.preSave(this, 'action')
 	next()
 })
 

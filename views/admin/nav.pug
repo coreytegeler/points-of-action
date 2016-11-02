@@ -1,26 +1,25 @@
 nav
-	.innerPadding
+	.padding
 		.inner
-			.horz
-				ul.edit
+			ul.edit
+				li
+					a(href='/admin/actions/') Actions
+				li
+					a(href='/admin/locations/') Locations
+				li
+					a(href='/admin/organizations/') Organizations
+				li
+					a(href='/admin/people/') People
+				li
+					a(href='/admin/tactics/') Tactics
+				li
+					a(href='/admin/terms/') Terms
+			ul.account
+				li
+					a(href='/admin/profile/') Profile
+				if(user)
 					li
-						a(href='/admin/actions/') Actions
+						a(href='/admin/logout/') Logout
+				else
 					li
-						a(href='/admin/locations/') Locations
-					li
-						a(href='/admin/organizations/') Organizations
-					li
-						a(href='/admin/people/') People
-					li
-						a(href='/admin/tactics/') Tactics
-					li
-						a(href='/admin/terms/') Terms
-				ul.account
-					li
-						a(href='/admin/profile/') Profile
-					if(user)
-						li
-							a(href='/admin/logout/') Logout
-					else
-						li
-							a(href='/admin/login/') Login
+						a(href='/admin/login/') Login

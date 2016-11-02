@@ -1,0 +1,163 @@
+@import 'fonts';
+@import 'vars';
+
+html {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	background: $light;
+	color: $darker;
+	body {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		font-family: $sans;
+		@include mediumText;
+		text-rendering: geometricPrecision;
+	}
+}
+main {
+	width: 100%;
+	height: calc(100% - 2em);
+	padding-top: 2em;
+}
+section {
+	padding: 1em;
+}
+h1, h2, h3, h4 {
+	font-family: $sans;
+	margin: 0;
+}
+h1 {
+	@include largeText;
+	font-weight: 900;
+}
+h2 {
+	font-size: 1.5em;
+	font-weight: 700;
+}
+a, a:visited {
+	color: $darker;
+	text-decoration: none;
+	transition: color 200ms $fadeEase;
+	&:hover {
+		color: $dark;
+	}
+}
+ul {
+	padding: 0;
+	margin: 0;
+	li {
+		list-style: none;
+	}
+	&.list {
+		padding: 20px 0;
+		li {
+			position: relative;
+			padding: 5px 30px 5px 0;
+			border-bottom: solid black 0.1em;
+			.button {
+				position: absolute;
+				right: 0px;
+				bottom: 0px;
+			}
+		}
+	}
+}
+
+pre {
+	white-space: normal;
+}
+
+.padding {
+	width: calc(100% - 2em);
+	height: 100%;
+	min-height: calc(100% - 2em);
+	margin: auto;
+	padding: 0 1em;
+	display: table;
+}
+
+nav {
+	width: 100%;
+	height: calc(2em - 1px);
+	display: table;
+	background: $light;
+	border-bottom: 1px solid $dark;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 600;
+	clear: both;
+	font-family: $sans;
+	font-weight: 900;
+	text-transform: uppercase;
+	.padding {
+		width: 100%;
+		display: table-cell;
+    vertical-align: middle;
+		ul {
+			display: table-cell;
+			margin: auto;
+			float: left;
+			list-style: none;
+			vertical-align: middle;
+			li {
+				padding: 5px 15px 5px 0;
+				display: inline-block;
+				list-style: none;
+				a, a:visited {
+					color: $darker;
+					&:hover {
+						color: $dark;
+					}
+				}
+			}
+		}
+	}
+}
+.buttons {
+	.button {
+		margin-right: 10px;
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+}
+.button {
+	display: inline-table;
+	color: $darker !important;
+	font: {
+		family: Helvetica;
+		size: 1em;
+		weight: bold;
+	}
+	line-height: 1.1em;
+	text-transform: uppercase;
+	color: black;
+	text-decoration: none;
+	border: 0;
+	text-rendering: geometricPrecision;
+	@include transition(color 200ms $fadeEase);
+	&:hover {
+		color: $medium !important;
+		cursor: pointer;
+	}
+	&.add {
+		font-size: 1em;
+	}
+}
+
+.horz {
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+}
+.vert {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.noScroll {
+	overflow: hidden;
+}

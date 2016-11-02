@@ -15,7 +15,7 @@ var tacticSchema = mongoose.Schema({
 });
 
 tacticSchema.pre('save', function(next) {
-	tools.preSave(this)
+	tools.preSave(this, 'tactic')
 	next()
 })
 

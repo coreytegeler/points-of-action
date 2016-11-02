@@ -2,12 +2,15 @@ include ../mixins
 doctype html
 html(lang='en')
 	head
-		script(type='text/javascript' src='/js/jquery-3.0.0.min.js')
+		script(type='text/javascript' src='/js/jquery.js')
+		script(type='text/javascript' src='/js/jquery-ui.js')
+		script(type='text/javascript' src='/js/imagesloaded.js')
+		script(type='text/javascript' src='/js/transit.js')
 		script(type='text/javascript' src='/js/moment.js')
 		script(type='text/javascript' src='/js/admin.js')
-		link(rel='stylesheet' href='/css/style.css')
+		link(rel='stylesheet' href='/css/admin.css')
 	body
 		include ./nav
 		main
-			.innerPadding
+			.padding
 				block body

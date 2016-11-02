@@ -1,5 +1,6 @@
 var tools = require('../tools')
 var mongoose = require('mongoose')
+var Mixed = mongoose.Schema.Types.Mixed
 
 var locationSchema = mongoose.Schema({
 	name: {
@@ -9,31 +10,21 @@ var locationSchema = mongoose.Schema({
 	slug: String,
 	parentLocation: String,
 	locationType: String,
-	point: {
-		address: String,
-		latitude: String,
-		longitude: String
-	},
-	startPoint: {
-		latitude: String,
-		longitude: String
-	},
-	endPoint: {
-		latitude: String,
-		longitude: String
-	},
+	pointAddress: String,
+	point: Mixed,
 	subtype: {
 		type: String,
-		value: mongoose.Schema.Types.Mixed
+		value: Mixed
 	},
 	description: String,
-	type: String
+	type: String,
+	action: Mixed
 }, { 
 	timestamps: true
 })
 
 locationSchema.pre('save', function(next) {
-	tools.preSave(this)
+	tools.preSave(this, 'location')
   next()
 })
 

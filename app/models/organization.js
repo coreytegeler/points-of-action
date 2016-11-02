@@ -16,7 +16,7 @@ var organizationSchema = mongoose.Schema({
 })
 
 organizationSchema.pre('save', function(next) {
-	tools.preSave(this)
+	tools.preSave(this, 'organization')
   next()
 })
 

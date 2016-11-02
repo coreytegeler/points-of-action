@@ -1,6 +1,3 @@
-var slug = require('slug')
-var moment = require('moment')
-
 var User = require('./models/user')
 var Action = require('./models/action')
 var Term = require('./models/term')
@@ -10,10 +7,21 @@ var Organization = require('./models/organization')
 var OrganizationType = require('./models/organizationType')
 var Person = require('./models/person')
 
+var slugify = require('slug')
+var moment = require('moment')
+var NodeGeocoder = require('node-geocoder');
+var geocoder = NodeGeocoder({
+  provider: 'google',
+  httpAdapter: 'https',
+  apiKey: 'AIzaSyAiUymfFCUE4O6kqMu-sXx9IKkMkvjYubo',
+  formatter: null
+})
+
 var isLoggedIn = function(req, res, next) {
-  // if(req.isAuthenticated())
-  //   return next();
-  // res.redirect('/admin/login');
+  return next();
+  if(req.isAuthenticated())
+    return next();
+  res.redirect('/admin/login');
   return next();
 }
 var singularize = function(string) {
@@ -60,6 +68,7 @@ var pluralize = function(string) {
       return string
   }
 }
+
 var getModel = function(type) {
   var type = singularize(type)
   switch(type) {
@@ -81,13 +90,58 @@ var getModel = function(type) {
       return Tactic
   }
 }
+
+var newModel = function(type, data) {
+  switch(type) {
+    case 'user':
+      var object = new User(data)
+      break
+    case 'action':
+      var object = new Action(data)
+      break
+    case 'person':
+      var object = new Person(data)
+      break
+    case 'location':
+      var object = new Location(data)
+      break
+    case 'organization':
+      var object = new Organization(data)
+      break
+    case 'organizationType':
+      var object = new OrganizationType(data)
+      break
+    case 'term':
+      var object = new Term(data)
+      break
+    case 'tactic':
+      var object = new Tactic(data)
+      break
+  }
+  object.type = type
+  return object
+}
+
 var preSave = function(object) {
-  if(!object.slug)
-    object.slug = slug(object.name, {lower: true})
+  if(object.type === 'person') {
+    var name = object.firstName + ' ' + object.lastName
+    object.name = name
+  } 
+  // else if(object.location) {
+  //   model = getModel(object.type)
+  //   model.findOneAndUpdate({_id: id}, {$set: {action: action}}, {new: true, runValidators: true}, function(err, object) {
+  // }
+  if(object.name) {
+    var slug = slugify(object.name, {lower: true})
+    object.slug = slug
+  }
+  return object
 }
 
 exports.isLoggedIn = isLoggedIn;
 exports.singularize = singularize;
 exports.pluralize = pluralize;
 exports.getModel = getModel;
+exports.newModel = newModel;
 exports.preSave = preSave;
+exports.geocoder = geocoder;

@@ -4,12 +4,12 @@
 	label Date
 	+dateselect(months, days)
 .row
-	+checkboxes('tactics', 'Tactics', true, true)
+	+checkboxes('tactic', 'Tactic(s)', true, true, (object ? object.tactic : null))
 .row
-	+checkboxes('locations', 'Locations', true, true)
+	+checkboxes('location', 'Location(s)', true, true, (object ? object.location : null))
 .row
-	+checkboxes('organizations', 'Organizations', true, true)
+	+checkboxes('organization', 'Organization(s)', true, true, (object ? object.organization : null))
 .row
-	+checkboxes('people', 'People', true, true)
+	+checkboxes('people', 'People', true, true, (object ? object.people : null))
 .row
 	+textarea('essay', 'Essay', (object ? object.essay : ''), 15)

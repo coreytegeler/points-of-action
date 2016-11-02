@@ -1,27 +1,27 @@
-mixin input(name, label, type, value)
+mixin input(name, label, type, value, disabled)
 	label(name=name) #{label}
 	.input
-		input(name=name, type=type, value=(value ? value : ''))
+		input(name=name, type=type, value=(value ? value : ''), disabled=disabled)
 
 mixin textarea(name, label, value, rows)
 	label(name=name) #{label}
 	textarea(name=name, rows=rows)= value
 
-mixin checkboxes(type, name, multiple, addable)
+mixin checkboxes(type, name, multiple, addable, checked)
 	label
 		| #{name}
 		if(addable)
 			.add.button(data-model=type) +
-	.module.checkboxes.populate(data-type='checkboxes', data-model=type, class=type, data-checked=(object ? object[type] : ''))
+	.module.checkboxes.populate(data-type='checkboxes', data-model=type, class=type, data-checked=checked)
 		+checkbox(type, null, null, multiple)
 
-mixin checkbox(type, name, value, multiple)
-	.item.checkbox(class=(value ? value : 'sample'))
-		input(type=(multiple ? 'checkbox' : 'radio'), value=(value ? value : ''), name=type, id=(value ? value+'Checkbox' : ''))
-		label(class=type, data-pop='name', for=(value ? value+'Checkbox' : '')) #{(name ? name : '')}
+mixin checkbox(type, name, value, multiple, checked)
+	.item.checkbox(class=(value ? value : 'null'), data-value=value)
+		input(type=(multiple ? 'checkbox' : 'radio'), value=(value ? value : ''), name=type, id=(value ? value+'-checkbox' : ''), checked=checked)
+		label(class=type, data-pop='name', for=(value ? value+'-checkbox' : '')) #{(name ? name : '')}
 
 mixin dateselect(months, days)
-	.input
+	.input.short
 		.item.date.selects
 			.select.month(data-datetype='month')
 				.display(data-datetype='month') Month
@@ -36,10 +36,9 @@ mixin dateselect(months, days)
 				.module.options.years(data-type='checkboxes', data-datetype='year')
 					+checkbox('year', null, null, false)
 
-mixin coords(parent, title)
+mixin coords(type, title)
 	.row.two
-		label(name='point') #{title}
 		.cell
-			+input(parent+'.latitude', 'Latitude', 'text', (object ? object[parent].latitude : ''))
+			+input(null, 'Latitude', 'text', (object && object[type] ? object[type].latitude : ''), true)
 		.cell
-			+input(parent+'.longitude', 'Longitude', 'text', (object ? object[parent].longitude : ''))
+			+input(null, 'Longitude', 'text', (object && object[type] ? object[type].longitude : ''), true)

@@ -2,11 +2,17 @@ include ./mixins
 doctype html
 html(lang='en')
 	head
-		script(type='text/javascript' src='/js/jquery-3.0.0.min.js')
-		script(type='text/javascript' src='/js/admin.js')
-		link(rel='stylesheet' href='/css/style.css')
+		script(type='text/javascript' src='https://unpkg.com/leaflet@1.0.1/dist/leaflet.js')
+		script(type='text/javascript' src='/js/jquery.js')
+		script(type='text/javascript' src='/js/jquery-ui.js')
+		script(type='text/javascript' src='/js/imagesloaded.js')
+		script(type='text/javascript' src='/js/transit.js')
+		script(type='text/javascript' src='/js/raphael.js')
+		script(type='text/javascript' src='/js/rlayer.js')
+		script(type='text/javascript' src='/js/public.js')
+		link(rel='stylesheet' href='https://unpkg.com/leaflet@1.0.1/dist/leaflet.css')
+		link(rel='stylesheet' href='/css/public.css')
 	body
 		include ./nav
 		main
-			.innerPadding
-				block body
+			block body

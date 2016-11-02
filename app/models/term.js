@@ -15,7 +15,7 @@ var termSchema = mongoose.Schema({
 });
 
 termSchema.pre('save', function(next) {
-	tools.preSave(this)
+	tools.preSave(this, 'term')
 	next()
 })
 

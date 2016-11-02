@@ -16,7 +16,7 @@ getData = () ->
 			model='location'
 		type = $(container).data('type')
 		$.ajax
-			url: '/api/'+model+'/all/json'
+			url: '/api/?type='+model+'&format=json'
 			error:  (jqXHR, status, error) ->
 				console.log jqXHR, status, error
 				return
@@ -33,18 +33,18 @@ getData = () ->
 	return
 
 addCheckbox = (container, object, checked) ->
-	$clone = $(container).find('.sample').clone().removeClass('sample')
+	$clone = $(container).find('.null').clone()
+	$clone.removeClass('null')
 	$label = $clone.find('label')
 	$input = $clone.find('input')
-	$input.val(object.slug).attr('id', object.slug+'Checkbox')
-	$label.text(object.name).attr('for', object.slug+'Checkbox')
+	$input.val(object._id).attr('id', object.slug+'-checkbox')
+	$label.text(object.name).attr('for', object.slug+'-checkbox')
 	if checked
-		if object.slug == checked || checked.indexOf(object.slug) > -1
+		if object._id == checked || checked.indexOf(object._id) > -1
 			$input.attr('checked', true)
 	$clone
-		.attr('data-slug', object.slug)
+		.attr('data-value', object._id)
 		.appendTo(container)
-	return $clone
 
 openSelect = (event) ->
 	$select = $(event.target).parents('.select')
@@ -67,33 +67,33 @@ updateSelectValue = (event) ->
 createQuickAddForms = (container) ->
 	type = $(container).data('model')
 	$.ajax
-		url: '/admin/'+type+'/quick-create'
+		url: '/admin/'+type+'/quicky'
 		error: (jqXHR, status, error) ->
 			console.log jqXHR, status, error
 			return
 		success: (html, status, jqXHR) ->
 			if(!html)
 				return
-			return $('.quickCreates').append(html)
+			return $('.quickies').append(html)
 	return
 
 openQuickCreate = (event) ->
 	$button = $(event.target)
 	type = $button.data('model')
 	$module = $button.parents('.module')
-	$addForm = $('.quickCreate[data-model="'+type+'"]')
+	$addForm = $('.quicky[data-model="'+type+'"]')
 	$addForm.addClass('open')
 	$saveBtn = $addForm.find('input.save')
 	$cancelBtn = $addForm.find('input.cancel')
-	$saveBtn.click(quickCreate)
-	$cancelBtn.click(closeQuickCreate)
+	$saveBtn.one 'click', quicky
+	$cancelBtn.one 'click', closeQuickCreate
 	$('body').addClass('noScroll')
 	return
 
 closeQuickCreate = (event) ->
 	event.preventDefault()
 	$button = $(event.target)
-	$addForm = $addForm = $button.parents('.quickCreate')
+	$addForm = $addForm = $button.parents('.quicky')
 	$addForm.removeClass('open')
 	$('body').removeClass('noScroll')
 	clearQuickCreate($addForm)
@@ -110,13 +110,13 @@ clearQuickCreate = (addForm) ->
 		$(group).removeClass('show')
 	return
 
-quickCreate = (event) ->
+quicky = (event) ->
 	event.preventDefault()
-	$quickCreate = $(event.target).parents('.quickCreate')
-	$form = $quickCreate.find('form')
+	$quicky = $(event.target).parents('.quicky')
+	$form = $quicky.find('form')
 	postUrl = $form.attr('action')
 	data = $form.serializeArray()
-	type = $quickCreate.data('model')
+	type = $quicky.data('model')
 	checkboxes = $('.checkboxes.'+type);
 	$.ajax
 		type: 'POST',
@@ -127,8 +127,8 @@ quickCreate = (event) ->
 			return console.log(jqXHR, status, error)
 		success: (object, status, jqXHR) ->
 			$('body').removeClass('noScroll')
-			$quickCreate.removeClass('open')
-			clearQuickCreate($quickCreate)
+			$quicky.removeClass('open')
+			clearQuickCreate($quicky)
 			object = JSON.parse(object)
 			addCheckbox(checkboxes, object, object.slug)
 			return
@@ -138,14 +138,13 @@ updateTemplate = (event) ->
 	$input = $(event.target)
 	$form = $input.parents('form')
 	value = $input.val()
-	console.log($input)
 	$form.find('[data-template]').removeClass('show')
 	$form.find('[data-template="'+value+'"]').addClass('show')
 
 fillDateSelects = () ->
 	$('.date.selects').each (i, selects) ->
 		$monthOptions = $(selects).find('.options.months')
-		$sample = $monthOptions.find('.checkbox.sample')
+		$null = $monthOptions.find('.checkbox.null')
 		for i in [0...12]
 			month = moment.months(i)
 			days = moment(i+1, 'M').daysInMonth()
@@ -154,13 +153,13 @@ fillDateSelects = () ->
 			$checkbox.attr('data-days', days)
 
 		$dayOptions = $(selects).find('.options.days')
-		$sample = $dayOptions.find('.checkbox.sample')
+		$null = $dayOptions.find('.checkbox.null')
 		for i in [1..31]
 			object = {name: i, slug: i}
 			$checkbox = addCheckbox($dayOptions, object, [])
 
 		$yearOptions = $(selects).find('.options.years')
-		$sample = $yearOptions.find('.checkbox.sample')
+		$null = $yearOptions.find('.checkbox.null')
 		for i in [moment().year()...1899]
 			object = {name: i, slug: i}
 			$checkbox = addCheckbox($yearOptions, object, [])

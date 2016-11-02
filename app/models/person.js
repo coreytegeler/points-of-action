@@ -24,7 +24,7 @@ var personSchema = mongoose.Schema({
 
 personSchema.pre('save', function(next) {
 	this.name = this.firstName + ' ' + this.lastName
-  tools.preSave(this)
+  tools.preSave(this, 'person')
   next()
 })
 

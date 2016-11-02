@@ -118,6 +118,25 @@ module.exports = function(app) {
     var type = req.params.type
     var errors
     data.type = tools.singularize(type)
+    if(data.type === 'location') {
+       tools.geocoder.geocode(data.pointAddress, function(err, location) {
+          if(err) {
+            console.log('Failed geocoding:')
+            console.log(err)
+          } else {
+            console.log('Geocoded address:')
+            console.log(location)
+            var locationType = data.locationType
+            data[locationType] = location[0]
+          }
+          createObj(type, data, res, false)
+        })
+    } else {
+      createObj(type, data, res, false)
+    }
+  })
+
+  var createObj = function(type, data, res, quicky) {
     switch(type) {
       case 'user':
         var object = new User(data)
@@ -132,34 +151,44 @@ module.exports = function(app) {
         var object = new Location(data)
         break
       case 'organization':
-        var object = new Organization(data) 
+        var object = new Organization(data)
         break
-      case 'tactic':
-        var object = new Tactic(data) 
+      case 'organizationType':
+        var object = new OrganizationType(data)
         break
       case 'term':
-        var object = new Term(data) 
+        var object = new Term(data)
         break
+      case 'tactic':
+        var object = new Tactic(data)
+        break
+      default:
+        return false
     }
+    object.type = type
     object.save(function(err) {
       if(err) {
-        console.log('Failed:')
-        console.log(err)
+        console.log('Failed: '+err)
         res.render('admin/edit.pug', {
           errors: err,
           type: {
-            s: tools.singularize(type),
-            p: tools.pluralize(type)
+            s: tools.singularize(object.type),
+            p: tools.pluralize(object.type)
           },
-          action: 'create'
+          action: 'create',
+          object: data
         })
+        return false
       } else {
-        console.log('Updated:')
-        console.log(object)
-        res.redirect('/admin/'+type)
+        console.log('Created: '+object)
+        if(quicky) {
+          res.json(object)
+        } else {
+          res.redirect('/admin/'+type+'/edit/'+object.slug)
+        }
       }
     })
-  })
+  }
 
   app.get('/admin/:type/edit/:slug', tools.isLoggedIn, function(req, res) {
     var type = req.params.type
@@ -171,6 +200,8 @@ module.exports = function(app) {
       model.findOne({slug: slug}, function(err, object) {
         if (err)
           throw err
+        if(!object)
+          return res.redirect('/admin/'+type+'/new')
         var data = {
           object: object,
           id: object._id,
@@ -191,36 +222,50 @@ module.exports = function(app) {
     var type = req.params.type
     var id = req.params.id
     var errors
+    data = tools.preSave(data, type)
+    if(type === 'location') {
+      tools.geocoder.geocode(data.pointAddress, function(err, location) {
+        if(err) {
+          console.log('Failed geocoding:')
+          console.log(err)
+        } else {
+          console.log('Geocoded address:')
+          console.log(location)
+          var locationType = data.locationType
+          data[locationType] = location[0]
+        }
+        updateObj(type, id, data, res)
+      })
+    } else {
+      updateObj(type, id, data, res)
+    }
+
+  })
+
+  var updateObj = function(type, id, data, res) {
     var model = tools.getModel(type)
-    if(type==='person') {
-      var name = data.firstName + ' ' + data.lastName
-      data.name = name
-    }
-    if(data.name) {
-      var slug = slugify(data.name, {lower: true})
-      data.slug = slug
-    }
-    data.type = tools.singularize(type)
-    model.findOneAndUpdate({_id: id}, data, {runValidators: true}, function(err, object) {
+    model.findOneAndUpdate({_id: id}, data, {new: true, runValidators: true, safe: true, upsert: true}, function(err, object) {
       if(err) {
-        console.log('Failed:')
-        console.log(err)
-        res.render('admin/edit.pug', {
-          errors: err,
-          type: {
-            s: tools.singularize(type),
-            p: tools.pluralize(type)
-          },
-          object: object,
-          action: 'update'
-        })
+        console.log('Failed:'+err)
+        if(res) {
+          res.render('admin/edit.pug', {
+            errors: err,
+            type: {
+              s: tools.singularize(type),
+              p: tools.pluralize(type)
+            },
+            object: data,
+            action: 'update'
+          })
+        }
       } else {
-        console.log('Updated:')
-        console.log(object)
-        res.redirect('/admin/'+type+'/edit/'+data.slug)
+        console.log('Updated:'+object)
+        if(res) {
+          res.redirect('/admin/'+type+'/edit/'+object.slug)
+        }
       }
     })
-  })
+  }
 
   app.get('/admin/:type/remove/:id', tools.isLoggedIn, function(req, res) {
     var type = tools.singularize(req.params.type)
@@ -233,50 +278,35 @@ module.exports = function(app) {
     })
   })
 
-  app.get('/admin/:type/quick-create', tools.isLoggedIn, function(req, res) {
+  app.get('/admin/:type/quicky', tools.isLoggedIn, function(req, res) {
     var type = req.params.type
     if(!type)
       return
-    res.render('admin/forms/partials/quickCreate.pug', {
+    res.render('admin/forms/partials/quicky.pug', {
       type: type
     })
   })
 
-  app.post('/admin/:type/quick-create', tools.isLoggedIn, function(req, res) {
+  app.post('/admin/:type/quicky', tools.isLoggedIn, function(req, res) {
     var data = req.body
-    var type = tools.singularize(req.params.type)
-    var errors
-    data.type = tools.singularize(type)
-    switch(type) {
-      case 'user':
-        var object = new User(data)
-        break
-      case 'action':
-        var object = new Action(data)
-        break
-      case 'tactic':
-        var object = new Tactic(data) 
-        break 
-      case 'person':
-        var object = new Person(data)
-        break
-      case 'location':
-        var object = new Location(data)
-        break
-      case 'organization':
-        var object = new Organization(data) 
-        break  
-      case 'organizationType':
-        var object = new OrganizationType(data) 
-        break
+    var type = req.params.type
+    data.type = type
+    if(type == 'location') {
+      tools.geocoder.geocode(data.pointAddress, function(err, location) {
+        if(err) {
+          console.log('Failed geocoding:')
+          console.log(err)
+        } else {
+          console.log('Geocoded address:')
+          console.log(location)
+          var locationType = data.locationType
+          data[locationType] = location[0]
+        }
+        createObj(type, data, res, true)
+      })
+    } else {
+      createObj(type, data, res, true)
     }
-    object.save(function(err) {
-      if(err) {
-        return res.json(err)
-      }
-      console.log(object)
-      return res.json(object)
-    })
   })
 
 }
