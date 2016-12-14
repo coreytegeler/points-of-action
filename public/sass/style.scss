@@ -7,6 +7,7 @@ html {
 	margin: 0;
 	background: $light;
 	color: $darker;
+	overflow: hidden;
 	body {
 		width: 100%;
 		height: 100%;
@@ -15,11 +16,6 @@ html {
 		@include mediumText;
 		text-rendering: geometricPrecision;
 	}
-}
-main {
-	width: 100%;
-	height: calc(100% - 2em);
-	padding-top: 2em;
 }
 section {
 	padding: 1em;
@@ -69,7 +65,33 @@ pre {
 	white-space: normal;
 }
 
-.padding {
+label.checkbox {
+	&::before {
+		width: .8em;
+		height: .8em;
+		margin: 0 5px 0 0;
+		background-image: none;
+		background-color: $light;
+		border: 1px solid $dark;
+		border-radius: 4px;
+		-webkit-appearance: none;
+		display: table;
+		float: left;
+		transition: background-color 200ms $fadeEase;
+		outline: none !important;
+		content: '';
+	}
+	input[type="checkbox"] {
+		display: none;
+		&::checked + label {
+			color: red;
+			&:before {
+				background: red;
+			}
+		}
+	}
+}
+.inner {
 	width: calc(100% - 2em);
 	height: 100%;
 	min-height: calc(100% - 2em);
@@ -77,34 +99,30 @@ pre {
 	padding: 0 1em;
 	display: table;
 }
-
 nav {
-	width: 100%;
-	height: calc(2em - 1px);
-	display: table;
-	background: $light;
-	border-bottom: 1px solid $dark;
-	position: fixed;
-	top: 0;
-	left: 0;
+	width: calc(25% - 1em);
+	min-width: 10em;
+	max-height: calc(40% - .5em);
+	display: block;
+	top: .5em;
+	left: .5em;
 	z-index: 600;
 	clear: both;
 	font-family: $sans;
 	font-weight: 900;
-	text-transform: uppercase;
-	.padding {
-		width: 100%;
-		display: table-cell;
-    vertical-align: middle;
+	.inner {
+		.title {
+			width: calc(100% - 1em);
+			padding: .5em;
+			text-transform: uppercase;
+			text-align: center; 
+		}
 		ul {
-			display: table-cell;
 			margin: auto;
-			float: left;
 			list-style: none;
-			vertical-align: middle;
 			li {
-				padding: 5px 15px 5px 0;
-				display: inline-block;
+				padding: 0 0 5px 0;
+				display: block;
 				list-style: none;
 				a, a:visited {
 					color: $darker;
@@ -114,6 +132,21 @@ nav {
 				}
 			}
 		}
+	}
+}
+.float {
+	background: rgba($white, .97);
+	border: 1px solid rgba($darker, 0.2);
+	box-shadow: 1px 0px 0px 0px rgba($darker, 0.1);
+	border-radius: 6px;
+	position: fixed;
+	display: block;
+	overflow-x: hidden;
+	overflow-y: auto;
+	.top {
+		width: calc(100% - 1em);
+		padding: .5em;
+		background: $yellow;
 	}
 }
 .buttons {
@@ -138,7 +171,7 @@ nav {
 	text-decoration: none;
 	border: 0;
 	text-rendering: geometricPrecision;
-	@include transition(color 200ms $fadeEase);
+	transition: color 200ms $fadeEase;
 	&:hover {
 		color: $medium !important;
 		cursor: pointer;
@@ -149,6 +182,7 @@ nav {
 }
 
 .horz {
+	height: 100%;
 	display: table;
 	margin-left: auto;
 	margin-right: auto;

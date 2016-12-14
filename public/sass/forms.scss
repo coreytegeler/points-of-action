@@ -45,6 +45,9 @@ form {
 		&:-webkit-autofill {
 			background: none;
 		}
+		&.hidden {
+			display: none;
+		}
 	}
 	input {
 		-webkit-appearance: none;
@@ -128,7 +131,7 @@ form {
 	}
 	.checkbox {
 		padding: 5px 0;
-		@include transition(color 250ms #{$fadeEase});
+		transition: color 250ms $fadeEase;
 		&:hover {
 			cursor: pointer;
 			color: $darker;
@@ -199,7 +202,7 @@ form {
 		.display {
 			display: inline-block;
 			padding: 0 1.1em 0 0.6em;
-			@include transition(color 200ms $fadeEase);
+			transition: color 200ms $fadeEase;
 			&:hover {
 				color: $darker;
 				cursor: pointer;
@@ -213,7 +216,7 @@ form {
 			padding: 0 0.5em;
 			opacity: 0;
 			pointer-events: none;
-			@include transition(color 200ms $fadeEase);
+			transition: color 200ms $fadeEase;
 			&.open {
 				opacity: 1;
 				pointer-events: all;
@@ -250,28 +253,77 @@ form {
 	}
 }
 
+.images {
+	display: block;
+	clear: both;
+	.image {
+		height: 100px;
+		display: inline-block;
+		margin: 0 .5em .5em 0;
+		padding: 0;
+		cursor: pointer;
+		vertical-align: bottom;
+		&.sample {
+			display: none !important;
+		}
+		img {
+			height: 100%;
+		}
+	}
+}
+
 .quicky {
 	width: 100%;
 	height: 100%;
+	padding: 0;
 	position: fixed;
 	left: 0;
 	top: 0;
 	overflow: auto;
 	display: none;
-	background: rgba(255,255,255, 0.95);
+	background: rgba(255,255,255,0.95);
+	&.saving .inner {
+		pointer-events: none;
+		opacity: 0.5;
+	}
+	.inner {
+		width: 100%;
+		max-width: 600px;
+		height: calc(100% - 2em - 20px);
+    margin: auto;
+    padding-top: 2em !important;
+    display: table;
+    form {
+    	width: 100%;
+    	padding: 0;
+    	margin: 0;
+    	label {
+    		text-transform: capitalize;
+    	}
+    	img {
+    		max-width: 100%;
+    		display: table;
+    		margin: auto;
+    	}
+    }
+	}
 	&.open {
 		display: block;
 	}
-	.checkboxes, .options {
-		background: rgba(255,255,255, 0.5);
-	}
-	.horz {
-		height: 100%;
-	}
-	.vert {
-		padding: 100px 0;
-	}
-	form {
-		padding: 0;
+	.close {
+		width: 1.5em;
+    height: 1.5em;
+    padding: 1px;
+		position: absolute;
+		right: 1em;
+		top: 1em;
+		z-index: 100;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-image: url(/img/x.svg);
+		&:hover {
+			cursor: pointer;
+		}
 	}
 }

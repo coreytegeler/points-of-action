@@ -16,6 +16,7 @@ var locationSchema = mongoose.Schema({
 		type: String,
 		value: Mixed
 	},
+	images: Mixed,
 	description: String,
 	type: String,
 	action: Mixed

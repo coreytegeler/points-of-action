@@ -5,10 +5,13 @@
   "repository": "",
   "main": "server.js",
   "scripts": {
-    "sass-p": "sass --watch public/sass/public.scss:public/css/public.css",
-    "sass-a": "sass --watch public/sass/admin.scss:public/css/admin.css",
+    "sass-public": "sass --watch public/sass/public.scss:public/css/_public.css",
+    "sass-admin": "sass --watch public/sass/admin.scss:public/css/_admin.css",
+    "prefix-public" : "postcss -w -u autoprefixer public/css/_public.css -o public/css/public.css",
+    "prefix-admin" : "postcss -w -u autoprefixer public/css/_admin.css -o public/css/admin.css",
+    "sass" : "npm run sass-public & npm run sass-admin & npm run prefix-public & npm run prefix-admin",
     "coffee": "coffee -o public/js/ -cw public/coffee/",
-    "go": "npm run sass-p & npm run sass-a & npm run coffee & nodemon server.js",
+    "go": "npm run sass & npm run coffee & nodemon server.js",
     "ssh": "ssh -i new-haven-building-archive.pem ubuntu@ec2-54-208-156-193.compute-1.amazonaws.com"
   },
   "author": "Corey Tegeler",
@@ -36,9 +39,13 @@
     "slug": "0.9.1",
     "coffee-script": "1.10.0",
     "node-sass": "3.8.0",
+    "autoprefixer": "^6.5.1",
+    "cssnano": "^3.8.0",
     
     "moment": "2.14.1",
     "node-geocoder": "3.15.0",
-    "gm": "1.23.0"
+    "gm": "1.23.0",
+    "multer": "1.2.0"
+  
   }
 }

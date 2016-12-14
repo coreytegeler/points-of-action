@@ -7,8 +7,15 @@ var Location = require('../models/location')
 var Organization = require('../models/organization')
 var OrganizationType = require('../models/organizationType')
 var Person = require('../models/person')
+var Image = require('../models/image')
+
 var tools = require('../tools')
 var slugify = require('slug')
+
+var path  = require('path')
+var fs  = require('fs')
+var multer  = require('multer')
+var gm  = require('gm')
 
 module.exports = function(app) {
 
@@ -282,31 +289,154 @@ module.exports = function(app) {
     var type = req.params.type
     if(!type)
       return
-    res.render('admin/forms/partials/quicky.pug', {
-      type: type
-    })
+    var form = 'quicky'
+    if(type == 'image')
+      form = 'image'
+    if(form)
+      res.render('admin/'+form+'.pug', {
+        type: type
+      })
+    else
+      return
   })
 
   app.post('/admin/:type/quicky', tools.isLoggedIn, function(req, res) {
     var data = req.body
-    var type = req.params.type
-    data.type = type
-    if(type == 'location') {
-      tools.geocoder.geocode(data.pointAddress, function(err, location) {
-        if(err) {
-          console.log('Failed geocoding:')
-          console.log(err)
-        } else {
-          console.log('Geocoded address:')
-          console.log(location)
-          var locationType = data.locationType
-          data[locationType] = location[0]
-        }
-        createObj(type, data, res, true)
+    var type = tools.singularize(req.params.type)
+    var errors    
+    switch(type) {
+      case 'neighborhood':
+        var object = new Neighborhood(data)
+        break
+      case 'tour':
+        var object = new Tour(data)
+        break
+      case 'style':
+        var object = new Style(data)
+        break
+      case 'use':
+        var object = new Use(data)
+        break
+      case 'material':
+        var object = new Material(data)
+        break
+      case 'structure':
+        var object = new Structure(data)
+        break
+      case 'roofType':
+        var object = new RoofType(data)
+        break
+      case 'roofMaterial':
+        var object = new RoofMaterial(data)
+        break
+      case 'threat':
+        var object = new Threat(data)
+        break
+      case 'environment':
+        var object = new Environment(data)
+        break
+      default:
+        return
+    }
+    object.save(function(err) {
+      if(!err) {
+        console.log('Created:')
+        console.log(object)
+        return res.json(object)
+      } else {
+        console.log('Failed:')
+        console.log(err)
+        return res.json(err)
+      }
+    })
+  })
+
+  app.get('/admin/image/quicky/:id', tools.isLoggedIn, function(req, res) {
+    var id = req.params.id
+    Image.findById(id, function(err, image) {
+      console.log(image)
+      res.render('admin/image.pug', {
+        object: image,
+        type: 'image'
       })
-    } else {
-      createObj(type, data, res, true)
+    })
+  })
+
+  var storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, appRoot+'/public/uploads/')
+    },
+    filename: function (req, file, callback) {
+      var datetimestamp = Date.now();
+      callback(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1])
     }
   })
 
+  var upload = multer({
+    storage: storage
+  }).single('image')
+
+  app.post('/admin/image/quicky/', tools.isLoggedIn, function(req, res) {
+    var data = req.body
+
+    upload(req, res, function(err) {
+      if(err) {
+        console.log('Failed image upload:', err)
+        return res.json(err)
+      }
+
+      var imageData = req.file
+      var filename = imageData.filename
+      data.filename = filename
+      data.original = '/uploads/'+filename
+      data.medium = '/uploads/medium/'+filename
+      data.small = '/uploads/small/'+filename
+
+      gm(appRoot+'/public'+data.original).resize(800, 800).quality(100).autoOrient().write(appRoot+'/public/'+data.medium, function (err) {
+        if(err) {
+          console.log('Failed medium resize:', err)
+          return res.json(err)
+        } else {
+          console.log('Medium resize:', this)
+        }
+      })
+
+      gm(appRoot+'/public'+data.original).resize(250, 250).quality(100).autoOrient().write(appRoot+'/public/'+data.small, function (err) {
+        if(err) {
+          console.log('Failed small resize:', err)
+          return res.json(err)
+        } else {
+          console.log('Small resize:', this)
+        }
+      })
+
+      var image = new Image(data)
+      image.save(function(err) {
+        if(!err) {
+          console.log('Added:')
+          console.log(image)
+          return res.json(image)
+        } else {
+          console.log(err)
+          return res.json(err)
+        }
+      })
+    })
+  })
+
+  app.post('/admin/image/quicky/:id', tools.isLoggedIn, function(req, res) {
+    var data = req.body
+    var id = req.params.id
+    Image.findOneAndUpdate({_id: id}, data, {new: true, runValidators: true}, function(err, image) {
+       if(!err) {
+        console.log('Updated:')
+        console.log(image)
+        res.json(image)
+      } else {
+        console.log('Failed:')
+        console.log(err)
+        return res.json(err)
+      }
+    })
+  })
 }

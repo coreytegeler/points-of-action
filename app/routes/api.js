@@ -44,6 +44,7 @@ module.exports = function(app) {
     } else if(filter) {
       query[filter] = id
     }
+    // getLocation(type, slug, id, filter)
     model.find(query, function(err, object) {
       if(err)
         callback(err)
@@ -56,4 +57,81 @@ module.exports = function(app) {
       })
     })
   })
+
+  // var getLocation = function() {
+  //   Async.waterfall([
+  //     function(callback) {
+  //     Async.parallel([
+  //       function(callback) {
+  //         Location.findOne(id, function(err, data) {
+  //           if(err)
+  //             callback(err)
+  //           callback(null, data)
+  //         })
+  //       },
+  //       function(callback) {
+  //         Action.find({b: {
+  //           $in: arr.map(mongoose.Types.ObjectId }
+  //         }, function(err, data) {
+  //           if(err)
+  //             callback(err)
+  //           callback(null, data)
+  //         })
+  //       },
+  //       function(callback) {
+  //         Organization.find({}, function(err, data) {
+  //           if(err)
+  //             callback(err)
+  //           callback(null, data)
+  //         })
+  //       },
+  //       function(callback) {
+  //         Person.find({}, function(err, data) {
+  //           if(err)
+  //             callback(err)
+  //           callback(null, data)
+  //         })
+  //       },
+  //       function(callback) {
+  //         Term.find({}, function(err, data) {
+  //           if(err)
+  //             callback(err)
+  //           callback(null, data)
+  //         })
+  //       },
+  //       function(callback) {
+  //         Tactic.find({}, function(err, data) {
+  //           if(err)
+  //             callback(err)
+  //           callback(null, data)
+  //         })
+  //       }
+  //     ],
+  //   ],
+  //   function(err, results) { 
+  //     if(err)
+  //       callback(err)
+  //     res.render('content/'+type+'.pug', {
+  //       type: {
+  //         s: tools.singularize(type),
+  //         p: tools.pluralize(type)
+  //       },
+  //       location: object[0]
+  //     })
+
+  //     res.render('admin/index.pug', {
+  //       errors: err,
+  //       models: {
+  //         users: results[0],
+  //         actions: results[1],
+  //         locations: results[2],
+  //         organizations: results[3],
+  //         people: results[4],
+  //         terms: results[5],
+  //         tactics: results[6]
+  //       },
+  //       user: req.user
+  //     })
+  //   })
+  // }
 }

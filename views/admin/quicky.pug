@@ -1,0 +1,11 @@
+include ./mixins
+.quicky(data-model=type)
+	.horz
+		.vert
+			form(method='post' action='/admin/'+type+'/quicky/')
+				.row
+					+input('name', 'Name', 'text')
+				.buttons
+					input.button.cancel(type='submit' value='Cancel')
+					if(!noForm)
+						input.button.save(type='submit', value=action)

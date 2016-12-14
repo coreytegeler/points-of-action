@@ -13,6 +13,7 @@ var actionSchema = mongoose.Schema({
 	people: Mixed,
 	organization: Mixed,
 	essay: String,
+	images: Mixed,
 	type: String
 }, { 
 	timestamps: true

@@ -3,5 +3,8 @@
 .image.lead
 	img(src='/images/wf.jpeg')
 .text.inner
-	ul
-		li= object[object.locationType].formattedAddress
+	h2.address= object[object.locationType].formattedAddress
+	.actions.group
+		h3= 'Actions'
+		ul.list
+			li

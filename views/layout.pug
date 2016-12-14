@@ -1,18 +1,35 @@
-include ./mixins
+//- include ./mixins
 doctype html
 html(lang='en')
 	head
-		script(type='text/javascript' src='https://unpkg.com/leaflet@1.0.1/dist/leaflet.js')
+		meta(name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no')
+		//- js libraries
 		script(type='text/javascript' src='/js/jquery.js')
 		script(type='text/javascript' src='/js/jquery-ui.js')
 		script(type='text/javascript' src='/js/imagesloaded.js')
 		script(type='text/javascript' src='/js/transit.js')
 		script(type='text/javascript' src='/js/raphael.js')
-		script(type='text/javascript' src='/js/rlayer.js')
+		//- script(type='text/javascript' src='/js/leaflet.js')
+		script(type='text/javascript' src='/js/mapbox-gl.js')
+		//- script(type='text/javascript' src='/js/rlayer.js')
+		//- geojson
+		script(type='text/javascript' src='/geojson/boroughs.js')
+		//- custom js
 		script(type='text/javascript' src='/js/public.js')
-		link(rel='stylesheet' href='https://unpkg.com/leaflet@1.0.1/dist/leaflet.css')
+		//- styles
+		//- link(rel='stylesheet' href='/css/leaflet.css')
+		link(rel='stylesheet' href='/css/mapbox-gl.css')
 		link(rel='stylesheet' href='/css/public.css')
 	body
 		include ./nav
 		main
 			block body
+		#palette
+			.white
+			.light
+			.medium
+			.dark
+			.darker
+			.black
+			.yellow
+

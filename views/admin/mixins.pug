@@ -42,3 +42,24 @@ mixin coords(type, title)
 			+input(null, 'Latitude', 'text', (object && object[type] ? object[type].latitude : ''), true)
 		.cell
 			+input(null, 'Longitude', 'text', (object && object[type] ? object[type].longitude : ''), true)
+
+mixin images(name, images, required)
+	label(name=name)
+		| Images 
+		span.instruct Drag to reorder
+	.images.sortable
+		input.hidden(name='images', type='text', value=images)
+		li.image.edit.sample(data-type='image')
+			img
+		ul
+			if(images)
+				each image, index in images
+					li.image.edit(data-id=image.id, data-type='image')
+						img(src='http://ec2-54-208-156-193.compute-1.amazonaws.com'+image.small)
+	.buttons
+		.add.button(data-model='image') Add Image
+		.clear.button Clear All
+
+mixin image(name)
+	label(name=name) Image
+	input(name=name, class=name, type='file', required=true)

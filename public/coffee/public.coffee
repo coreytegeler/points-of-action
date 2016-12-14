@@ -1,25 +1,33 @@
 $ ->
+	$window = $(window)
+	$body = $('body')
 	$map = $('#map')
-	$aside = $('aside')
-	pointsLayer = []
-	
+	$right = $('#right.float')
+	$left = $('#left.float')
+	markersLayer = []
+	nycLatLng = {lat: 40.723952837100995, lng: -73.98725835012341}
+	zoomIn = 17
+	zoomOut = 12
+	minZoom = 9.8
+	maxZoom = 20
+
 	initMap = () ->
-		window.map = L.map 'map',
-			center: [40.7128, -74.0059],
-			zoom: 10
+		mapboxgl.accessToken = 'pk.eyJ1IjoiY29yZXl0ZWdlbGVyIiwiYSI6ImNpd25xZHV3cjAxMngyenFpeGd0aGxwanYifQ.quHbdI63gF-JNfVLCe_fTw'
+		window.map = new mapboxgl.Map
+		  container: 'map',
+		  style: 'mapbox://styles/coreytegeler/ciwnq6zxd004o2ppllvfpmx5x',
+		  center: nycLatLng,
+		  speed: 2,
+		  zoom: zoomOut,
+		  minZoom: minZoom,
+		  maxZoom: maxZoom,
+		  pitch: 15
+		map.on 'load', () ->
+			getMarkers()
+			$map.addClass('show')
+			map.on 'moveend', listLocations
 
-		tiles = L.tileLayer 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-			subdomains: 'abcd',
-			minZoom: 10,
-			zoom: {
-				animate: false
-			}
-		.addTo(map)
-
-		getPoints()
-
-	getPoints = () ->
+	getMarkers = () ->
 		url = '/api/?type=location'
 		$.ajax
 			url: url,
@@ -27,106 +35,197 @@ $ ->
 				console.error jqXHR, status, error
 				return
 			success: (response, status, jqXHR) ->
-				plotPoints(response)
+				plotMarkers(response)
 		return
 
-	plotPoints = (locs) ->
-		points = []
+	plotMarkers = (locs) ->
+		window.markers = []
+		bounds = new mapboxgl.LngLatBounds()
 		$.each locs, (i, loc) ->
-			point = plotPoint(loc)
-			getLocActions(loc, point)
-			point.addTo(map)
-			points.push(point._latlng)
-		if(points.length)
-			map.fitBounds points,
-				padding: [50,50],
-				animate: false
-		$map.addClass('show')
+			marker = plotMarker(loc)
+			# getLocActions(loc, marker)
+			bounds.extend(marker.geometry.coordinates)
+			markers.push(marker)
+		map.addSource 'markers',
+	    'type': 'geojson',
+	    'data':
+        'type': 'FeatureCollection',
+        'features': markers
 
-	pointRadius = 8
-	plotPoint = (loc) ->
+    map.addLayer({
+    	'id': 'markers',
+    	'type': 'symbol',
+			'source': 'markers',
+			'type': 'circle',
+			'paint':
+				'circle-radius': 6,
+				'circle-color': colors.yellow
+		})
+		map.fitBounds bounds,
+			padding: 50,
+			animate: false
+		map.on 'mousemove', mapMouseMove
+		map.on 'click', mapClick
+
+	plotMarker = (loc) ->
 		if(!loc.point)
 			return
-		lat = loc.point.latitude
 		lng = loc.point.longitude
-		point = new L.circleMarker([lat,lng], {
-			type: loc.type,
-			id: loc._id,
-			slug: loc.slug,
-			fillOpacity: 1,
-			weight: 2,
-			radius: pointRadius,
-			className: 'point'
-		})
-		.on 'mouseover', () ->
-			$(this._path).addClass('hover')
-			if(!$(this._path).is('.selected'))
-				this.openPopup()
-		.on 'mouseout', () ->
-			$(this._path).removeClass('hover')
-			this.closePopup()
-		.on 'click', (e) ->
-			clickPoint(this)
-		return point
+		lat = loc.point.latitude
+		marker = {
+	    'type': 'Feature',
+	    'geometry': {
+        'type': 'Point',
+        'coordinates': [lng, lat]
+	    },
+	    'properties': {
+	    	'id': loc._id,
+	    	'title': loc.name,
+	    	'name': loc.name,
+	    	'slug': loc.slug,
+	    	'address': loc.pointAddress
+	    }
+		}
+		return marker
+		
 
-	getLocActions = (loc, point) ->
-		url = '/api/?type=action&filter=location&id='+loc._id
-		$.ajax
-			url: url,
-			error:  (jqXHR, status, error) ->
-				console.error jqXHR, status, error
-				return
-			success: (actions, status, jqXHR) ->
-				point.setStyle
-					radius: pointRadius + (actions.length*2)
-				listLocActions(loc, point, actions)
+	# getLocActions = (loc, marker) ->
+	# 	url = '/api/?type=action&filter=location&id='+loc._id
+	# 	$.ajax
+	# 		url: url,
+	# 		error:  (jqXHR, status, error) ->
+	# 			console.error jqXHR, status, error
+	# 			return
+	# 		success: (actions, status, jqXHR) ->
+	# 			marker.setStyle
+	# 				radius: markerRadius + (actions.length*2)
+	# 			listLocActions(loc, marker, actions)
 
-	listLocActions = (loc, point, actions) ->
-		$popup = $('.popup.sample').clone()
-		$popup
-			.removeClass('sample')
-			.addClass('location')
-			.attr('data-id', loc._id)
-		$.each actions, (i, action) ->
-			$action = $('<li><a href="/?type=action&id='+action._id+'">'+action.name+'</a></li>')
-			$popup.find('ul').append($action)
-		# popup = point.bindPopup($popup.html())
+	# listLocActions = (loc, marker, actions) ->
+	# 	$popup = $('.popup.sample').clone()
+	# 	$popup
+	# 		.removeClass('sample')
+	# 		.addClass('location')
+	# 		.attr('data-id', loc._id)
+	# 	$.each actions, (i, action) ->
+	# 		$action = $('<li><a href="/?type=action&id='+action._id+'">'+action.name+'</a></li>')
+	# 		$popup.find('ul').append($action)
+	# 	# popup = marker.bindPopup($popup.html())
 
-	clickPoint = (point) ->
-		getLocContent(point)
-		point.closePopup()
-		$('.point.selected').removeClass('selected')
-		$(point._path).addClass('selected')
+	# clickMarker = (marker) ->
+	# 	getLocContent(marker)
+	# 	marker.closePopup()
+	# 	$('.marker.selected').removeClass('selected')
+	# 	$(marker._path).addClass('selected')
 
-	getLocContent = (point) ->
-		type = point.options.type
-		id = point.options.id
-		url = '/content/?type='+type+'&id='+id
+	getLocContent = (marker) ->
+		id = marker.properties.id
+		url = '/content/?type=location&id='+id
 		$.ajax
 			url: url,
 			error:  (jqXHR, status, error) ->
 				console.error jqXHR, status, error
 				return
 			success: (response, status, jqXHR) ->
-				openLoc(type, id, response, point)
+				openLocPanel(id, response, marker)
 		return
 
-	openLoc = (type, id, response, point) ->
-		$aside.find('.content').html(response)
-		$aside.find('.lead').imagesLoaded () ->
-			$(this.elements[0]).addClass('loaded')
-			imagesLoaded($aside).on 'progress', (inst, image) ->
-				$(image.img).addClass('loaded')
-			latlng = point._latlng
-			if(!$map.is('.thin'))
-				latlngPixel = map.latLngToLayerPoint(latlng)
-				latlng = map.layerPointToLatLng([latlngPixel.x + $map.innerWidth()/2.666, latlngPixel.y])
-			setTimeout () ->
-				map.invalidateSize()
-				map.panTo(latlng)
-				$aside.addClass('show')
-				$map.addClass('thin')
-				map.invalidateSize()
-			, 100
+	openLocPanel = (id, response, marker) ->
+		latlng = marker.geometry.coordinates
+		if(!$body.is('.opened'))
+			position = marker._vectorTileFeature
+			x = position._x
+			y = position._y
+		# $right.find('.content').html(response)
+		# $right.find('.lead').imagesLoaded () ->
+		# 	$(this.elements[0]).addClass('loaded')
+		# 	imagesLoaded($right).on 'progress', (inst, image) ->
+		# 		$(image.img).addClass('loaded')
+				# flyTo = map.containerPointToLayerPoint([x + $map.innerWidth()/2.666, y])
+			# else
+		flyTo = marker.geometry.coordinates
+		$map.attr 'data-zoom', map.getZoom()
+		map.flyTo
+			center: flyTo,
+			curve: 1,
+			zoom: zoomIn,
+      bearing: 0,
+      speed: .1
+    $body.addClass('opened')
+    $right.transition
+    	x: 0,
+    	scale: 1,
+    400, 'easeInOutBack'
+    $left.transition
+    	x: -$window.innerWidth(),
+    	scale: .9,
+    400, 'easeInOutBack'
 
+	closeLocPanel = (e) ->
+		$body.removeClass('opened')
+		$right.transition
+    	x: $window.innerWidth(),
+    	scale: .9
+    $left.transition
+    	x: 0,
+    	scale: 1
+		zoomTo = $map.attr 'data-zoom'
+		map.zoomTo zoomTo
+
+	getUniqueFeatures = (array, comparatorProperty) ->
+    existingFeatureKeys = {}
+    uniqueFeatures = array.filter (el) ->
+      if (existingFeatureKeys[el.properties[comparatorProperty]])
+        return false
+      else
+        existingFeatureKeys[el.properties[comparatorProperty]] = true
+        return true
+
+    return uniqueFeatures
+
+	listLocations = (e) ->
+		if $left.find('#inView')[0].checked
+			markers = map.queryRenderedFeatures
+				layers: ['markers']
+		else
+			markers = window.markers
+		# getUniqueFeatures(markers, "iata_code")
+		$leftList = $left.find('ul')
+		$leftList.html ''
+		markers.forEach (marker) ->
+			id = marker.properties.id
+			slug = marker.properties.slug
+			name = marker.properties.name
+			address = marker.properties.address
+			$leftList.append '<li data-id="' + id + '"><div class="name">' + name + '</div><div class="address">' + address + '</div></li>'
+
+	mapMouseMove = (e) ->
+		features = map.queryRenderedFeatures e.point,
+			layers: ['markers']
+		if features.length
+			map.getCanvas().style.cursor = 'pointer'
+		else
+			map.getCanvas().style.cursor = ''
+
+	mapClick = (e) ->
+		features = map.queryRenderedFeatures e.point,
+			layers: ['markers']
+		if features.length
+			marker = features[0]
+			getLocContent(marker)
+
+
+	$body.on 'click touchend', '#right .close', closeLocPanel
+	$body.on 'change', '#points input', listLocations
+
+
+	colors = {
+		white: $('#palette .white').css('color')
+		light: $('#palette .light').css('color')
+		medium: $('#palette .medium').css('color')
+		dark: $('#palette .dark').css('color')
+		darker: $('#palette .darker').css('color')
+		black: $('#palette .black').css('color')
+		yellow: $('#palette .yellow').css('color')
+	}
 	initMap()

@@ -45,7 +45,6 @@ h2 {
 a, a:visited {
   color: #333167;
   text-decoration: none;
-  -webkit-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
   transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
   a:hover, a:visited:hover {
     color: #64648c; }
@@ -80,7 +79,6 @@ label.checkbox::before {
   -webkit-appearance: none;
   display: table;
   float: left;
-  -webkit-transition: background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
   transition: background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
   outline: none !important;
   content: ''; }
@@ -158,7 +156,6 @@ nav {
   text-decoration: none;
   border: 0;
   text-rendering: geometricPrecision;
-  -webkit-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
   transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
   .button:hover {
     color: #e6e4e0 !important;
@@ -275,7 +272,6 @@ form {
     opacity: 1; }
   .checkboxes .checkbox, .options .checkbox {
     padding: 5px 0;
-    -webkit-transition: color 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
     transition: color 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
     .checkboxes .checkbox:hover, .options .checkbox:hover {
       cursor: pointer;
@@ -300,15 +296,9 @@ form {
 .checkboxes {
   min-height: 135px;
   padding: 0.25em 0.5em;
-  -webkit-column-count: auto;
-     -moz-column-count: auto;
-          column-count: auto;
-  -webkit-column-width: 50%;
-     -moz-column-width: 50%;
-          column-width: 50%;
-  -webkit-column-gap: 1em;
-     -moz-column-gap: 1em;
-          column-gap: 1em; }
+  column-count: auto;
+  column-width: 50%;
+  column-gap: 1em; }
   .checkboxes .checkbox label::before {
     width: 0.55em;
     height: 0.55em;
@@ -321,17 +311,13 @@ form {
   .checkboxes.toggle {
     min-height: auto;
     border: none;
-    -webkit-columns: none;
-       -moz-columns: none;
-            columns: none;
+    columns: none;
     padding: 0; }
     .checkboxes.toggle .checkbox {
       float: left;
       margin-right: 0.5em; }
 
 .selects {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   border-bottom: solid black 0.1em;
   padding: 0.15em 0; }
@@ -341,7 +327,6 @@ form {
     .selects .select .display {
       display: inline-block;
       padding: 0 1.1em 0 0.6em;
-      -webkit-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
       transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
       .selects .select .display:hover {
         color: #333167;
@@ -354,7 +339,6 @@ form {
       padding: 0 0.5em;
       opacity: 0;
       pointer-events: none;
-      -webkit-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
       transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
       .selects .select .options.open {
         opacity: 1;
@@ -364,6 +348,7 @@ form {
   position: relative;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
+  -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
@@ -452,4 +437,4 @@ main .inner {
   width: calc(100% - 8em);
   max-width: 700px; }
 
-/*# sourceMappingURL=admin.css.map */
+/*# sourceMappingURL=_admin.css.map */

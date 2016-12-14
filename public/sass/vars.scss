@@ -1,13 +1,11 @@
 $white: #ffffff;
-$light: #f7f7fa;
-$medium: #cdd2d4;
+$light: #f6f4f6;
+// $medium: #cdd2d4;
+$medium: #e6e4e0;
 $dark: #64648c;
 $darker: #333167;
 $black: #000000;
-$yellow: #ffe706;
-
-$serif: 'Bookman Old Style', Times, serif;
-$sans: 'Gill Sans', Arial Black, Arial, sans-serif;
+$yellow: #feec35;
 
 @mixin xSmallText {
   font-size: 0.7em;
@@ -20,7 +18,7 @@ $sans: 'Gill Sans', Arial Black, Arial, sans-serif;
 }
 
 @mixin mediumText {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.2em;
 }
 
@@ -30,12 +28,8 @@ $sans: 'Gill Sans', Arial Black, Arial, sans-serif;
 }
 
 $fadeEase: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+$slideEase: cubic-bezier(0.0, 0.0, 0.2, 1);
 
-@mixin transition($transition) {
-  transition: $transition;
-  -moz-transition: $transition;
-  -webkit-transition: $transition;
-}
 
 @mixin noSelect {
   -webkit-touch-callout: none;

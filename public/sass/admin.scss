@@ -2,12 +2,12 @@
 @import 'forms';
 
 main {
-	.padding {
-		width: calc(100% - 8em);
+	.inner {
+		width: calc(75% - 8em);
 		max-width: 700px;
 		padding: 4em;
 		display: table;
-		margin: auto;
+		margin-left: 25%;
 	}
 }
 .quicky {
