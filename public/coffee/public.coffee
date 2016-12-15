@@ -24,8 +24,27 @@ $ ->
 		  pitch: 15
 		map.on 'load', () ->
 			getMarkers()
+			getFeature('boroughs')
 			$map.addClass('show')
 			map.on 'moveend', listLocations
+
+	getFeature = (featureName) ->
+		url = '/geojson/' + featureName + '.json'
+		$.getJSON
+			url: url,
+			error:  (jqXHR, status, error) ->
+				console.error jqXHR, status, error
+				return
+			success: (response, status, jqXHR) ->
+				map.addSource featureName,
+					'type': 'geojson',
+					'data': response
+				map.addLayer({
+		    	'id': featureName,
+		    	'type': 'line',
+					'source': featureName
+				})
+		return
 
 	getMarkers = () ->
 		url = '/api/?type=location'
@@ -54,7 +73,6 @@ $ ->
 
     map.addLayer({
     	'id': 'markers',
-    	'type': 'symbol',
 			'source': 'markers',
 			'type': 'circle',
 			'paint':
@@ -120,6 +138,7 @@ $ ->
 
 	getLocContent = (marker) ->
 		id = marker.properties.id
+		title = marker.properties.title
 		url = '/content/?type=location&id='+id
 		$.ajax
 			url: url,
@@ -127,21 +146,18 @@ $ ->
 				console.error jqXHR, status, error
 				return
 			success: (response, status, jqXHR) ->
-				openLocPanel(id, response, marker)
+				openLocPanel(id, title, response, marker)
 		return
 
-	openLocPanel = (id, response, marker) ->
+	openLocPanel = (id, title, response, marker) ->
 		latlng = marker.geometry.coordinates
+
+		$right.find('.title h1').html title
 		if(!$body.is('.opened'))
 			position = marker._vectorTileFeature
 			x = position._x
 			y = position._y
-		# $right.find('.content').html(response)
-		# $right.find('.lead').imagesLoaded () ->
-		# 	$(this.elements[0]).addClass('loaded')
-		# 	imagesLoaded($right).on 'progress', (inst, image) ->
-		# 		$(image.img).addClass('loaded')
-				# flyTo = map.containerPointToLayerPoint([x + $map.innerWidth()/2.666, y])
+			# 	flyTo = map.containerPointToLayerPoint([x + $map.innerWidth()/2.666, y])
 			# else
 		flyTo = marker.geometry.coordinates
 		$map.attr 'data-zoom', map.getZoom()
@@ -152,16 +168,25 @@ $ ->
       bearing: 0,
       speed: .1
     $body.addClass('opened')
-    $right.transition
-    	x: 0,
-    	scale: 1,
-    400, 'easeInOutBack'
-    $left.transition
-    	x: -$window.innerWidth(),
-    	scale: .9,
-    400, 'easeInOutBack'
 
-	closeLocPanel = (e) ->
+		$left.transition
+			x: -$window.innerWidth(),
+    	scale: .9
+    , 500, 'easeInOutQuint'
+
+		$right.transition
+    	x: 0,
+    	scale: 1
+		, 500, 'easeInOutQuint', () ->
+    	console.log '!'
+    	$right.find('.content').html(response)
+			$right.find('.lead').imagesLoaded () ->
+				$(this.elements[0]).addClass('loaded')
+				imagesLoaded($right).on 'progress', (inst, image) ->
+					$(image.img).addClass('loaded')
+
+
+	closeRight = (e) ->
 		$body.removeClass('opened')
 		$right.transition
     	x: $window.innerWidth(),
@@ -171,6 +196,10 @@ $ ->
     	scale: 1
 		zoomTo = $map.attr 'data-zoom'
 		map.zoomTo zoomTo
+
+	closeFloater = (e) ->
+		$floater = $(this).parents '.float'
+		$floater.toggleClass 'hide'
 
 	getUniqueFeatures = (array, comparatorProperty) ->
     existingFeatureKeys = {}
@@ -184,11 +213,11 @@ $ ->
     return uniqueFeatures
 
 	listLocations = (e) ->
-		if $left.find('#inView')[0].checked
-			markers = map.queryRenderedFeatures
-				layers: ['markers']
-		else
-			markers = window.markers
+		# if $left.find('#inView')[0].checked
+		# 	markers = map.queryRenderedFeatures
+		# 		layers: ['markers']
+		# else
+		markers = window.markers
 		# getUniqueFeatures(markers, "iata_code")
 		$leftList = $left.find('ul')
 		$leftList.html ''
@@ -215,7 +244,8 @@ $ ->
 			getLocContent(marker)
 
 
-	$body.on 'click touchend', '#right .close', closeLocPanel
+	$body.on 'click touchend', '#right .band', closeRight
+	$body.on 'click touchend', '.float .band.top', closeFloater
 	$body.on 'change', '#points input', listLocations
 
 

@@ -44,18 +44,17 @@ main {
 	transform: translate3d(100%, 0, 0) scale(.9);
 	transition: transform 350ms ease-in;
 	overflow-x: visible;
+	.title {
+		h1 {
+			text-transform: uppercase;
+			text-align: center;
+		}
+	}
 	.content {
 		height: calc(100% - 4em);
-    padding: 2em 0;
     overflow-y: scroll;
     .inner {
     	padding: 1em;
-		}
-    .title {
-			h1 {
-				text-transform: uppercase;
-				text-align: center;
-			}
 		}
 		.image {
 			opacity: 0;
@@ -92,34 +91,7 @@ main {
 			}
 		}
 	}
-	.close {
-		display: none;
-		width: auto;
-		height: 15px;
-		padding: .1em;
-		position: absolute;
-    left: calc(-15px*1.5);
-    top: 50%;
-    z-index: 600;
-    display: table;
-    background-color: $light;
-    @include xSmallText;
-    font-family: $sans;
-		font-weight: 900;
-		color: $darker;
-    text-align: center;
-    border: 1px solid $dark;
-    transform: rotateZ(-90deg);
-    &:hover {
-    	cursor: pointer;
-    }
-	}
 	.opened & {
-		// transform: translateX(0) scale(1);
-		.close {
-			opacity: 1;
-
-		}
 		.image {
 			&.loaded {
 				transition: all 200ms ease;
@@ -130,12 +102,16 @@ main {
 #left {
 	width: calc(25% - 1em);
 	min-width: 10em;
-	max-height: calc(60% - 1em);
 	left: .5em;
 	bottom: .5em;
 	z-index: 500;
-	transition: transform 550ms $slideEase;
-	overflow: auto;
+	transition: transform 550ms $slideEase, height 550ms $slideEase;
+	.scroll {
+		max-height: calc(60vh - 1em);
+		.inner {
+			
+		}
+	}
 	label.checkbox {
 		text-transform: uppercase;
 		padding: .25em;
@@ -168,7 +144,6 @@ main {
 			}
 			.name {
 				color: $darker;
-				@include smallText;
 			}
 			.address {
 				color: $dark;

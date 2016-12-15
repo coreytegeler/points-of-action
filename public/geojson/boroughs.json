@@ -1,4 +1,4 @@
-var boroughsGeoJSON = {
+{
 	"type": "FeatureCollection",
 	"crs": {
 		"type": "name",

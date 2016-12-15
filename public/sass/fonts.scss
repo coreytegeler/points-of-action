@@ -22,5 +22,31 @@
 	font-style: normal;
 }
 
+@font-face {
+	font-family: 'FranklinGothicStd-ExtraCond';
+	src: url('../fonts/FranklinGothicStd-ExtraCond.eot');
+	src: url('../fonts/FranklinGothicStd-ExtraCond.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/FranklinGothicStd-ExtraCond.woff2') format('woff2'),
+		url('../fonts/FranklinGothicStd-ExtraCond.woff') format('woff'),
+		url('../fonts/FranklinGothicStd-ExtraCond.ttf') format('truetype'),
+		url('../fonts/FranklinGothicStd-ExtraCond.svg#FranklinGothicStd-ExtraCond') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'FranklinCondITCStd';
+	src: url('../fonts/FranklinCondITCStd-Bold.eot');
+	src: url('../fonts/FranklinCondITCStd-Bold.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/FranklinCondITCStd-Bold.woff2') format('woff2'),
+		url('../fonts/FranklinCondITCStd-Bold.woff') format('woff'),
+		url('../fonts/FranklinCondITCStd-Bold.ttf') format('truetype'),
+		url('../fonts/FranklinCondITCStd-Bold.svg#FranklinCondITCStd-Bold') format('svg');
+	font-weight: bold;
+	font-style: normal;
+}
+
+
 $serif: 'Bookman Old Style', Times, serif;
-$sans: 'Lunchtype', Arial, sans-serif;
+$sans: 'FranklinCondITCStd', Arial, sans-serif;
+$sansCond: 'FranklinGothicStd-ExtraCond', Arial, sans-serif;
