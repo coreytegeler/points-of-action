@@ -2,7 +2,7 @@ extends layout.pug
 block body
 	if(errors)
 		pre #{errors}
-	form(method='post' action='/admin/'+type.s+'/'+action+'/'+(id ? id : ''))
+	form.main(method='post' action='/admin/'+type.s+'/'+action+'/'+(id ? id : ''))
 		case type.s
 			when 'user'
 				include ../admin/forms/user.pug

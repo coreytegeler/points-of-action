@@ -1,11 +1,27 @@
 include ./mixins
-.quicky(data-model=type)
+.quicky(data-type=type, class=action)
 	.horz
 		.vert
-			form(method='post' action='/admin/'+type+'/quicky/')
-				.row
-					+input('name', 'Name', 'text')
+			form(method='post' action='/admin/'+type+'/quicky/'+action)
+				case type
+					when 'user'
+						include ../admin/forms/user.pug
+					when 'action'
+						include ../admin/forms/action.pug
+					when 'location'
+						include ../admin/forms/location.pug
+					when 'person'
+						include ../admin/forms/person.pug
+					when 'organization'
+						include ../admin/forms/organization.pug
+					when 'tactic'
+						include ../admin/forms/tactic.pug
+					when 'term'
+						include ../admin/forms/term.pug
+					default
+						- var noForm = true
+						| No form for "#{type.s}"
 				.buttons
-					input.button.cancel(type='submit' value='Cancel')
+					.button.close= 'Cancel'
 					if(!noForm)
 						input.button.save(type='submit', value=action)

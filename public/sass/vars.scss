@@ -7,6 +7,13 @@ $darker: #333167;
 $black: #000000;
 $yellow: #feec35;
 
+@mixin smallBase {
+  font-size: 18px;
+}
+@mixin mediumBase {
+  font-size: 24px;
+}
+
 @mixin xSmallText {
   font-size: 0.7em;
   line-height: 1.1em;
@@ -14,11 +21,11 @@ $yellow: #feec35;
 
 @mixin smallText {
   font-size: 0.8em;
-  line-height: 1.2em;
+  line-height: 1.4em;
 }
 
 @mixin mediumText {
-  font-size: 24px;
+  font-size: 1em;
   line-height: 1.2em;
 }
 

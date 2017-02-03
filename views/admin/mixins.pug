@@ -3,38 +3,42 @@ mixin input(name, label, type, value, disabled)
 	.input
 		input(name=name, type=type, value=(value ? value : ''), disabled=disabled)
 
-mixin textarea(name, label, value, rows)
+mixin textarea(name, label, value)
 	label(name=name) #{label}
-	textarea(name=name, rows=rows)= value
+	.textarea(data-name=name)
+	input.pseudo(name=name+'JSON', value=value)
+	input.pseudo(name=name+'HTML', value=value)
 
-mixin checkboxes(type, name, multiple, addable, checked)
-	label
-		| #{name}
-		if(addable)
-			.add.button(data-model=type) +
-	.module.checkboxes.populate(data-type='checkboxes', data-model=type, class=type, data-checked=checked)
-		+checkbox(type, null, null, multiple)
+mixin checkboxes(type, name, multiple, addable, value)
+	if(name)
+		label #{name}
+	.module.checkboxes.populate(id=type+'-checkboxes', data-type='checkboxes', data-model=type, class=type, data-checked=value)
+		.list.options
+			+checkbox(type, 'N/A', null, multiple, (value == null ? true : false))
+	if(addable)
+		.add.button(data-type=type) New
 
 mixin checkbox(type, name, value, multiple, checked)
-	.item.checkbox(class=(value ? value : 'null'), data-value=value)
-		input(type=(multiple ? 'checkbox' : 'radio'), value=(value ? value : ''), name=type, id=(value ? value+'-checkbox' : ''), checked=checked)
-		label(class=type, data-pop='name', for=(value ? value+'-checkbox' : '')) #{(name ? name : '')}
+	.item.checkbox(class=(value || value != null ? value : 'empty'))
+		input(type=(multiple ? 'checkbox' : 'radio'), value=(value ? value : 'null'), name=type, id=(type+'-'+value), checked=checked)
+		label(class=type, style=style, data-pop='name', for=(type+'-'+value)) #{(name ? name : '')}
 
-mixin dateselect(months, days)
-	.input.short
-		.item.date.selects
-			.select.month(data-datetype='month')
-				.display(data-datetype='month') Month
-				.module.options.months(data-type='checkboxes', data-datetype='month')
-					+checkbox('month', null, null, false)
-			.select.day(data-datetype='day')
-				.display(data-datetype='day') Day
-				.module.options.days(data-type='checkboxes', data-datetype='day')
-					+checkbox('day', null, null, false)
-			.select.year(data-datetype='year')
-				.display(data-datetype='year') Year
-				.module.options.years(data-type='checkboxes', data-datetype='year')
-					+checkbox('year', null, null, false)
+mixin dateselect(month, day, year)
+	.dateselect
+		.input
+			.selects
+				.select.month(data-type='month', data-checked=day.month)
+					.display= (month ? month.name : 'Month')
+					//- input(name='month', type='text', value=(value ? value : ''))
+				.select.day(data-type='day', data-checked=day.day)
+					//- input(name='day', type='text', value=(value ? value : ''))
+					.display= (day ? day.name : 'Day')
+				.select.year(data-type='year', data-checked=day.year)
+					//- input(name='year', type='text', value=(value ? value : ''))
+					.display= (year ? year.name : 'Year')
+		+checkboxes('month', null, false, false, month)
+		+checkboxes('day', null, false, false, day)
+		+checkboxes('year', null, false, false, year)
 
 mixin coords(type, title)
 	.row.two
@@ -45,20 +49,19 @@ mixin coords(type, title)
 
 mixin images(name, images, required)
 	label(name=name)
-		| Images 
+		| Images
 		span.instruct Drag to reorder
 	.images.sortable
-		input.hidden(name='images', type='text', value=images)
+		input.pseudo(name='images', type='text', value=images)
 		li.image.edit.sample(data-type='image')
 			img
 		ul
 			if(images)
 				each image, index in images
 					li.image.edit(data-id=image.id, data-type='image')
-						img(src='http://ec2-54-208-156-193.compute-1.amazonaws.com'+image.small)
+						img(src=image.small)
 	.buttons
-		.add.button(data-model='image') Add Image
-		.clear.button Clear All
+		.add.button(data-type='image') Add Image
 
 mixin image(name)
 	label(name=name) Image

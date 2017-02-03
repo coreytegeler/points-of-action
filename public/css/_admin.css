@@ -35,7 +35,6 @@ html {
     margin: 0;
     font-family: "FranklinCondITCStd", Arial, sans-serif;
     font-size: 24px;
-    line-height: 1.2em;
     text-rendering: geometricPrecision; }
 
 section {
@@ -111,8 +110,6 @@ label.checkbox input[type="checkbox"] {
 
 nav {
   width: calc(25% - 1em);
-  min-width: 10em;
-  max-height: calc(40% - .5em);
   display: block;
   top: .5em;
   left: .5em;
@@ -120,20 +117,20 @@ nav {
   clear: both;
   font-family: "FranklinCondITCStd", Arial, sans-serif; }
   nav .title {
-    width: 100%;
+    width: calc(100% - 2em);
+    padding: .25em 1em;
     background: #feec35;
     text-align: center;
+    text-transform: uppercase;
     font-weight: 900;
-    font-size: 2em;
-    line-height: 1em; }
+    font-size: 24px; }
   nav .inner {
     padding-top: .5em;
     padding-bottom: .5em; }
     nav .inner ul {
       margin: auto;
       list-style: none;
-      font-size: 24px;
-      line-height: 1.2em; }
+      font-size: 24px; }
       nav .inner ul li {
         padding: 0 0 5px 0;
         display: block;
@@ -150,54 +147,81 @@ nav {
   border-radius: 6px;
   position: fixed;
   display: block;
-  overflow: hidden; }
+  overflow: hidden;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1); }
   .float .band {
-    background: #feec35;
-    position: absolute;
-    left: 0;
-    top: 0; }
-    .float .band.top {
-      width: 100%;
-      height: 1em; }
-    .float .band.left {
-      width: 1em;
-      height: 100%; }
+    background: #feec35; }
     .float .band:hover {
       cursor: pointer; }
   .float .scroll {
     width: 100%;
-    height: calc(100% - 1em);
+    height: 100%;
     overflow-x: hidden;
-    overflow-y: auto; }
+    overflow-y: auto;
+    transition: all 400ms cubic-bezier(0, 0, 0.2, 1); }
     .float .scroll .inner {
       display: block;
-      padding: 1em .5em .5em .5em; }
-  .float.hide {
-    height: 0; }
+      padding: .5em;
+      height: auto; }
+  .float.top .band {
+    width: 100%;
+    height: 1em; }
+  .float.left .scroll, .float.right .scroll {
+    width: calc(100% - 1em); }
+  .float.left .band, .float.right .band {
+    width: 1em;
+    height: 100%;
+    position: absolute;
+    top: 0; }
+  .float.left {
+    width: calc(25vw - 1em);
+    left: .5em;
+    transform: translateX(-25vw);
+    transition-duration: 150ms; }
+    .float.left .scroll {
+      padding-right: 1em; }
+    .float.left .band {
+      right: 0; }
+    .float.left.show {
+      transform: translateX(calc(-25vw + 1.5em)); }
+    .float.left.open {
+      transform: translateX(0); }
+  .float.right {
+    width: calc(75vw - 1em);
+    right: .5em;
+    transform: translateX(75vw);
+    transition-duration: 250ms; }
+    .float.right .scroll {
+      padding-left: 1em; }
+    .float.right .band {
+      left: 0; }
+    .float.right.show {
+      transform: translateX(calc(75vw - 1.5em)); }
+    .float.right.open {
+      transform: translateX(0); }
 
 .buttons .button {
-  margin-right: 10px; }
+  margin-right: 10px;
+  border-width: 0 0 2px 0;
+  border-color: #64648c;
+  border-style: solid; }
   .buttons .button:last-child {
     margin-right: 0; }
 
 .button {
-  display: inline-table;
   color: #333167 !important;
-  font-family: Helvetica;
-  font-size: 1em;
-  font-weight: bold;
+  display: inline-table;
+  font-size: 0.7em;
   line-height: 1.1em;
+  font-weight: bold;
   text-transform: uppercase;
-  color: black;
   text-decoration: none;
-  border: 0;
   text-rendering: geometricPrecision;
   transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
   .button:hover {
-    color: #e6e4e0 !important;
+    color: #64648c !important;
     cursor: pointer; }
-  .button.add {
-    font-size: 1em; }
 
 .horz {
   height: 100%;
@@ -212,6 +236,16 @@ nav {
 .noScroll {
   overflow: hidden; }
 
+.textarea {
+  font-family: "Bookman Old Style", Times, serif;
+  font-size: 0.8em;
+  line-height: 1.4em; }
+  .textarea p {
+    display: table;
+    margin: 0 auto 1em auto !important; }
+    .textarea p:not(:first-child) {
+      text-indent: 2em; }
+
 form {
   width: 100%; }
   form label {
@@ -222,6 +256,18 @@ form {
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: .5em; }
+    form label .button {
+      border: none;
+      font-size: 1em;
+      line-height: 1em;
+      margin-left: .25em; }
+    form label .instruct {
+      color: #64648c;
+      margin-left: .5em; }
+      form label .instruct::before {
+        content: '['; }
+      form label .instruct::after {
+        content: ']'; }
   form .input {
     width: 100%;
     display: table;
@@ -230,42 +276,54 @@ form {
       width: auto;
       max-width: 100%; }
     form .input::before, form .input::after {
-      width: 1px;
-      height: 0.5em;
+      width: 2px;
+      height: .5em;
       position: absolute;
       bottom: 1px;
       content: '';
-      background: black; }
+      background: #64648c; }
     form .input::before {
       left: 0; }
     form .input::after {
       right: 0; }
-  form input, form textarea, form select {
+  form input, form .textarea, form select {
     width: calc(100% - 0.8em);
     padding: 0.1em 0.4em;
     background: transparent;
-    border: solid black;
-    border-width: 0 0 1px 0;
+    border-style: solid;
+    border-color: #333167;
+    border-width: 0 0 2px 0;
     font-family: "Bookman Old Style", Times, serif;
-    font-size: 1em;
-    line-height: 1.3em;
-    outline: none; }
-    form input:-webkit-autofill, form textarea:-webkit-autofill, form select:-webkit-autofill {
+    font-size: 0.8em;
+    line-height: 1.4em;
+    outline: none;
+    color: #333167; }
+    form input:-webkit-autofill, form .textarea:-webkit-autofill, form select:-webkit-autofill {
       background: none; }
-    form input.hidden, form textarea.hidden, form select.hidden {
+    form input.hidden, form .textarea.hidden, form select.hidden {
       display: none; }
   form input {
     -webkit-appearance: none;
-    outline: none; }
+    outline: none;
+    border-color: #64648c; }
     form input[type="text"] {
       width: calc(100% - 0.4em - 1px);
       padding-right: 1px; }
     form input[type="submit"] {
       width: auto;
-      display: inline-block; }
-  form textarea {
-    padding: 0.5em;
-    border: 0.1em solid black; }
+      display: inline-block;
+      font-family: "FranklinCondITCStd", Arial, sans-serif;
+      padding: 0; }
+  form .textarea {
+    width: 100%;
+    padding: 0em;
+    border: 2px solid #64648c !important; }
+  form input.pseudo {
+    display: none; }
+  form .ql-toolbar {
+    display: flex;
+    border-color: #64648c !important;
+    border-width: 2px 2px 0 2px !important; }
   form .null {
     display: none; }
   form .row {
@@ -284,8 +342,6 @@ form {
     form [data-template].show {
       display: block; }
 
-.row.header .input::before, .row.header .input::after {
-  height: 1em; }
 .row.header .input input {
   padding-left: 0.2em;
   width: calc(100% - 0.2em - 1px);
@@ -293,44 +349,46 @@ form {
   line-height: 1em;
   font-family: "FranklinCondITCStd", Arial, sans-serif;
   font-weight: 900;
-  border-bottom-width: 1px;
+  border-bottom-width: 2px;
   padding-bottom: 0; }
 
-.checkboxes, .options {
+.checkboxes {
+  max-height: 10.5em;
   overflow: auto;
   font-size: 1em;
   line-height: 1.1em;
-  border: 0.1em solid black;
+  border: 0.1em solid #64648c;
   background: #f6f4f6; }
-  .checkboxes.populate .item, .options.populate .item {
+  .checkboxes.populate .item {
     opacity: 0; }
-  .checkboxes.populate.loaded .item, .options.populate.loaded .item {
+  .checkboxes.populate.loaded .item {
     opacity: 1; }
-  .checkboxes .checkbox, .options .checkbox {
-    padding: 5px 0;
+  .checkboxes .checkbox {
+    padding: .1em 0;
     transition: color 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
-    .checkboxes .checkbox:hover, .options .checkbox:hover {
+    .checkboxes .checkbox label:hover {
       cursor: pointer;
       color: #333167; }
-    .checkboxes .checkbox label, .options .checkbox label {
+    .checkboxes .checkbox.empty {
+      display: none; }
+    .checkboxes .checkbox label {
       font-family: inherit;
       font-size: inherit;
       line-height: 1.1em;
       display: table;
       margin: 0;
       text-transform: none; }
-      .checkboxes .checkbox label:hover, .checkboxes .checkbox label *:hover, .options .checkbox label:hover, .options .checkbox label *:hover {
+      .checkboxes .checkbox label:hover, .checkboxes .checkbox label *:hover {
         cursor: pointer;
         color: #64648c; }
-    .checkboxes .checkbox input[type="checkbox"], .checkboxes .checkbox input[type="radio"], .options .checkbox input[type="checkbox"], .options .checkbox input[type="radio"] {
+    .checkboxes .checkbox input[type="checkbox"], .checkboxes .checkbox input[type="radio"] {
       display: none; }
-      .checkboxes .checkbox input[type="checkbox"]:checked ~ label::before, .checkboxes .checkbox input[type="radio"]:checked ~ label::before, .options .checkbox input[type="checkbox"]:checked ~ label::before, .options .checkbox input[type="radio"]:checked ~ label::before {
-        background: black; }
-        .checkboxes .checkbox input[type="checkbox"]:checked ~ label::before:hover, .checkboxes .checkbox input[type="radio"]:checked ~ label::before:hover, .options .checkbox input[type="checkbox"]:checked ~ label::before:hover, .options .checkbox input[type="radio"]:checked ~ label::before:hover {
+      .checkboxes .checkbox input[type="checkbox"]:checked ~ label::before, .checkboxes .checkbox input[type="radio"]:checked ~ label::before {
+        background: #64648c; }
+        .checkboxes .checkbox input[type="checkbox"]:checked ~ label::before:hover, .checkboxes .checkbox input[type="radio"]:checked ~ label::before:hover {
           cursor: pointer; }
 
 .checkboxes {
-  min-height: 135px;
   padding: 0.25em 0.5em;
   column-count: auto;
   column-width: 50%;
@@ -340,7 +398,7 @@ form {
     height: 0.55em;
     margin-right: 0.5em;
     border-radius: 50%;
-    border: solid black 0.1em;
+    border: solid #64648c 0.1em;
     font-size: inherit;
     display: inline-block;
     content: ''; }
@@ -355,7 +413,7 @@ form {
 
 .selects {
   display: flex;
-  border-bottom: solid black 0.1em;
+  border-bottom: solid #64648c 0.1em;
   padding: 0.15em 0; }
   .selects .select {
     background: transparent;
@@ -380,25 +438,49 @@ form {
         opacity: 1;
         pointer-events: all; }
 
-.selects.date .select {
-  position: relative;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-  .selects.date .select.month .display {
-    width: 6em; }
-  .selects.date .select.day .display {
-    width: 1.5em; }
-  .selects.date .select.year .display {
-    width: 2.5em; }
-  .selects.date .select:not(:last-child) .display:after {
-    content: '/';
-    position: absolute;
-    right: 0;
-    top: 0; }
+.dateselect {
+  width: 50%; }
+  .dateselect .selects {
+    width: 100%;
+    display: flex; }
+    .dateselect .selects .select {
+      position: relative;
+      display: flex;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none; }
+      .dateselect .selects .select.month {
+        flex-grow: 1; }
+      .dateselect .selects .select.selected .display {
+        color: #64648c; }
+      .dateselect .selects .select:not(:last-child) .display:after {
+        content: '/';
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: transparent;
+        padding: 0 0.2em; }
+      .dateselect .selects .select .display {
+        width: calc(100% - .6em); }
+      .dateselect .selects .select input {
+        display: none; }
+  .dateselect .checkboxes {
+    border-top: 0; }
+    .dateselect .checkboxes:not(.open) {
+      height: 0;
+      padding: 0;
+      border-width: 0; }
+    .dateselect .checkboxes .options {
+      display: flex;
+      width: 100%;
+      flex-wrap: wrap; }
+      .dateselect .checkboxes .options .checkbox {
+        padding: .2em;
+        font-size: 0.7em;
+        line-height: 1.1em; }
 
 .images {
   display: block;
@@ -447,7 +529,7 @@ form {
         margin: auto; }
   .quicky.open {
     display: block; }
-  .quicky .close {
+  .quicky .x {
     width: 1.5em;
     height: 1.5em;
     padding: 1px;
@@ -459,18 +541,33 @@ form {
     background-repeat: no-repeat;
     background-size: contain;
     background-image: url(/img/x.svg); }
-    .quicky .close:hover {
+    .quicky .x:hover {
       cursor: pointer; }
 
-main .inner {
-  width: calc(75% - 8em);
-  max-width: 700px;
-  padding: 4em;
-  display: table;
-  margin-left: 25%; }
+main {
+  width: 100%;
+  height: 100%; }
+  main .scroll {
+    width: 100%;
+    height: 100%;
+    overflow: auto; }
+    main .scroll .inner {
+      width: calc(75% - 2em);
+      max-width: 700px;
+      padding: 1em 1em 2em 25%;
+      display: table;
+      margin: auto; }
+
+nav {
+  max-height: calc(100% - 1em); }
 
 .quicky .horz {
-  width: calc(100% - 8em);
-  max-width: 700px; }
+  width: calc(75% - 2em);
+  max-width: 700px;
+  padding: 1em 1em 1em 25%;
+  display: table;
+  margin: auto; }
+  .quicky .horz img {
+    width: 100%; }
 
 /*# sourceMappingURL=_admin.css.map */

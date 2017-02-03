@@ -12,9 +12,13 @@ var actionSchema = mongoose.Schema({
 	location: Mixed,
 	people: Mixed,
 	organization: Mixed,
-	essay: String,
+	essayJSON: String,
+	essayHTML: String,
 	images: Mixed,
-	type: String
+	type: String,
+	month: Mixed,
+	day: Mixed,
+	year: Mixed
 }, { 
 	timestamps: true
 });

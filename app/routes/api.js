@@ -2,7 +2,7 @@ var Async = require('async')
 var tools = require('../tools')
 module.exports = function(app) {
 
-	app.get('/api/', function(req, res) {
+	app.get('/api/json/', function(req, res) {
     var type = tools.singularize(req.query.type)
     var slug = req.query.slug
     var id = req.query.id
@@ -26,25 +26,24 @@ module.exports = function(app) {
     })
   })
 
-  app.get('/content/', function(req, res) {
+  app.get('/api/html/', function(req, res) {
     var type = req.query.type
     var slug = req.query.slug
     var id = req.query.id
     var filter = req.query.filter
-    var format = req.query.format
     var model = tools.getModel(type)
     if(!model)
       return res.json(null)
     query = {}
-    if(id) {
+
+    if(filter) {
+      query[filter] = id
+    } else if(id) {
       query._id = id
     }
     else if(slug) {
       query.slug = slug
-    } else if(filter) {
-      query[filter] = id
     }
-    // getLocation(type, slug, id, filter)
     model.find(query, function(err, object) {
       if(err)
         callback(err)
@@ -53,7 +52,7 @@ module.exports = function(app) {
           s: tools.singularize(type),
           p: tools.pluralize(type)
         },
-        object: object[0]
+        object: object
       })
     })
   })

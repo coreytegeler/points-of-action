@@ -2,11 +2,13 @@ $ ->
 	$window = $(window)
 	$body = $('body')
 	$map = $('#map')
+	$intro = $('#intro')
+	$introCanvas = $('#intro')
 	$right = $('#right.float')
 	$left = $('#left.float')
 	markersLayer = []
 	nycLatLng = {lat: 40.723952837100995, lng: -73.98725835012341}
-	zoomIn = 17
+	zoomIn = 15
 	zoomOut = 12
 	minZoom = 9.8
 	maxZoom = 20
@@ -23,10 +25,10 @@ $ ->
 		  maxZoom: maxZoom,
 		  pitch: 15
 		map.on 'load', () ->
-			getMarkers()
+			getPoints()
+			# introSetup()
 			getFeature('boroughs')
 			$map.addClass('show')
-			map.on 'moveend', listLocations
 
 	getFeature = (featureName) ->
 		url = '/geojson/' + featureName + '.json'
@@ -35,10 +37,10 @@ $ ->
 			error:  (jqXHR, status, error) ->
 				console.error jqXHR, status, error
 				return
-			success: (response, status, jqXHR) ->
+			success: (geojson, status, jqXHR) ->
 				map.addSource featureName,
 					'type': 'geojson',
-					'data': response
+					'data': geojson
 				map.addLayer({
 		    	'id': featureName,
 		    	'type': 'line',
@@ -46,8 +48,15 @@ $ ->
 				})
 		return
 
-	getMarkers = () ->
-		url = '/api/?type=location'
+	introSetup = () ->
+		$.each map.queryRenderedFeatures(), (i, layer) ->
+			id = layer.layer.id
+			if id == 'background'
+				console.log layer
+			map.setLayoutProperty(id, 'visibility', 'none')
+
+	getPoints = () ->
+		url = '/api/json/?type=location'
 		$.ajax
 			url: url,
 			error:  (jqXHR, status, error) ->
@@ -58,18 +67,21 @@ $ ->
 		return
 
 	plotMarkers = (locs) ->
-		window.markers = []
+		window.markers = {}
+		markersArray = []
 		bounds = new mapboxgl.LngLatBounds()
 		$.each locs, (i, loc) ->
 			marker = plotMarker(loc)
 			# getLocActions(loc, marker)
 			bounds.extend(marker.geometry.coordinates)
-			markers.push(marker)
+			markersArray.push(marker)
+			markers[loc._id] = marker
+		listLocs()
 		map.addSource 'markers',
 	    'type': 'geojson',
 	    'data':
         'type': 'FeatureCollection',
-        'features': markers
+        'features': markersArray
 
     map.addLayer({
     	'id': 'markers',
@@ -77,7 +89,7 @@ $ ->
 			'type': 'circle',
 			'paint':
 				'circle-radius': 6,
-				'circle-color': colors.yellow
+				'circle-color': colors.darker
 		})
 		map.fitBounds bounds,
 			padding: 50,
@@ -104,31 +116,7 @@ $ ->
 	    	'address': loc.pointAddress
 	    }
 		}
-		return marker
-		
-
-	# getLocActions = (loc, marker) ->
-	# 	url = '/api/?type=action&filter=location&id='+loc._id
-	# 	$.ajax
-	# 		url: url,
-	# 		error:  (jqXHR, status, error) ->
-	# 			console.error jqXHR, status, error
-	# 			return
-	# 		success: (actions, status, jqXHR) ->
-	# 			marker.setStyle
-	# 				radius: markerRadius + (actions.length*2)
-	# 			listLocActions(loc, marker, actions)
-
-	# listLocActions = (loc, marker, actions) ->
-	# 	$popup = $('.popup.sample').clone()
-	# 	$popup
-	# 		.removeClass('sample')
-	# 		.addClass('location')
-	# 		.attr('data-id', loc._id)
-	# 	$.each actions, (i, action) ->
-	# 		$action = $('<li><a href="/?type=action&id='+action._id+'">'+action.name+'</a></li>')
-	# 		$popup.find('ul').append($action)
-	# 	# popup = marker.bindPopup($popup.html())
+		return marker	
 
 	# clickMarker = (marker) ->
 	# 	getLocContent(marker)
@@ -136,10 +124,9 @@ $ ->
 	# 	$('.marker.selected').removeClass('selected')
 	# 	$(marker._path).addClass('selected')
 
-	getLocContent = (marker) ->
-		id = marker.properties.id
-		title = marker.properties.title
-		url = '/content/?type=location&id='+id
+	getLocContent = (id, title) ->
+		url = '/api/html/?type=location&id='+id
+		marker = markers[id]
 		$.ajax
 			url: url,
 			error:  (jqXHR, status, error) ->
@@ -151,55 +138,47 @@ $ ->
 
 	openLocPanel = (id, title, response, marker) ->
 		latlng = marker.geometry.coordinates
-
+		currentZoom = map.getZoom()
 		$right.find('.title h1').html title
-		if(!$body.is('.opened'))
-			position = marker._vectorTileFeature
-			x = position._x
-			y = position._y
-			# 	flyTo = map.containerPointToLayerPoint([x + $map.innerWidth()/2.666, y])
-			# else
-		flyTo = marker.geometry.coordinates
-		$map.attr 'data-zoom', map.getZoom()
+		# if(!$body.is('.opened'))
+		zoomOffset = currentZoom/zoomIn
+		pixelCoords = map.project marker.geometry.coordinates
+		xOffset = 0.375 * map._containerDimensions()[0]
+		pixelCoords.x = pixelCoords.x + xOffset
+		flyTo = map.unproject pixelCoords
+		$map.attr 'data-zoom', currentZoom
+		$right.find('.content').html(response)
+		getLocActions(id)
 		map.flyTo
 			center: flyTo,
 			curve: 1,
-			zoom: zoomIn,
+			# zoom: zoomIn,
       bearing: 0,
       speed: .1
-    $body.addClass('opened')
 
-		$left.transition
-			x: -$window.innerWidth(),
-    	scale: .9
-    , 500, 'easeInOutQuint'
+		$right.addClass('show')
+		$right.addClass('open')
+		$left.removeClass('open')
 
-		$right.transition
-    	x: 0,
-    	scale: 1
-		, 500, 'easeInOutQuint', () ->
-    	console.log '!'
-    	$right.find('.content').html(response)
-			$right.find('.lead').imagesLoaded () ->
-				$(this.elements[0]).addClass('loaded')
-				imagesLoaded($right).on 'progress', (inst, image) ->
-					$(image.img).addClass('loaded')
+	getLocActions = (id) ->
+		url = '/api/html/?type=action&filter=location&id='+id
+		$.ajax
+			url: url,
+			error:  (jqXHR, status, error) ->
+				console.error jqXHR, status, error
+				return
+			success: (content, status, jqXHR) ->
+				listLocActions(content)
 
+	listLocActions = (content) ->
+		$actions = $right.find('.actions')
+		$actions.append(content)
 
 	closeRight = (e) ->
-		$body.removeClass('opened')
-		$right.transition
-    	x: $window.innerWidth(),
-    	scale: .9
-    $left.transition
-    	x: 0,
-    	scale: 1
+		$right.removeClass('open')
 		zoomTo = $map.attr 'data-zoom'
-		map.zoomTo zoomTo
-
-	closeFloater = (e) ->
-		$floater = $(this).parents '.float'
-		$floater.toggleClass 'hide'
+		if zoomTo
+			map.zoomTo zoomTo
 
 	getUniqueFeatures = (array, comparatorProperty) ->
     existingFeatureKeys = {}
@@ -212,21 +191,17 @@ $ ->
 
     return uniqueFeatures
 
-	listLocations = (e) ->
-		# if $left.find('#inView')[0].checked
-		# 	markers = map.queryRenderedFeatures
-		# 		layers: ['markers']
-		# else
-		markers = window.markers
-		# getUniqueFeatures(markers, "iata_code")
+	listLocs = (e) ->
+		# markers = window.markers
 		$leftList = $left.find('ul')
 		$leftList.html ''
-		markers.forEach (marker) ->
+		$.each markers, (id, marker) ->
 			id = marker.properties.id
 			slug = marker.properties.slug
 			name = marker.properties.name
 			address = marker.properties.address
-			$leftList.append '<li data-id="' + id + '"><div class="name">' + name + '</div><div class="address">' + address + '</div></li>'
+			$leftList.append '<li class="loc-link" data-id="' +id+'" data-title="'+name+'"><div class="name">'+name+'</div><div class="address">'+address+'</div></li>'
+		$left.addClass('open').addClass('show')
 
 	mapMouseMove = (e) ->
 		features = map.queryRenderedFeatures e.point,
@@ -241,12 +216,18 @@ $ ->
 			layers: ['markers']
 		if features.length
 			marker = features[0]
-			getLocContent(marker)
+			id = marker.properties.id
+			title = marker.properties.title
+			getLocContent(id, title)
 
+	clickLocLink = () ->
+		id = this.dataset.id
+		title = this.dataset.title
+		getLocContent(id, title)
 
-	$body.on 'click touchend', '#right .band', closeRight
-	$body.on 'click touchend', '.float .band.top', closeFloater
-	$body.on 'change', '#points input', listLocations
+	$body.on 'click touchend', '.right.open .band', closeRight
+	$body.on 'change', '#points input', listLocs
+	$body.on 'click', '.loc-link', clickLocLink
 
 
 	colors = {

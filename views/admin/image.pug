@@ -1,6 +1,5 @@
 include ./mixins
 .quicky(data-model='image', data-id=(object ? object.id : ''), class=(object ? 'edit' : 'create'))
-	.close.button.x
 	.horz
 		.vert
 			form(method='post', action='/admin/image/quicky/'+(object ? object.id : ''), enctype='multipart/form-data')
@@ -12,6 +11,7 @@ include ./mixins
 				.row
 					+input('caption', 'Caption', 'text', (object ? object.caption : ''))
 				.buttons
+					.button.close Cancel
 					input(type='submit' value=(object ? 'Update' : 'Upload') name='submit').button
 					if (object)
 						a.button.delete(href='/admin/image/remove/'+object.id) Delete

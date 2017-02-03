@@ -2,7 +2,9 @@
 	+input('name', 'Name', 'text', (object ? object.name : ''))
 .row
 	label Date
-	+dateselect(months, days)
+	+dateselect(object.month, object.day, object.year)
+.row
+	+images('images', (object ? object.images : ''), false)
 .row
 	+checkboxes('tactic', 'Tactic(s)', true, true, (object ? object.tactic : null))
 .row
@@ -12,4 +14,4 @@
 .row
 	+checkboxes('people', 'People', true, true, (object ? object.people : null))
 .row
-	+textarea('essay', 'Essay', (object ? object.essay : ''), 15)
+	+textarea('essay', 'Essay', (object ? object.essayJSON : ''), 15)

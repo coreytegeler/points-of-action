@@ -1,8 +1,4 @@
-.image.lead
-	img(src='/images/wf.jpeg')
-.text.inner
-	h2.address= object[object.locationType].formattedAddress
-	.actions.group
-		h3= 'Actions'
-		ul.list
-			li
+-var location = object[0]
+
+h2.address= location[location.locationType].formattedAddress
+.actions.group

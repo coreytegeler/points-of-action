@@ -24,6 +24,31 @@ var isLoggedIn = function(req, res, next) {
   res.redirect('/admin/login');
   return next();
 }
+
+var newObj = function(type, data) {
+  data.type = type
+  switch(type) {
+    case 'user':
+      return new User(data)
+    case 'action':
+      return new Action(data)
+    case 'person':
+      return new Person(data)
+    case 'location':
+      return new Location(data)
+    case 'organization':
+      return new Organization(data)
+    case 'organizationType':
+      return new OrganizationType(data)
+    case 'term':
+      return new Term(data)
+    case 'tactic':
+      return new Tactic(data)
+    default:
+      return false
+  }
+}
+
 var singularize = function(string) {
   switch(string) {
     case 'users':
@@ -91,57 +116,33 @@ var getModel = function(type) {
   }
 }
 
-var newModel = function(type, data) {
-  switch(type) {
-    case 'user':
-      var object = new User(data)
-      break
-    case 'action':
-      var object = new Action(data)
-      break
-    case 'person':
-      var object = new Person(data)
-      break
-    case 'location':
-      var object = new Location(data)
-      break
-    case 'organization':
-      var object = new Organization(data)
-      break
-    case 'organizationType':
-      var object = new OrganizationType(data)
-      break
-    case 'term':
-      var object = new Term(data)
-      break
-    case 'tactic':
-      var object = new Tactic(data)
-      break
-  }
-  object.type = type
-  return object
-}
-
 var preSave = function(object) {
   if(object.type === 'person') {
     var name = object.firstName + ' ' + object.lastName
     object.name = name
-  } 
-  // else if(object.location) {
-  //   model = getModel(object.type)
-  //   model.findOneAndUpdate({_id: id}, {$set: {action: action}}, {new: true, runValidators: true}, function(err, object) {
-  // }
+  }
+  var parsables = ['images', 'month', 'day', 'year']
+  for(var i = 0; i < parsables.length; i++) {
+    var name = parsables[i] 
+    if(typeof object[name] === 'string') {
+      object[name] = JSON.parse(object[name])
+    } 
+  }
   if(object.name) {
     var slug = slugify(object.name, {lower: true})
     object.slug = slug
   }
+  // else if(object.location) {
+  //   model = getModel(object.type)
+  //   model.findOneAndUpdate({_id: id}, {$set: {action: action}}, {new: true, runValidators: true}, function(err, object) {
+  // }
   return object
 }
 
 exports.isLoggedIn = isLoggedIn;
+exports.newObj = newObj;
 exports.singularize = singularize;
 exports.pluralize = pluralize;
 exports.getModel = getModel;
-exports.newModel = newModel;
 exports.preSave = preSave;
 exports.geocoder = geocoder;

@@ -1,6 +1,6 @@
 form {
 	width: 100%;
-	// border: 0.25em solid black;
+	// border: 0.25em solid $dark;
 	label {
 		display: table;
 		font-family: $sans;
@@ -8,6 +8,22 @@ form {
 		font-weight: 700;
 		text-transform: uppercase;
 		margin-bottom: .5em;
+		.button {
+			border: none;
+			font-size: 1em;
+			line-height: 1em;
+			margin-left: .25em;
+		}
+		.instruct {
+			color: $dark;
+			margin-left: .5em;
+			&::before {
+				content: '[';
+			}
+			&::after {
+				content: ']';
+			}
+		}
 	}
 	.input {
 		width: 100%;
@@ -18,12 +34,12 @@ form {
 			max-width: 100%;
 		}
 		&::before, &::after {
-			width: 1px;
-			height: 0.5em;
+			width: 2px;
+			height: .5em;
 			position: absolute;
 			bottom: 1px;
 			content: '';
-			background: black;
+			background: $dark;
 		}
 		&::before {
 			left: 0;
@@ -32,16 +48,17 @@ form {
 			right: 0;
 		}
 	}
-	input, textarea, select {
+	input, .textarea, select {
 		width: calc(100% - 0.8em);
 		padding: 0.1em 0.4em;
 		background: transparent;
-		border: solid black;
-		border-width: 0 0 1px 0;
+		border-style: solid;
+		border-color: $darker;
+		border-width: 0 0 2px 0;
 		font-family: $serif;
-		font-size: 1em;
-		line-height: 1.3em;
+		@include smallText;
 		outline: none;
+		color: $darker;
 		&:-webkit-autofill {
 			background: none;
 		}
@@ -52,6 +69,7 @@ form {
 	input {
 		-webkit-appearance: none;
 		outline: none;
+		border-color: $dark;
 		&[type="text"] {
 			width: calc(100% - 0.4em - 1px);
 			padding-right: 1px;
@@ -59,11 +77,28 @@ form {
 		&[type="submit"] {
 			width: auto;
 			display: inline-block;
+			font-family: $sans;
+			padding: 0;
 		}
 	}
-	textarea {
-		padding: 0.5em;
-		border: 0.1em solid black;
+	.textarea {
+		width: 100%;
+		// max-height: 20em;
+		// overflow: auto;
+		padding: 0em;
+		border: 2px solid $dark !important;
+	}
+	input.pseudo {
+		display: none;
+	}
+	.ql-toolbar {
+		display: flex;
+		border-color: $dark !important;	
+		border-width: 2px 2px 0 2px !important;
+		svg, svg *, * {
+			// color: $dark !important;
+			// stroke: $dark !important;
+		}
 	}
 	.group {
 		// padding: 0 0 2em 0;
@@ -100,26 +135,24 @@ form {
 
 .row.header {
 	.input {
-		&::before, &::after {
-			height: 1em;
-		}
 		input {
 			padding-left: 0.2em;
 			width: calc(100% - 0.2em - 1px);
 			@include largeText;
 			font-family: $sans;
 			font-weight: 900;
-			border-bottom-width: 1px;
+			border-bottom-width: 2px;
 			padding-bottom: 0;
 		}
 	}
 }
  
-.checkboxes, .options {
+.checkboxes {
+	max-height: 10.5em;
 	overflow: auto;
 	font-size: 1em;
 	line-height: 1.1em;
-	border: 0.1em solid black;
+	border: 0.1em solid $dark;
 	background: $light;
 	&.populate {
 		.item {
@@ -130,11 +163,14 @@ form {
 		}
 	}
 	.checkbox {
-		padding: 5px 0;
+		padding: .1em 0;
 		transition: color 250ms $fadeEase;
-		&:hover {
+		label:hover {
 			cursor: pointer;
 			color: $darker;
+		}
+		&.empty {
+			display: none;
 		}
 		label {
 			font-family: inherit;
@@ -152,7 +188,7 @@ form {
 			display: none;
 			&:checked~label {
 				&::before {
-					background: black;
+					background: $dark;
 					&:hover {
 						cursor: pointer;
 					}
@@ -163,7 +199,6 @@ form {
 }	
 
 .checkboxes {
-	min-height: 135px;
 	padding: 0.25em 0.5em;
   column-count: auto;
   column-width: 50%;
@@ -174,7 +209,7 @@ form {
 			height: 0.55em;
 			margin-right: 0.5em;
 			border-radius: 50%;
-			border: solid black 0.1em;
+			border: solid $dark 0.1em;
 			font-size: inherit;
 			display: inline-block;
 			content: '';
@@ -194,7 +229,7 @@ form {
 
 .selects {
 	display: flex;
-	border-bottom: solid black 0.1em;
+	border-bottom: solid $dark 0.1em;
 	padding: 0.15em 0;
 	.select {
 		background: transparent;
@@ -224,35 +259,58 @@ form {
 		}
 	}
 }
-
-.selects.date {
-	.select {
-		position: relative;
-		@include noSelect;
-		&.month {
+.dateselect {
+	width: 50%;
+	.selects {
+		width: 100%;
+		display: flex;
+		.select {
+			position: relative;
+			display: flex;
+			@include noSelect;
+			&.month {
+				flex-grow: 1;
+			}
+			&.selected .display {
+				color: $dark;
+			}
+			&:not(:last-child) .display:after {
+				content: '/';
+				position: absolute;
+				right: 0;
+				top: 0;
+				background-color: transparent;
+				padding: 0 0.2em;
+			}
 			.display {
-				width: 6em;
+				width: calc(100% - .6em);
+			}
+			input {
+				display: none;
 			}
 		}
-		&.day {
-			.display {
-				width: 1.5em;
-			}
+	}
+	.checkboxes {
+		border-top: 0;
+		&:not(.open) {
+			height: 0;
+			padding: 0;
+			border-width: 0; 
 		}
-		&.year {
-			.display {
-				width: 2.5em;
+		.options {
+			display: flex;
+			width: 100%;
+			flex-wrap: wrap;
+			.checkbox {
+				padding: .2em;
+				@include xSmallText;
+				label::before {
+					// display: none;
+				}
 			}
-		}
-		&:not(:last-child) .display:after {
-			content: '/';
-			position: absolute;
-			right: 0;
-			top: 0;
 		}
 	}
 }
-
 .images {
 	display: block;
 	clear: both;
@@ -310,7 +368,7 @@ form {
 	&.open {
 		display: block;
 	}
-	.close {
+	.x {
 		width: 1.5em;
     height: 1.5em;
     padding: 1px;

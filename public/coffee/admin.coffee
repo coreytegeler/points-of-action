@@ -1,58 +1,19 @@
 $ ->
 	$body = $('body')
 	$main = $('main')
-
-$ ->
-	$body = $('body')
-	$main = $('main')
+	$mainForm = $('form.main')
 
 	initAdmin = () ->
-		getData()
-		$body.on 'click',  'form .add', openQuicky
-		$body.on 'click',  'form .images .edit', openQuicky
+		# getData()
+		setupForm($mainForm)
+		$body.on 'submit',  'form.main', formSave
+		$body.on 'click',  'form .add', addQuicky
+		$body.on 'click',  'form .images .edit', addQuicky
 		$body.on 'click',  '.quicky .close', closeQuicky
-		$body.on 'submit', '.quicky form', quickySave
+		$body.on 'submit', '.quicky form', saveQuicky
 		$body.on 'click',  'a.delete', deleteObject
-		$body.on 'click',  '.button.clear', () ->
-			$('.images input:text').val('[]')
-			$('.images .image:not(.empty)').remove()
-		
-		$sortable = $('.sortable')
-		sortable = $( '.sortable ul' ).sortable
-			update: (e, elem) ->
-				newOrder = []
-				$sortableInput = $sortable.find('input')
-				$(this).find('li').each () ->
-					id = $(this).data('id')
-					newOrder.push(id)
-				if($sortable.is('.images'))
-					imagesData = JSON.parse($sortableInput.val())
-					newOrderClone = newOrder
-					$(imagesData).each () ->
-						index = newOrder.indexOf(this.id)
-						newOrder[index] = this
-				newOrderJson = JSON.stringify(newOrder)
-				$sortable.find('input').val(newOrderJson)
-		sortable.disableSelection()
-
-		$('textarea').each () ->
-			editor = new MediumEditor(this, {
-				buttons: ['italic', 'underline', 'anchor', 'superscript'],
-				placeholder: false,
-				imageDragging: false,
-				targetBlank: true,
-				paste: {
-	        forcePlainText: true,
-	        cleanPastedHTML: true,
-	        cleanReplacements: [],
-	        cleanAttrs: ['class', 'style', 'dir'],
-	        cleanTags: ['meta'],
-	        unwrapTags: ['span', 'div', 'h1', 'h2', 'h3', 'h4', 'label']
-		    }
-			})
-			$(editor.elements).each () ->
-				$(this).addClass('editable')
-
+		$body.on 'click',  '.dateselect .select', openDateOptions
+		$body.on 'click',  '.dateselect .checkbox label', selectDateOption
 
 	getData = () ->
 		if($('form .images').length)
@@ -64,72 +25,87 @@ $ ->
 					if(id)
 						addQuicky('image', id)
 
-		$('form .populate').each (i, container) ->
-			modelType = $(container).data('model')
-			containerType = $(container).data('type')
+	setupForm = (form) ->
+		populateCheckboxes(form)
+		setupSortable(form)
+		setupEditor(form)
+		setupDateSelector(form)
+
+	populateCheckboxes = (form) ->
+		$(form).find('.populate:not(.populated)').each (i, container) ->
+			model = $(container).data('model')
+			type = $(container).data('type')
 			label = $(container).prev('label').text()
-			addQuicky(modelType, null, label)
-			if(modelType == 'historicUse')
-				modelType = 'use'
+			# addQuicky(model, null, label)
+			$(this).addClass('populated')
+			if(model == 'historicUse')
+				model = 'use'
 			$.ajax
-				url: '/api/?type='+modelType+'&format=json',
+				url: '/api/json/?type='+model,
 				error:  (jqXHR, status, error) ->
 					console.log jqXHR, status, error
 					return
 				success: (objects, status, jqXHR) ->
 					if(!objects)
 						return
-					switch containerType
-						when 'checkboxes'
-							$(objects).each (i, object) ->
-								checked = $(container).data('checked')
-								addCheckbox(container, object, checked)
+					listId = model+'-checkboxes'
+					$(objects).each (i, object) ->
+						checked = $(container).data('checked')
+						addCheckbox(container, object, checked)
+					filterList = new List listId,
+						valueNames: ['checkbox']
 					$(container).addClass('loaded')
 					return
 			return
 		return
 
 	addCheckbox = (container, object, checked) ->
-		$clone = $(container).find('.empty').clone().removeClass('empty')
-		$clone.find('input').attr('checked', false)
-		$label = $clone.find('label')
-		$input = $clone.find('input')
+		if !$.isArray(checked)
+			checked = [checked]
+		$checkbox = $(container).find('.empty').clone().removeClass('empty')
+		$checkbox.find('input').attr('checked', false)
+		$options = $(container).find('.options')
+		$label = $checkbox.find('label')
+		$input = $checkbox.find('input')
 		if !object
 			return
-		valueObject = {name: object.name, slug: object.slug, id: object._id}
-		if(object.color)
-			valueObject['color'] = object.color
-		if(object.buildings)
-			valueObject['buildings'] = object.buildings
-		value = JSON.stringify(valueObject)
+		if typeof object == 'object'
+			if(object._id)
+				id = object._id
+			else 
+				id = object.id
+			valueObject = {name: object.name, slug: object.slug, id: id}
+			slug = valueObject.slug
+			value = JSON.stringify(valueObject)
+		else
+			value = {id: object}
+			slug = value
 		model = $(container).data('model')
 		$input.attr('value', value).attr('id', model+'-'+object.slug)
 		$label.text(object.name).attr('for', model+'-'+object.slug)
 		if checked
-			if $.isArray(checked)
-				for checkedValue in checked
-					try
-						checkedObj = JSON.parse(checkedValue)
-					catch
-			    	checkedObj = checkedValue
-					if valueObject.id == checkedObj.id
-						$input.attr('checked', true)
-			else if (valueObject.id == checked || valueObject.id == checked.id) 
-				$input.attr('checked', true)
-		$clone
-			.attr('data-slug', object.slug)
-			.prependTo(container)
+			for checkedVal in checked
+				try
+					checkedVal = JSON.parse(checkedVal).id
+				if valueObject.id == checkedVal.id
+					$input.attr('checked', true)
+		$checkbox.attr('data-slug', slug)
+		$options.prepend($checkbox)
 		$(container).addClass('loaded')
-		return
+		return $checkbox
 
-	# openSelect = (event) ->
-	# 	$select = $(event.target).parents('.select')
-	# 	datetype = $select.attr('data-datetype')
-	# 	$options = $select.find('.options')
-	# 	$select.siblings('.select').find('.options').removeClass('open')
-	# 	$options.toggleClass('open')
-	# 	return
-
+	formSave = (event) ->
+		$(window.editors).each () ->
+			editor = this
+			name = editor.container.dataset.name
+			$inputHTML = $('input[name="'+name+'HTML"]')
+			$inputJSON = $('input[name="'+name+'JSON"]')
+			if(json = editor.getContents())
+				json = JSON.stringify(json)
+				$inputJSON.val(json)
+			if(html = editor.root.innerHTML)
+				$inputHTML.val(html)
+			
 	# updateSelectValue = (event) ->
 	# 	option = event.target 
 	# 	value = option.value
@@ -141,67 +117,76 @@ $ ->
 	# 	$options.removeClass('open')
 	# 	return
 
-	addQuicky = (type, id, label) ->
-		if($('.quicky[data-id="' + id + '"]').length)
-			return
-		url = '/admin/'+type+'/quicky/'
-		if(id)
-			url += id
-		$.ajax
-			url: url
-			error: (jqXHR, status, error) ->
-				console.log jqXHR, status, error
-				return
-			success: (html, status, jqXHR) ->
-				if(!html)
-					return
-				$('.quickies').append(html)
-		return
 
-	openQuicky = () ->
+	addQuicky = () ->
+		console.log(this)
 		$button = $(this)
 		id = $button.data('id')
-		type = $button.data('model')
-		if(!id)
-			$quicky = $('.quicky.create[data-model="'+type+'"]')
+		type = $button.data('type')
+		if(!id && $('.quicky.create[data-type="'+type+'"]').length)
+			openQuicky($('.quicky.create[data-type="'+type+'"]'))
+		else if($('.quicky.edit[data-id="'+id+'"]').length)
+			openQuicky($('.quicky.edit[data-id="'+id+'"]'))
 		else
-			$quicky = $('.quicky.edit[data-id="'+id+'"]')
-		$quicky.addClass('open')
-		$quicky.find('input[name="name"]').focus()
-		return
+			loadQuicky(type, id)
+
+	loadQuicky = (type, id, label) ->
+		if($quicky = $('.quicky[data-id="' + id + '"]').length)
+			$quicky.addClass('open')
+			$quicky.find('input[name="name"]').focus()
+		else
+			url = '/admin/'+type+'/quicky/'
+			if(id)
+				url += id
+			$.ajax
+				url: url
+				error: (jqXHR, status, error) ->
+					console.log jqXHR, status, error
+					return
+				success: (html, status, jqXHR) ->
+					if(!html)
+						return
+					$quicky = $(html)
+					$('.quickies').append($quicky)
+					$form = $quicky.find('form')
+					setupForm($form)
+					openQuicky($quicky)
+
+	openQuicky = (quicky) ->
+		$(quicky).addClass('open')
+		$(quicky).find('input[name="name"]').focus()
 
 	closeQuicky = (quicky) ->
 		if(quicky.length)
 			$quicky = $(quicky)
 		else
 			$quicky = $(this).parents('.quicky')
-		if(!$quicky.is('[data-model="image"]'))
+		if(!$quicky.is('[data-type="image"]'))
 			$quicky.find('input:not([type="submit"])').each (i, input) ->
 				$(input).val('')
 		$quicky.removeClass('open')
 		$quicky.removeClass('saving')
 		return
 
-	quickySave = (event) ->
+	saveQuicky = (event) ->
 		event.stopPropagation()
 		event.preventDefault()
 		$form = $(this)
 		$quicky = $form.parents('.quicky')
 		id = $quicky.data('id')
-		type = $quicky.data('model')
+		type = $quicky.data('type')
 		data = new FormData()
 		if(type == 'image' && !id.length)
 			image = $form.find('input:file')[0].files[0]
 			caption = $form.find('input.caption').val()
-			data.append('image', image, image.name)
-			data.append('caption', caption)
+			data.set('image', image, image.name)
+			data.set('caption', caption)
 			contentType = false
 			processData = false
 		else
 	  	data = $form.serializeArray()
 	  	contentType = 'application/x-www-form-urlencoded; charset=UTF-8'
 	  	processData = true
-
 		postUrl = $form.attr('action')
 		if(!data)
 			return
@@ -216,10 +201,11 @@ $ ->
 				console.log(postUrl, jqXHR, status, error)
 				alert('Error, check browser console logs')
 			success: (object, status, jqXHR) ->
-				type = $quicky.data('model')
+				type = $quicky.data('type')
 				checkboxes = $('.checkboxes.'+type)
+				checked = {id:object._id}
 				if(checkboxes.length)
-					addCheckbox(checkboxes, object, object._id)
+					addCheckbox(checkboxes, object, checked)
 				else if(type == 'image')
 					addImage(object)
 				$quicky.removeClass('saving')
@@ -227,7 +213,7 @@ $ ->
 		return
 
 	addImage = (object) ->
-		$imagesWrapper = $('.images')
+		$imagesWrapper = $('form.main').find('.images')
 		$imagesInput = $imagesWrapper.find('input:text')
 		addQuicky('image', object._id, '')
 		imageObject = {
@@ -237,7 +223,6 @@ $ ->
 			small: object.small,
 			caption: object.caption
 		}
-
 		if($imagesInput.val())
 			imagesInputVal = JSON.parse($imagesInput.val())
 		else
@@ -265,13 +250,13 @@ $ ->
 				$clone.append(this)
 				$clone.find('.caption').text(imageObject.caption)
 				$imagesWrapper.find('.ui-sortable').append($clone)
-			newImg.src = imageObject.original;
+			newImg.src = imageObject.original
 
-	# updateTemplate = (event) ->
-	# 	$input = $(event.target)
-	# 	value = $input.val()
-	# 	$('[data-template]').removeClass('show')
-	# 	$('[data-template="'+value+'"]').addClass('show')
+	updateTemplate = (event) ->
+		$input = $(event.target)
+		value = $input.val()
+		$('[data-template]').removeClass('show')
+		$('[data-template="'+value+'"]').addClass('show')
 
 	deleteObject = (event) ->
 		if(!confirm('Are you sure you want to delete this?'))
@@ -290,34 +275,93 @@ $ ->
 			$main.removeClass('noscroll')
 			return event.preventDefault()
 
-	updateTemplate = (event) ->
-		$input = $(event.target)
-		$form = $input.parents('form')
-		value = $input.val()
-		$form.find('[data-template]').removeClass('show')
-		$form.find('[data-template="'+value+'"]').addClass('show')
-
-	fillDateSelects = () ->
-		$('.date.selects').each (i, selects) ->
-			$monthOptions = $(selects).find('.options.months')
+	setupDateSelector = (form) ->
+		$(form).find('.dateselect').each (i, selects) ->
+			$monthOptions = $(selects).find('.checkboxes.month')
 			$null = $monthOptions.find('.checkbox.null')
-			for i in [0...12]
-				month = moment.months(i)
-				days = moment(i+1, 'M').daysInMonth()
-				object = {name: month, slug: month}
-				$checkbox = addCheckbox($monthOptions, object, [])
+
+			checkedMonth = {id:$monthOptions.data('checked').slug}
+			for i in [12...0]
+				month = moment.months(i-1)
+				days = moment(i, 'M').daysInMonth()
+				object = {name: month, slug: i, id: i}
+				$checkbox = addCheckbox($monthOptions, object, checkedMonth)
 				$checkbox.attr('data-days', days)
 
-			$dayOptions = $(selects).find('.options.days')
-			$null = $dayOptions.find('.checkbox.null')
-			for i in [1..31]
-				object = {name: i, slug: i}
-				$checkbox = addCheckbox($dayOptions, object, [])
+			$dayOptions = $(selects).find('.checkboxes.day')
+			checkedDay = {id:$dayOptions.data('checked').slug}
+			for i in [31...0]
+				object = {name: i, slug: i, id: i}
+				$checkbox = addCheckbox($dayOptions, object, checkedDay)
 
-			$yearOptions = $(selects).find('.options.years')
-			$null = $yearOptions.find('.checkbox.null')
+			$yearOptions = $(selects).find('.checkboxes.year')
+			checkedYear = {id:$yearOptions.data('checked').slug}
 			for i in [moment().year()...1899]
-				object = {name: i, slug: i}
-				$checkbox = addCheckbox($yearOptions, object, [])
+				object = {name: i, slug: i, id: i}
+				$checkbox = addCheckbox($yearOptions, object, checkedYear)
+
+	openDateOptions = (e) ->
+		$dateselect = $(this).parents('.dateselect')
+		type = this.dataset.type
+		$checkboxes = $dateselect.find('.checkboxes.'+type)
+
+		$dateselect.find('.select:not(.'+type+')').removeClass('selected')
+		$dateselect.find('.checkboxes:not(.'+type+')').removeClass('open')
+		$(this).toggleClass('selected')
+		$checkboxes.toggleClass('open')
+
+	selectDateOption = (e) ->
+		$dateselect = $(this).parents('.dateselect')
+		$checkboxes = $(this).parents('.checkboxes')
+		type = $checkboxes.data('model')
+		$select = $dateselect.find('.select.'+type)
+		object = JSON.parse($(this).prev('input').val())
+		$select.find('.display').text(object.name)
+		$select.find('.input').val(object.slug)
+
+
+	setupEditor = (form) ->
+		window.editors = []
+		toolbarOpt = [
+			['bold', 'italic', 'underline'],
+			['blockquote'],
+			[{ 'header': 1 }, { 'header': 2 }],
+			[{ 'list': 'ordered'}, { 'list': 'bullet' }],
+			[{ 'script': 'sub'}, { 'script': 'super' }],
+			[{ 'indent': '-1'}, { 'indent': '+1' }],
+			[{ 'size': ['small', false, 'large', 'huge'] }],
+			['clean']
+		]   
+		editorOpt =
+		  modules:
+		    toolbar: toolbarOpt
+		  theme: 'snow'
+		$(form).find('.textarea').each (i, textarea) ->
+			editor = new Quill(textarea, editorOpt)
+			name = textarea.dataset.name
+			contents = $(form).find('input[name="'+name+'HTML"]').val()
+			if(contents.length)
+				editor.setContents(JSON.parse(contents));
+			window.editors.push(editor)
+
+
+	setupSortable = (form) ->
+		$sortable = $(form).find('.sortable')
+		sortable = $sortable.find('ul').sortable
+			update: (e, elem) ->
+				newOrder = []
+				$sortableInput = $sortable.find('input')
+				$(this).find('li').each () ->
+					id = $(this).data('id')
+					newOrder.push(id)
+				if($sortable.is('.images'))
+					imagesData = JSON.parse($sortableInput.val())
+					newOrderClone = newOrder
+					$(imagesData).each () ->
+						index = newOrder.indexOf(this.id)
+						newOrder[index] = this
+				newOrderJson = JSON.stringify(newOrder)
+				$sortable.find('input').val(newOrderJson)
+		sortable.disableSelection()
 
 	initAdmin()

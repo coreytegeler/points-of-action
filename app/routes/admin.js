@@ -16,6 +16,7 @@ var path  = require('path')
 var fs  = require('fs')
 var multer  = require('multer')
 var gm  = require('gm')
+var sharp  = require('sharp')
 
 module.exports = function(app) {
 
@@ -173,6 +174,7 @@ module.exports = function(app) {
         return false
     }
     object.type = type
+    if(object.images) { object.images = JSON.parse(object.images) }
     object.save(function(err) {
       if(err) {
         console.log('Failed: '+err)
@@ -183,7 +185,7 @@ module.exports = function(app) {
             p: tools.pluralize(object.type)
           },
           action: 'create',
-          object: data
+          object: object
         })
         return false
       } else {
@@ -251,6 +253,7 @@ module.exports = function(app) {
 
   var updateObj = function(type, id, data, res) {
     var model = tools.getModel(type)
+    data = tools.preSave(data, type)
     model.findOneAndUpdate({_id: id}, data, {new: true, runValidators: true, safe: true, upsert: true}, function(err, object) {
       if(err) {
         console.log('Failed:'+err)
@@ -266,7 +269,7 @@ module.exports = function(app) {
           })
         }
       } else {
-        console.log('Updated:'+object)
+        // console.log('Updated:'+object)
         if(res) {
           res.redirect('/admin/'+type+'/edit/'+object.slug)
         }
@@ -282,83 +285,6 @@ module.exports = function(app) {
       if (err) throw err
       console.log(type+' successfully deleted!')
       res.redirect('/admin/'+type)
-    })
-  })
-
-  app.get('/admin/:type/quicky', tools.isLoggedIn, function(req, res) {
-    var type = req.params.type
-    if(!type)
-      return
-    var form = 'quicky'
-    if(type == 'image')
-      form = 'image'
-    if(form)
-      res.render('admin/'+form+'.pug', {
-        type: type
-      })
-    else
-      return
-  })
-
-  app.post('/admin/:type/quicky', tools.isLoggedIn, function(req, res) {
-    var data = req.body
-    var type = tools.singularize(req.params.type)
-    var errors    
-    switch(type) {
-      case 'neighborhood':
-        var object = new Neighborhood(data)
-        break
-      case 'tour':
-        var object = new Tour(data)
-        break
-      case 'style':
-        var object = new Style(data)
-        break
-      case 'use':
-        var object = new Use(data)
-        break
-      case 'material':
-        var object = new Material(data)
-        break
-      case 'structure':
-        var object = new Structure(data)
-        break
-      case 'roofType':
-        var object = new RoofType(data)
-        break
-      case 'roofMaterial':
-        var object = new RoofMaterial(data)
-        break
-      case 'threat':
-        var object = new Threat(data)
-        break
-      case 'environment':
-        var object = new Environment(data)
-        break
-      default:
-        return
-    }
-    object.save(function(err) {
-      if(!err) {
-        console.log('Created:')
-        console.log(object)
-        return res.json(object)
-      } else {
-        console.log('Failed:')
-        console.log(err)
-        return res.json(err)
-      }
-    })
-  })
-
-  app.get('/admin/image/quicky/:id', tools.isLoggedIn, function(req, res) {
-    var id = req.params.id
-    Image.findById(id, function(err, image) {
-      console.log(image)
-      res.render('admin/image.pug', {
-        object: image,
-        type: 'image'
-      })
     })
   })
 
@@ -378,48 +304,53 @@ module.exports = function(app) {
 
   app.post('/admin/image/quicky/', tools.isLoggedIn, function(req, res) {
     var data = req.body
-
     upload(req, res, function(err) {
       if(err) {
         console.log('Failed image upload:', err)
         return res.json(err)
       }
-
       var imageData = req.file
       var filename = imageData.filename
       data.filename = filename
       data.original = '/uploads/'+filename
-      data.medium = '/uploads/medium/'+filename
       data.small = '/uploads/small/'+filename
-
-      gm(appRoot+'/public'+data.original).resize(800, 800).quality(100).autoOrient().write(appRoot+'/public/'+data.medium, function (err) {
-        if(err) {
-          console.log('Failed medium resize:', err)
-          return res.json(err)
-        } else {
-          console.log('Medium resize:', this)
+      data.medium = '/uploads/medium/'+filename
+      Async.parallel([
+        function(callback) {
+          sharp(appRoot+'/public'+data.original)
+            .resize(800, 800).max().png()
+            .toFile(appRoot+'/public'+data.small, function(err, image) {
+              if(err) {
+                console.log('Error on small image', err)
+                callback(err)
+              }
+              console.log('small', image)
+              callback(null, image)
+            })
+        }, function(callback) {
+          sharp(appRoot+'/public'+data.original)
+            .resize(800, 800).max().png()
+            .toFile(appRoot+'/public'+data.medium, function(err, image) {
+              if(err) {
+                console.log('Error on medium image', err)
+                callback(err)
+              }
+              console.log('medium', image)
+              callback(null, image)
+            })
         }
-      })
-
-      gm(appRoot+'/public'+data.original).resize(250, 250).quality(100).autoOrient().write(appRoot+'/public/'+data.small, function (err) {
-        if(err) {
-          console.log('Failed small resize:', err)
-          return res.json(err)
-        } else {
-          console.log('Small resize:', this)
-        }
-      })
-
-      var image = new Image(data)
-      image.save(function(err) {
-        if(!err) {
-          console.log('Added:')
-          console.log(image)
-          return res.json(image)
-        } else {
-          console.log(err)
-          return res.json(err)
-        }
+      ], function(err, images) {
+        var image = new Image(data)
+        image.save(function(err) {
+          if(!err) {
+            console.log('Added:')
+            console.log(image)
+            return res.json(image)
+          } else {
+            console.log(err)
+            return res.json(err)
+          }
+        })
       })
     })
   })
@@ -437,6 +368,50 @@ module.exports = function(app) {
         console.log(err)
         return res.json(err)
       }
+    })
+  })
+
+  app.get('/admin/:type/quicky', tools.isLoggedIn, function(req, res) {
+    var type = req.params.type
+    if(!type)
+      return
+    var form = 'quicky'
+    if(type == 'image')
+      form = 'image'
+    if(form)
+      res.render('admin/'+form+'.pug', {
+        type: type,
+        action: 'create'
+      })
+    else
+      return
+  })
+
+  app.post('/admin/:type/quicky/create', tools.isLoggedIn, function(req, res) {
+    var data = req.body
+    var type = tools.singularize(req.params.type)
+    var errors    
+    var object = tools.newObj(type, data)
+    object.save(function(err) {
+      if(!err) {
+        console.log('Created:')
+        console.log(object)
+        return res.json(object)
+      } else {
+        console.log('Failed:')
+        console.log(err)
+        return res.json(err)
+      }
+    })
+  })
+
+  app.get('/admin/image/quicky/:id', tools.isLoggedIn, function(req, res) {
+    var id = req.params.id
+    Image.findById(id, function(err, image) {
+      res.render('admin/image.pug', {
+        object: image,
+        type: 'image'
+      })
     })
   })
 }

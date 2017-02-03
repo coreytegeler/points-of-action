@@ -18,6 +18,7 @@ var db = {
 	production: process.env.MONGODB_URI
 };
 
+global.appRoot = path.resolve(__dirname)
 app.set('dbUrl', db[app.settings.env]);
 mongoose.connect(app.get('dbUrl'));
 

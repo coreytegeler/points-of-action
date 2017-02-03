@@ -7,10 +7,18 @@ html(lang='en')
 		script(type='text/javascript' src='/js/imagesloaded.js')
 		script(type='text/javascript' src='/js/transit.js')
 		script(type='text/javascript' src='/js/moment.js')
+		script(type='text/javascript' src='//cdn.quilljs.com/1.2.0/quill.min.js')
+		script(type='text/javascript' src='/js/list.js')
+		script(type='text/javascript' src='/js/main.js')
 		script(type='text/javascript' src='/js/admin.js')
 		link(rel='stylesheet' href='/css/admin.css')
+		link(rel='stylesheet' href='//cdn.quilljs.com/1.2.0/quill.core.css')
+		link(rel='stylesheet' href='//cdn.quilljs.com/1.2.0/quill.snow.css')
+
+			
 	body
 		include ./nav
 		main
-			.inner
-				block body
+			.scroll
+				.inner
+					block body

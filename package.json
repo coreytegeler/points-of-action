@@ -1,51 +1,54 @@
 {
   "name": "civil-rights",
   "version": "1.0.0",
-  "description": "Points of action",
+  "description": "",
   "repository": "",
   "main": "server.js",
   "scripts": {
     "sass-public": "sass --watch public/sass/public.scss:public/css/_public.css",
     "sass-admin": "sass --watch public/sass/admin.scss:public/css/_admin.css",
-    "prefix-public" : "postcss -w -u autoprefixer public/css/_public.css -o public/css/public.css",
-    "prefix-admin" : "postcss -w -u autoprefixer public/css/_admin.css -o public/css/admin.css",
-    "sass" : "npm run sass-public & npm run sass-admin & npm run prefix-public & npm run prefix-admin",
+    "prefix-public": "postcss -w -u autoprefixer public/css/_public.css -o public/css/public.css",
+    "prefix-admin": "postcss -w -u autoprefixer public/css/_admin.css -o public/css/admin.css",
+    "sass": "npm run sass-public & npm run sass-admin & npm run prefix-public & npm run prefix-admin",
     "coffee": "coffee -o public/js/ -cw public/coffee/",
     "go": "npm run sass & npm run coffee & nodemon server.js",
-    "ssh": "ssh -i new-haven-building-archive.pem ubuntu@ec2-54-208-156-193.compute-1.amazonaws.com"
+    "ssh": "ssh root@162.243.9.116"
   },
   "author": "Corey Tegeler",
   "license": "ISC",
-  "dependencies" : {
-    "express" : "~4.0.0",  
-    "async" : "2.0.0-rc.6",         
-    "pug" : "2.0.0-beta3",               
-    "mongoose" : "4.5.1",   
-
-    "passport" : "~0.1.17",         
-    "passport-local" : "~0.1.6",    
-    "passport-local-mongoose": "^1.0.0",
-    "connect-flash" : "~0.1.1",     
-    "bcrypt-nodejs" : "latest",
-
-    "morgan": "~1.0.0",
-    "body-parser": "~1.0.0",
-    "cookie-parser": "~1.0.0",
-    "method-override": "~1.0.0",
-    "express-session": "~1.0.0",
-
-    "browserify": "13.0.1",
-    "jquery": "3.0.0",
-    "slug": "0.9.1",
-    "coffee-script": "1.10.0",
-    "node-sass": "3.8.0",
+  "engines": {
+    "node": "7.5.0",
+    "npm": "4.1.1"
+  },
+  "dependencies": {
+    "async": "2.0.0-rc.6",
     "autoprefixer": "^6.5.1",
+    "bcrypt-nodejs": "latest",
+    "body-parser": "~1.0.0",
+    "browserify": "13.0.1",
+    "coffee-script": "1.10.0",
+    "connect-flash": "~0.1.1",
+    "cookie-parser": "~1.0.0",
     "cssnano": "^3.8.0",
-    
-    "moment": "2.14.1",
-    "node-geocoder": "3.15.0",
+    "express": "~4.0.0",
+    "express-session": "~1.0.0",
+    "geojson2svg": "^1.0.5",
     "gm": "1.23.0",
-    "multer": "1.2.0"
-  
+    "jquery": "3.0.0",
+    "method-override": "~1.0.0",
+    "moment": "2.14.1",
+    "mongodb": "2.2.22",
+    "mongoose": "4.5.1",
+    "morgan": "~1.0.0",
+    "multer": "1.2.0",
+    "node-geocoder": "3.15.0",
+    "node-sass": "4.3.0",
+    "passport": "~0.1.17",
+    "passport-local": "~0.1.6",
+    "passport-local-mongoose": "^1.0.0",
+    "pug": "2.0.0-beta3",
+    "quill": "^1.2.0",
+    "sharp": "^0.17.1",
+    "slug": "0.9.1"
   }
 }
