@@ -21,7 +21,7 @@ module.exports = function(app) {
     }
     model.find(query, function(err, items) {
       if(err)
-        callback(err)
+        return res.json(err)
       res.json(items)
     })
   })
@@ -46,7 +46,7 @@ module.exports = function(app) {
     }
     model.find(query, function(err, object) {
       if(err)
-        callback(err)
+        return res.json(err)
       res.render('content/'+type+'.pug', {
         type: {
           s: tools.singularize(type),

@@ -3,13 +3,7 @@ include ./mixins
 	.horz
 		.vert
 			form(method='post', action='/admin/image/quicky/'+(object ? object.id : ''), enctype='multipart/form-data')
-				.row
-					if(object)
-						img(src=object.medium)
-					else
-						+image('image', 'Image')
-				.row
-					+input('caption', 'Caption', 'text', (object ? object.caption : ''))
+				include ../admin/forms/image.pug
 				.buttons
 					.button.close Cancel
 					input(type='submit' value=(object ? 'Update' : 'Upload') name='submit').button

@@ -21,8 +21,7 @@ html(lang='en')
 		//- styles
 		link(rel='stylesheet' href='/css/mapbox-gl.css')
 		link(rel='stylesheet' href='/css/public.css')
-	body
-		include ./nav
+	body(data-root=root, data-model=(model ? model.s : ''), data-slug=(slug ? slug : ''), data-id=(id ? id : ''), data-title=(title ? title : ''))
 		main
 			block body
 		#palette

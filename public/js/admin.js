@@ -39,9 +39,10 @@
     };
     populateCheckboxes = function(form) {
       $(form).find('.populate:not(.populated)').each(function(i, container) {
-        var label, model, type;
+        var checked, label, model, type;
         model = $(container).data('model');
         type = $(container).data('type');
+        checked = $(container).data('checked');
         label = $(container).prev('label').text();
         $(this).addClass('populated');
         if (model === 'historicUse') {
@@ -59,8 +60,6 @@
             }
             listId = model + '-checkboxes';
             $(objects).each(function(i, object) {
-              var checked;
-              checked = $(container).data('checked');
               return addCheckbox(container, object, checked);
             });
             filterList = new List(listId, {
@@ -73,7 +72,7 @@
     };
     addCheckbox = function(container, object, checked) {
       var $checkbox, $input, $label, $options, checkedVal, id, j, len, model, slug, value, valueObject;
-      if (!$.isArray(checked)) {
+      if (checked && !$.isArray(checked)) {
         checked = [checked];
       }
       $checkbox = $(container).find('.empty').clone().removeClass('empty');
@@ -112,7 +111,7 @@
           try {
             checkedVal = JSON.parse(checkedVal).id;
           } catch (undefined) {}
-          if (valueObject.id === checkedVal.id) {
+          if (checkedVal && valueObject.id === checkedVal.id) {
             $input.attr('checked', true);
           }
         }
@@ -140,7 +139,6 @@
     };
     addQuicky = function() {
       var $button, id, type;
-      console.log(this);
       $button = $(this);
       id = $button.data('id');
       type = $button.data('type');
@@ -201,16 +199,17 @@
       $quicky.removeClass('saving');
     };
     saveQuicky = function(event) {
-      var $form, $quicky, caption, contentType, data, id, image, postUrl, processData, type;
-      event.stopPropagation();
+      var $form, $quicky, caption, contentType, data, id, image, model, postUrl, processData;
       event.preventDefault();
       $form = $(this);
       $quicky = $form.parents('.quicky');
       id = $quicky.data('id');
-      type = $quicky.data('type');
+      model = $quicky.data('model');
       data = new FormData();
-      if (type === 'image' && !id.length) {
+      console.log(model, id);
+      if (model === 'images' && !id) {
         image = $form.find('input:file')[0].files[0];
+        console.log(image);
         caption = $form.find('input.caption').val();
         data.set('image', image, image.name);
         data.set('caption', caption);
@@ -238,14 +237,13 @@
         },
         success: function(object, status, jqXHR) {
           var checkboxes, checked;
-          type = $quicky.data('type');
-          checkboxes = $('.checkboxes.' + type);
+          checkboxes = $('main .checkboxes.' + model);
           checked = {
             id: object._id
           };
           if (checkboxes.length) {
             addCheckbox(checkboxes, object, checked);
-          } else if (type === 'image') {
+          } else if (model === 'images') {
             addImage(object);
           }
           $quicky.removeClass('saving');
@@ -257,7 +255,6 @@
       var $clone, $imagesInput, $imagesWrapper, i, imageObject, imagesInputVal, newImg, thisObject, updating;
       $imagesWrapper = $('form.main').find('.images');
       $imagesInput = $imagesWrapper.find('input:text');
-      addQuicky('image', object._id, '');
       imageObject = {
         id: object._id,
         original: object.original,
@@ -330,12 +327,14 @@
     };
     setupDateSelector = function(form) {
       return $(form).find('.dateselect').each(function(i, selects) {
-        var $checkbox, $dayOptions, $monthOptions, $null, $yearOptions, checkedDay, checkedMonth, checkedYear, days, j, k, l, month, object, ref, results;
+        var $checkbox, $dayOptions, $monthOptions, $yearOptions, checkedDay, checkedMonth, checkedYear, days, j, k, l, month, object, ref, results;
         $monthOptions = $(selects).find('.checkboxes.month');
-        $null = $monthOptions.find('.checkbox.null');
         checkedMonth = {
-          id: $monthOptions.data('checked').slug
+          id: $monthOptions.data('checked')
         };
+        if (checkedMonth.id) {
+          checkedMonth.id = checkedMonth.slug;
+        }
         for (i = j = 12; j > 0; i = --j) {
           month = moment.months(i - 1);
           days = moment(i, 'M').daysInMonth();
@@ -349,8 +348,11 @@
         }
         $dayOptions = $(selects).find('.checkboxes.day');
         checkedDay = {
-          id: $dayOptions.data('checked').slug
+          id: $dayOptions.data('checked')
         };
+        if (checkedDay.id) {
+          checkedDay.id = checkedDay.slug;
+        }
         for (i = k = 31; k > 0; i = --k) {
           object = {
             name: i,
@@ -361,8 +363,11 @@
         }
         $yearOptions = $(selects).find('.checkboxes.year');
         checkedYear = {
-          id: $yearOptions.data('checked').slug
+          id: $yearOptions.data('checked')
         };
+        if (checkedYear.id) {
+          checkedYear.id = checkedYear.slug;
+        }
         results = [];
         for (i = l = ref = moment().year(); ref <= 1899 ? l < 1899 : l > 1899; i = ref <= 1899 ? ++l : --l) {
           object = {

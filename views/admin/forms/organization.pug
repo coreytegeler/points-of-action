@@ -1,6 +1,6 @@
 .row.header
 	+input('name', 'Name', 'text', (object ? object.name : ''))
 .row
-	+checkboxes('organizationType', 'Organization Type', true, true)
+	+checkboxes('organizationType', 'Organization Type', true, true, (object ? object.organizationType : null))
 .row
-	+checkboxes('location', 'Location', true, true)
+	+checkboxes('location', 'Location', true, true, (object ? object.location : null))

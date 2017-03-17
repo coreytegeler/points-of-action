@@ -1,27 +1,29 @@
-nav.float
+aside#left
 	.title
 		a(href='/admin/') Civil Rights Map
 	.scroll
-		.inner
+		nav
 			ul.edit
-				li
+				li.link
 					a(href='/admin/actions/') Actions
-				li
+				li.link
 					a(href='/admin/locations/') Locations
-				li
+				li.link
 					a(href='/admin/organizations/') Organizations
-				li
+				li.link
 					a(href='/admin/people/') People
-				li
+				li.link
 					a(href='/admin/tactics/') Tactics
-				li
+				li.link
 					a(href='/admin/terms/') Terms
+				li.link
+					a(href='/admin/images/') Images
 			ul.account
-				li
+				li.link
 					a(href='/admin/profile/') Profile
 				if(user)
-					li
+					li.link
 						a(href='/admin/logout/') Logout
 				else
-					li
+					li.link
 						a(href='/admin/login/') Login

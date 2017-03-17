@@ -1,0 +1,9 @@
+.row
+	+input('name', 'Name', 'text', (object ? object.name : ''))
+.row
+	if(object)
+		img(src=object.medium)
+	else
+		+image('image', 'Image')
+.row
+	+input('caption', 'Caption', 'text', (object ? object.caption : ''))

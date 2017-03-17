@@ -15,10 +15,16 @@ var userSchema = mongoose.Schema({
 		type: String
 	},
 	name: String,
-	slug: String,
+	slug: {
+		type: String,
+		unique: true
+	},
 	password: String,
 	username: String,
-	type: String
+	model: {
+		type: String,
+		default: 'user'
+	}
 }, { 
 	timestamps: true
 });

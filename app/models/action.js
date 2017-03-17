@@ -7,18 +7,22 @@ var actionSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
-	slug: String,
-	tactic: Mixed,
-	location: Mixed,
+	slug: {
+		type: String,
+		unique: true
+	},
+	tactics: Mixed,
+	locations: Mixed,
 	people: Mixed,
-	organization: Mixed,
-	essayJSON: String,
+	organizations: Mixed,
+	essayJSON: Mixed,
 	essayHTML: String,
 	images: Mixed,
-	type: String,
-	month: Mixed,
-	day: Mixed,
-	year: Mixed
+	date: Mixed,
+	model: {
+		type: String,
+		default: 'action'
+	}
 }, { 
 	timestamps: true
 });

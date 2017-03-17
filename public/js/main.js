@@ -7,16 +7,16 @@
     return $body.on('click touchend', '.band', toggleFloat);
   });
 
-  window.toggleFloat = function(float, dur) {
-    var $band, $float;
-    if ($(float).is('.float')) {
-      $float = $(float);
-      $band = $float.find('.band');
+  window.toggleFloat = function(aside, dur) {
+    var $aside, $band;
+    if ($(aside).is('aside')) {
+      $aside = $(aside);
+      $band = $aside.find('.band');
     } else {
       $band = $(this);
-      $float = $band.parents('.float');
+      $aside = $band.parents('aside');
     }
-    return $float.toggleClass('open');
+    return $aside.toggleClass('open');
   };
 
 }).call(this);

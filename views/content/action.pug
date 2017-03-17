@@ -1,5 +1,8 @@
 -var actions = object
 each action in actions
-	h4= action.name
-	.content
+	.action(data-id=action._id)
+		h4= action.name
+		each image, index in action.images
+			.image(data-id=image.id)
+				img(src=image.original)
 		.essay.textarea !{action.essayHTML}

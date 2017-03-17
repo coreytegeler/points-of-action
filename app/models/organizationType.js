@@ -3,9 +3,15 @@ var mongoose = require('mongoose')
 var Mixed = mongoose.Schema.Types.Mixed
 
 var organizationTypeSchema = mongoose.Schema({
-	title: String,
-	slug: String,
-	type: String
+	name: String,
+	slug: {
+		type: String,
+		unique: true
+	},
+	model: {
+		type: String,
+		default: 'organizationType'
+	}
 }, { 
 	timestamps: true
 })

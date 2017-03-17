@@ -4,9 +4,10 @@ $ ->
 	$map = $('#map')
 	$intro = $('#intro')
 	$introCanvas = $('#intro')
-	$right = $('#right.float')
-	$left = $('#left.float')
+	$right = $('aside#right')
+	$left = $('aside#left')
 	markersLayer = []
+	window.markers = {}
 	nycLatLng = {lat: 40.723952837100995, lng: -73.98725835012341}
 	zoomIn = 15
 	zoomOut = 12
@@ -27,7 +28,7 @@ $ ->
 		map.on 'load', () ->
 			getPoints()
 			# introSetup()
-			getFeature('boroughs')
+			# getFeature('boroughs')
 			$map.addClass('show')
 
 	getFeature = (featureName) ->
@@ -64,10 +65,12 @@ $ ->
 				return
 			success: (response, status, jqXHR) ->
 				plotMarkers(response)
+				if($right.is('.open'))
+					id = $right.data('id')
+					centerPoint(id)
 		return
 
 	plotMarkers = (locs) ->
-		window.markers = {}
 		markersArray = []
 		bounds = new mapboxgl.LngLatBounds()
 		$.each locs, (i, loc) ->
@@ -76,7 +79,7 @@ $ ->
 			bounds.extend(marker.geometry.coordinates)
 			markersArray.push(marker)
 			markers[loc._id] = marker
-		listLocs()
+		listLocs(locs)
 		map.addSource 'markers',
 	    'type': 'geojson',
 	    'data':
@@ -126,39 +129,42 @@ $ ->
 
 	getLocContent = (id, title) ->
 		url = '/api/html/?type=location&id='+id
-		marker = markers[id]
+		# marker = markers[id]
 		$.ajax
 			url: url,
 			error:  (jqXHR, status, error) ->
 				console.error jqXHR, status, error
 				return
 			success: (response, status, jqXHR) ->
-				openLocPanel(id, title, response, marker)
+				openLocPanel(id, title, response)
 		return
 
-	openLocPanel = (id, title, response, marker) ->
+	openLocPanel = (id, title, response) ->
+		$right.find('.title h1').html title
+		if(!$.isEmptyObject(markers))
+			centerPoint(id)
+		getLocActions(id)
+		$right.find('.content').html(response)
+		$right.attr('data-id', id)
+		$right.addClass('show')
+		$right.addClass('open')
+		$left.removeClass('open')
+
+	centerPoint = (id) ->
+		marker = markers[id]
 		latlng = marker.geometry.coordinates
 		currentZoom = map.getZoom()
-		$right.find('.title h1').html title
-		# if(!$body.is('.opened'))
 		zoomOffset = currentZoom/zoomIn
 		pixelCoords = map.project marker.geometry.coordinates
 		xOffset = 0.375 * map._containerDimensions()[0]
 		pixelCoords.x = pixelCoords.x + xOffset
 		flyTo = map.unproject pixelCoords
 		$map.attr 'data-zoom', currentZoom
-		$right.find('.content').html(response)
-		getLocActions(id)
 		map.flyTo
 			center: flyTo,
 			curve: 1,
-			# zoom: zoomIn,
       bearing: 0,
       speed: .1
-
-		$right.addClass('show')
-		$right.addClass('open')
-		$left.removeClass('open')
 
 	getLocActions = (id) ->
 		url = '/api/html/?type=action&filter=location&id='+id
@@ -168,11 +174,16 @@ $ ->
 				console.error jqXHR, status, error
 				return
 			success: (content, status, jqXHR) ->
-				listLocActions(content)
+				listLocActions(id, content)
 
-	listLocActions = (content) ->
+	listLocActions = (id, content) ->
+		$content = $(content)
 		$actions = $right.find('.actions')
-		$actions.append(content)
+		$actions.append($content)
+		$content.imagesLoaded().progress (inst, image) ->
+			$img = $(image.img)
+			$image = $img.parent()
+			$image.addClass('loaded')
 
 	closeRight = (e) ->
 		$right.removeClass('open')
@@ -191,17 +202,20 @@ $ ->
 
     return uniqueFeatures
 
-	listLocs = (e) ->
-		# markers = window.markers
+	listLocs = (locs) ->
 		$leftList = $left.find('ul')
 		$leftList.html ''
-		$.each markers, (id, marker) ->
-			id = marker.properties.id
-			slug = marker.properties.slug
-			name = marker.properties.name
-			address = marker.properties.address
-			$leftList.append '<li class="loc-link" data-id="' +id+'" data-title="'+name+'"><div class="name">'+name+'</div><div class="address">'+address+'</div></li>'
-		$left.addClass('open').addClass('show')
+		$.each locs, (id, loc) ->
+			id = loc._id
+			slug = loc.slug
+			name = loc.name
+			address = loc.pointAddress
+			url = getUrl('location', slug)
+			$locLink = $('<li class="loc link"><a href="'+url+'" data-id="'+id+'" data-title="'+name+'"><div class="name">'+name+'</div><div class="address">'+address+'</div></div></li>')
+			$leftList.append $locLink
+		$left.addClass('show')
+		if(!$right.is('.open'))
+			$left.addClass('open')
 
 	mapMouseMove = (e) ->
 		features = map.queryRenderedFeatures e.point,
@@ -220,23 +234,47 @@ $ ->
 			title = marker.properties.title
 			getLocContent(id, title)
 
-	clickLocLink = () ->
+	clickLocLink = (e) ->
+		e.preventDefault()
 		id = this.dataset.id
 		title = this.dataset.title
 		getLocContent(id, title)
 
+	getUrl = (model, slug) ->
+		root = $body.data('root')
+		root = '/'
+		return root+model+'/'+slug
+
+	readUrl = () ->
+		id = $body.data('id')
+		model = $body.data('model')
+		switch model
+		  when 'location'
+		  	getLocContent(id)
+		  	break
+
+	windowResizing = () ->
+		$('aside').addClass('static')
+		clearTimeout(window.timeout)
+		window.timeout = setTimeout(windowResized, 300)
+
+	windowResized = () ->
+		$('aside').removeClass('static')
+
 	$body.on 'click touchend', '.right.open .band', closeRight
 	$body.on 'change', '#points input', listLocs
-	$body.on 'click', '.loc-link', clickLocLink
+	$body.on 'click', '.locations ul li.loc a', clickLocLink
+	$window.on 'resize', windowResizing
 
-
+	$palette = $('#palette')
 	colors = {
-		white: $('#palette .white').css('color')
-		light: $('#palette .light').css('color')
-		medium: $('#palette .medium').css('color')
-		dark: $('#palette .dark').css('color')
-		darker: $('#palette .darker').css('color')
-		black: $('#palette .black').css('color')
-		yellow: $('#palette .yellow').css('color')
+		white: $palette.find('.white').css('color')
+		light: $palette.find('.light').css('color')
+		medium: $palette.find('.medium').css('color')
+		dark: $palette.find('.dark').css('color')
+		darker: $palette.find('.darker').css('color')
+		black: $palette.find('.black').css('color')
+		yellow: $palette.find('.yellow').css('color')
 	}
+	readUrl()
 	initMap()

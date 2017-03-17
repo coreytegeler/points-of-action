@@ -41,12 +41,67 @@ main {
 		// width: 25%;
 	}
 }
+aside {
+	.scroll {
+		width: calc(100% - 1em);
+	}
+}
 nav {
 	max-height: calc(40% - .5em);
 }
+#left {
+	bottom: .5em;
+	z-index: 500;
+	transform: translateX(-25vw);
+	label.checkbox {
+		text-transform: uppercase;
+		padding: .25em;
+		font-weight: 700;
+		display: table;
+		color: rgba($dark, 0.5);
+		@include xSmallText;
+		transition: color 200ms $fadeEase;
+		&:hover {
+			cursor: pointer;
+			color: $dark;
+			input#inView {
+				background-color: $darker;
+			}
+		}
+	}
+	ul {
+		padding: 0;
+		li {
+			.name, .address {
+				transition: transform 150ms $slideEase;
+			}
+			.name {
+				color: $darker;
+			}
+			.address {
+				color: $dark;
+				text-transform: uppercase;
+				@include xSmallText;
+			}
+			&:hover {
+				transform-origin: left center;
+				.name {
+					color: rgba($darker, 0.7);
+				}
+				.address {
+					color: rgba($dark, 0.7);
+				}
+			}
+		}
+	}
+	&.show {
+		transform: translateX(calc(-25vw + 1em));
+	}
+	&.open {
+		transform: translateX(0);
+	}
+}
 #right {
-	height: calc(100% - 1em);
-	top: .5em;
 	z-index: 500;
 	overflow-x: visible;
 	.title {
@@ -94,69 +149,6 @@ nav {
 				transition: all 200ms ease;
 			}
 		}
-	}
-}
-#left {
-	bottom: .5em;
-	z-index: 500;
-	.scroll {
-		max-height: calc(60vh - 1em);
-		.inner {
-			
-		}
-	}
-	label.checkbox {
-		text-transform: uppercase;
-		padding: .25em;
-		font-weight: 700;
-		display: table;
-		color: rgba($dark, 0.5);
-		@include xSmallText;
-		transition: color 200ms $fadeEase;
-		&:hover {
-			cursor: pointer;
-			color: $dark;
-			input#inView {
-				background-color: $darker;
-			}
-		}
-	}
-	ul {
-		padding: 0;
-		&:hover {
-			cursor: pointer;
-		}
-		li {
-			list-style: none;
-			display: block;
-			margin: 0;
-			padding: .25em;
-			transition: color 200ms $fadeEase;
-			.name,.address {
-				transition: transform 150ms $slideEase;
-			}
-			.name {
-				color: $darker;
-			}
-			.address {
-				color: $dark;
-				text-transform: uppercase;
-				@include xSmallText;
-			}
-			&:hover {
-				cursor: pointer;
-				transform-origin: left center;
-				.name {
-					color: rgba($darker, 0.7);
-				}
-				.address {
-					color: rgba($dark, 0.7);
-				}
-			}
-		}
-	}
-	.opened & {
-		
 	}
 }
 #palette {

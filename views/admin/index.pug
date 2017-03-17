@@ -1,13 +1,13 @@
 extends layout.pug
 block body
-	each model, type in models
-		.group(id=type)
+	each objects, model in models
+		.group(class=model)
 			h2
-				a(href='/admin/'+type) #{uppercase(type)}
+				a(href='/admin/'+model) #{uppercase(model)}
 			if model
-				ul.list
-					for object in model
+				ul(class=(model == 'images' ? 'grid' : 'list'))
+					for object in objects
 						li.item
-							a(href='/admin/'+object.type+'/edit/'+object.slug) #{object.name}
+							a(href='/admin/'+object.model+'/edit/'+object.slug)= object.name
 							| &nbsp;
-							a(href='/admin/'+object.type+'/remove/'+object._id).button.x.remove X
+							a(href='/admin/'+object.model+'/remove/'+object._id).button.x.remove X

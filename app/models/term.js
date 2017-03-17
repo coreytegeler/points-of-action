@@ -7,9 +7,15 @@ var termSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
-	slug: String,
+	slug: {
+		type: String,
+		unique: true
+	},
 	definition: String,
-	type: String
+	model: {
+		type: String,
+		default: 'term'
+	}
 }, { 
 	timestamps: true
 });

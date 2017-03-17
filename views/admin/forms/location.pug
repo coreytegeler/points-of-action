@@ -22,4 +22,4 @@
 .row
 	+images('images', (object ? object.images : ''), false)
 .row
-	+checkboxes('parentLocation', 'Parent Location', true, false)
+	+checkboxes('parentLocation', 'Parent Location', true, false, (object ? object.parentLocation : null))

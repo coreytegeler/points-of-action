@@ -4,13 +4,17 @@ var Mixed = mongoose.Schema.Types.Mixed
 
 var organizationSchema = mongoose.Schema({
 	name: String,
-	slug: String,
-	organizationType: {
-		type: Mixed
+	slug: {
+		type: String,
+		unique: true
 	},
+	organizationType: Mixed,
 	location: Mixed,
 	essay: String,
-	type: String
+	model: {
+		type: String,
+		default: 'organization'
+	}
 }, { 
 	timestamps: true
 })

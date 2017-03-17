@@ -4,20 +4,17 @@ var Term = require('./models/term')
 var Tactic = require('./models/tactic')
 var Location = require('./models/location')
 var Organization = require('./models/organization')
-var OrganizationType = require('./models/organizationType')
 var Person = require('./models/person')
-
+var Image = require('./models/image')
+var OrganizationType = require('./models/organizationType')
+var PersonType = require('./models/personType')
+var Async = require('async')
 var slugify = require('slug')
 var moment = require('moment')
-var NodeGeocoder = require('node-geocoder');
-var geocoder = NodeGeocoder({
-  provider: 'google',
-  httpAdapter: 'https',
-  apiKey: 'AIzaSyAiUymfFCUE4O6kqMu-sXx9IKkMkvjYubo',
-  formatter: null
-})
+
 
 var isLoggedIn = function(req, res, next) {
+  // REMOVE ON PRODUCTION
   return next();
   if(req.isAuthenticated())
     return next();
@@ -25,9 +22,8 @@ var isLoggedIn = function(req, res, next) {
   return next();
 }
 
-var newObj = function(type, data) {
-  data.type = type
-  switch(type) {
+var newObj = function(model, data) {
+  switch(model) {
     case 'user':
       return new User(data)
     case 'action':
@@ -38,12 +34,16 @@ var newObj = function(type, data) {
       return new Location(data)
     case 'organization':
       return new Organization(data)
-    case 'organizationType':
-      return new OrganizationType(data)
     case 'term':
       return new Term(data)
     case 'tactic':
       return new Tactic(data)
+    case 'image':
+      return new Image(data)
+    case 'personType':
+      return new PersonType(data)
+    case 'organizationType':
+      return new OrganizationType(data)
     default:
       return false
   }
@@ -61,12 +61,16 @@ var singularize = function(string) {
       return 'location'
     case 'organizations':
       return 'organization'
-    case 'organizationTypes':
-      return 'organizationType'
     case 'terms':
       return 'term'
     case 'tactics':
       return 'tactic'
+    case 'images':
+      return 'image'
+    case 'personTypes':
+      return 'personType'
+    case 'organizationTypes':
+      return 'organizationType'
     default:
       return string
   }
@@ -83,20 +87,24 @@ var pluralize = function(string) {
       return 'locations'
     case 'organization':
       return 'organizations'
-    case 'organizationType':
-      return 'organizationTypes'
     case 'term':
       return 'terms'
     case 'tactic':
       return 'tactics'
+    case 'image':
+      return 'images'
+    case 'personType':
+      return 'personTypes'
+    case 'organizationType':
+      return 'organizationTypes'
     default:
       return string
   }
 }
 
-var getModel = function(type) {
-  var type = singularize(type)
-  switch(type) {
+var getModel = function(model) {
+  var model = singularize(model)
+  switch(model) {
     case 'user':
       return User
     case 'action':
@@ -107,33 +115,64 @@ var getModel = function(type) {
       return Location
     case 'organization':
       return Organization
-    case 'organizationType':
-      return OrganizationType
     case 'term':
       return Term
     case 'tactic':
       return Tactic
+    case 'image':
+      return Image
+    case 'personType':
+      return PersonType
+    case 'organizationType':
+      return OrganizationType
   }
 }
 
-var preSave = function(object) {
-  if(object.type === 'person') {
-    var name = object.firstName + ' ' + object.lastName
-    object.name = name
+var preSave = function(object, model) {
+  if(!object.model && model)
+    object.model = model
+
+  switch(object.model) {
+    case 'person':
+      var name = object.firstName + ' ' + object.lastName
+      object.name = name
+      break
+    case 'action':
+      console.log(object.location)
+      // Location.update({_id: id}, {$set: {action: action}}, {new: true, runValidators: true}, {multi: true}, function(err, object) {
+      // })
+      break
+    default:
+      break
   }
-  var parsables = ['images', 'month', 'day', 'year']
+
+
+  var parsables = ['images', 'month', 'day', 'year', 'organizations','locations', 'tactics', 'people']
   for(var i = 0; i < parsables.length; i++) {
-    var name = parsables[i] 
+    var name = parsables[i]
     if(typeof object[name] === 'string') {
       object[name] = JSON.parse(object[name])
-    } 
+    } else if(typeof object[name] === 'object') {
+      for(var j = 0; j < object[name].length; j++) {
+        if(typeof object[name][j] === 'string') {
+          object[name][j] = JSON.parse(object[name][j])
+        }
+      }
+    }
+  }
+  if(object.month || object.day || object.year) {
+    object.date = {
+      month: object.month,
+      day: object.day,
+      year: object.year
+    }
   }
   if(object.name) {
     var slug = slugify(object.name, {lower: true})
     object.slug = slug
   }
   // else if(object.location) {
-  //   model = getModel(object.type)
+  //   model = getModel(object.model)
   //   model.findOneAndUpdate({_id: id}, {$set: {action: action}}, {new: true, runValidators: true}, function(err, object) {
   // }
   return object
@@ -145,4 +184,3 @@ exports.singularize = singularize;
 exports.pluralize = pluralize;
 exports.getModel = getModel;
 exports.preSave = preSave;
-exports.geocoder = geocoder;

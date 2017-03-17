@@ -23,17 +23,21 @@ mixin checkbox(type, name, value, multiple, checked)
 		input(type=(multiple ? 'checkbox' : 'radio'), value=(value ? value : 'null'), name=type, id=(type+'-'+value), checked=checked)
 		label(class=type, style=style, data-pop='name', for=(type+'-'+value)) #{(name ? name : '')}
 
-mixin dateselect(month, day, year)
+mixin dateselect(date)
+	if(date)
+		-var month = date.month
+		-var day = date.day
+		-var year = date.year
 	.dateselect
 		.input
 			.selects
-				.select.month(data-type='month', data-checked=day.month)
+				.select.month(data-type='month', data-checked=(month ? month.id : ''))
 					.display= (month ? month.name : 'Month')
 					//- input(name='month', type='text', value=(value ? value : ''))
-				.select.day(data-type='day', data-checked=day.day)
+				.select.day(data-type='day', data-checked=(day ? day.id : ''))
 					//- input(name='day', type='text', value=(value ? value : ''))
 					.display= (day ? day.name : 'Day')
-				.select.year(data-type='year', data-checked=day.year)
+				.select.year(data-type='year', data-checked=(year ? year.id : ''))
 					//- input(name='year', type='text', value=(value ? value : ''))
 					.display= (year ? year.name : 'Year')
 		+checkboxes('month', null, false, false, month)

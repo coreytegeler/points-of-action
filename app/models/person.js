@@ -12,18 +12,23 @@ var personSchema = mongoose.Schema({
 		required: true
 	},
 	name: String,
-	slug: String,
+	slug: {
+		type: String,
+		unique: true
+	},
 	personType: Mixed,
 	locations: Mixed,
 	organizations: Mixed,
 	description: String,
-	type: String
+	model: {
+		type: String,
+		default: 'person'
+	}
 }, { 
 	timestamps: true
 })
 
 personSchema.pre('save', function(next) {
-	this.name = this.firstName + ' ' + this.lastName
   tools.preSave(this, 'person')
   next()
 })

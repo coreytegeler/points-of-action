@@ -26,6 +26,7 @@ h1, h2, h3, h4 {
 }
 h1 {
 	@include largeText;
+	font-family: $serif;
 	font-weight: 900;
 }
 h2 {
@@ -56,6 +57,31 @@ ul {
 				position: absolute;
 				right: 0px;
 				bottom: 0px;
+			}
+		}
+	}
+	&.grid {
+		display: flex;
+		li {
+			width: 25%;
+			position: relative;
+			img {
+				width: 100%;
+				display: table;
+			}
+			a {
+				display: table;
+				&.button {
+					width: 1em;
+					height: 1em;
+					position: absolute;
+					top: .2em;
+					right: .2em;
+					display: block;
+					background-color: $light;
+					border-radius: 50%;
+					text-align: center;
+				}
 			}
 		}
 	}
@@ -100,58 +126,44 @@ label.checkbox {
 	display: table;
 }
 nav {
-	width: calc(25% - 1em);
-	// min-width: 10em;
 	display: block;
-	top: .5em;
-	left: .5em;
 	z-index: 600;
 	clear: both;
 	font-family: $sans;
-	.title {
-		width: calc(100% - 2em);
-		padding: .25em 1em;
-		background: $yellow;
-		text-align: center;
-		text-transform: uppercase;
-		font-weight: 900;
-		@include mediumBase();
-	}
 	.scroll {
 
 	}
 	.inner {
 		padding-top: .5em;
 		padding-bottom: .5em;
-		ul {
-			margin: auto;
-			list-style: none;
-			@include mediumBase();
-			li {
-				padding: 0 0 5px 0;
-				display: block;
-				list-style: none;
-				a, a:visited {
-					color: $darker;
-					&:hover {
-						color: $dark;
-					}
-				}
-			}
-		}
 	}
 }
-.float {
+aside {
 	background: rgba($white, .97);
-	border: 1px solid rgba($darker, 0.2);
-	box-shadow: 1px 0px 0px 0px rgba($darker, 0.1);
-	border-radius: 6px;
+	height: 100%;
+	// border: 1px solid rgba($darker, 0.2);
+	// box-shadow: 1px 0px 0px 0px rgba($darker, 0.1);
+	// border-radius: 6px;
 	position: fixed;
-	display: block;
+	top: 0;
+	display: flex;
+	flex-direction: column;
 	overflow: hidden;
 	transition-property: transform;
 	transition-timing-function: $slideEase;
+	.title {
+		padding: .4em;
+		font-weight: 900;
+		border-bottom: 1px solid $medium;
+		a {
+			
+		}
+	}
 	.band {
+		width: 1em;
+		height: 100%;
+		position: absolute;
+		top: 0;
 		background: $yellow;
 		&:hover {
 			cursor: pointer;
@@ -169,54 +181,69 @@ nav {
 			height: auto;
 		}
 	}
+	ul {
+		margin: auto;
+		list-style: none;
+		@include mediumBase();
+		li {
+			list-style: none;
+			display: block;
+			margin: 0;
+			padding: .4em;
+			border-bottom: 1px solid $medium;
+			color: $darker;
+			transition: color 200ms $fadeEase;
+			&.link {
+				padding: 0;
+			}
+			a, a:visited {
+				width: calc(100% - .8em);
+				display: table;
+				padding: .4em;
+				transition: transform 200ms $slideEase;
+				&:hover {
+					color: $dark;
+					transform: translateX(.1em);
+				}
+			}
+		}
+	}
 	&.top {
 		.band {
 			width: 100%;
 			height: 1em;
 		}
 	}
-	&.left, &.right {
-		.scroll {
-			width: calc(100% - 1em);
-		}
-		.band {
-			width: 1em;
-			height: 100%;
-			position: absolute;
-			top: 0;
-		}
-	}
-	&.left {
-		width: calc(25vw - 1em);
-		left: .5em;
-		transform: translateX(-25vw);
+	&#left {
+		width: 25vw;
+		left: 0;
 		transition-duration: 150ms;
-		.scroll {
-			padding-right: 1em;
+		.title {
+			padding-right: 1.5em;
 		}
 		.band {
 			right: 0;
 		}
-		&.show {
-			transform: translateX(calc(-25vw + 1.5em));
-		}
-		&.open {
-			transform: translateX(0);
+		.scroll {
+			
 		}
 	}
-	&.right {
-		width: calc(75vw - 1em);
-		right: .5em;
+	&#right {
+		width: 75vw;
+		right: 0;
 		transform: translateX(75vw);
 		transition-duration: 250ms;
-		.scroll {
-			padding-left: 1em;
+		.title {
+			padding-left: 1.5em;
 		}
 		.band {
 			left: 0;
 		}
+		.scroll {
+			padding-left: 1em;
+		}
 		&.show {
-			transform: translateX(calc(75vw - 1.5em));
+			transform: translateX(calc(75vw - 1em));
 		}
 		&.open {
 			transform: translateX(0);
@@ -225,6 +252,9 @@ nav {
 	&.hidden {
 		
 	}
+	&.static {
+		transition: none !important
+	}
 }
 .buttons {
 	.button {
@@ -232,6 +262,7 @@ nav {
 		border-width: 0 0 2px 0;
 		border-color: $dark;
 		border-style: solid;
+		background-color: transparent;
 		&:last-child {
 			margin-right: 0;
 		}

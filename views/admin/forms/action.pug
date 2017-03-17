@@ -2,15 +2,15 @@
 	+input('name', 'Name', 'text', (object ? object.name : ''))
 .row
 	label Date
-	+dateselect(object.month, object.day, object.year)
+	+dateselect(object.date)
 .row
 	+images('images', (object ? object.images : ''), false)
 .row
-	+checkboxes('tactic', 'Tactic(s)', true, true, (object ? object.tactic : null))
+	+checkboxes('tactics', 'Tactic(s)', true, true, (object ? object.tactics : null))
 .row
-	+checkboxes('location', 'Location(s)', true, true, (object ? object.location : null))
+	+checkboxes('locations', 'Location(s)', true, true, (object ? object.locations : null))
 .row
-	+checkboxes('organization', 'Organization(s)', true, true, (object ? object.organization : null))
+	+checkboxes('organizations', 'Organization(s)', true, true, (object ? object.organizations : null))
 .row
 	+checkboxes('people', 'People', true, true, (object ? object.people : null))
 .row

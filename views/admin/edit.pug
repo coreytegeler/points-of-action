@@ -2,8 +2,8 @@ extends layout.pug
 block body
 	if(errors)
 		pre #{errors}
-	form.main(method='post' action='/admin/'+type.s+'/'+action+'/'+(id ? id : ''))
-		case type.s
+	form.main(method='post' action='/admin/'+model.s+'/'+action+'/'+(id ? id : '') class=model.s)
+		case model.s
 			when 'user'
 				include ../admin/forms/user.pug
 			when 'action'
@@ -18,11 +18,13 @@ block body
 				include ../admin/forms/tactic.pug
 			when 'term'
 				include ../admin/forms/term.pug
+			when 'image'
+				include ../admin/forms/image.pug
 			default
 				- var noForm = true
-				| No form for "#{type.s}"
+				| No form for "#{model.s}"
 		.buttons
-			a.button(href='/admin/'+type.p) View all #{type.p}
+			a.button(href='/admin/'+model.p) View all #{model.p}
 			if(!noForm)
 				input.button.save(type='submit', value=action)
 	.quickies

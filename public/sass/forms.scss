@@ -37,7 +37,7 @@ form {
 			width: 2px;
 			height: .5em;
 			position: absolute;
-			bottom: 1px;
+			bottom: 2px;
 			content: '';
 			background: $dark;
 		}
@@ -48,7 +48,7 @@ form {
 			right: 0;
 		}
 	}
-	input, .textarea, select {
+	input[type="text"], input[type="password"], input[type="email"], .textarea, select {
 		width: calc(100% - 0.8em);
 		padding: 0.1em 0.4em;
 		background: transparent;
@@ -124,6 +124,19 @@ form {
 				}
 			}
 		}
+		&.header {
+			.input {
+				input {
+					padding-left: 2px;
+					width: calc(100% - 2px - 1px);
+					@include largeText;
+					font-family: $sans;
+					font-weight: 900;
+					border-bottom-width: 2px;
+					padding-bottom: 0;
+				}
+			}
+		}
 	}
 	[data-template] {
 		display: none;
@@ -131,18 +144,9 @@ form {
 			display: block;
 		}
 	}
-}
-
-.row.header {
-	.input {
-		input {
-			padding-left: 0.2em;
-			width: calc(100% - 0.2em - 1px);
-			@include largeText;
-			font-family: $sans;
-			font-weight: 900;
-			border-bottom-width: 2px;
-			padding-bottom: 0;
+	&.image {
+		.row img {
+			width: 100%;
 		}
 	}
 }
@@ -152,7 +156,7 @@ form {
 	overflow: auto;
 	font-size: 1em;
 	line-height: 1.1em;
-	border: 0.1em solid $dark;
+	border: 2px solid $dark;
 	background: $light;
 	&.populate {
 		.item {
@@ -229,8 +233,8 @@ form {
 
 .selects {
 	display: flex;
-	border-bottom: solid $dark 0.1em;
-	padding: 0.15em 0;
+	border-bottom: solid $dark 2px;
+	padding: 2px 0;
 	.select {
 		background: transparent;
 		position: relative;
@@ -247,7 +251,7 @@ form {
 			max-height: calc(1.8em * 10);
 			position: absolute;
 			left: 0;
-			top: calc(100% + 0.15em);
+			top: calc(100% + 2px);
 			padding: 0 0.5em;
 			opacity: 0;
 			pointer-events: none;
@@ -280,7 +284,7 @@ form {
 				right: 0;
 				top: 0;
 				background-color: transparent;
-				padding: 0 0.2em;
+				padding: 0 .2em;
 			}
 			.display {
 				width: calc(100% - .6em);

@@ -2,17 +2,26 @@ var tools = require('../tools')
 var mongoose = require('mongoose')
 
 var imageSchema = mongoose.Schema({
+	name: String,
+	slug: {
+		type: String,
+		unique: true
+	},
 	filename: String,
 	original: String,
 	medium: String,
 	small: String,
-	caption: String
+	caption: String,
+	model: {
+		type: String,
+		default: 'image'
+	}
 }, { 
 	timestamps: true
 });
 
 imageSchema.pre('save', function(next) {
-	this.type = 'image'
+	tools.preSave(this, 'image')
 	next()
 })
 

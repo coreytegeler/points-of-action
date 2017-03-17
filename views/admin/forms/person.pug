@@ -1,11 +1,9 @@
-.row.two
+.row.two.header
 	.cell
 		+input('firstName', 'First Name', 'text', (object ? object.firstName : ''))
 	.cell
 		+input('lastName', 'Last Name', 'text', (object ? object.lastName : ''))
 .row
-	+checkboxes('personTypes', 'Person Type', true, true)
+	+checkboxes('personTypes', 'Person Type', true, true, (object ? object.personTypes : null))
 .row
-	+checkboxes('organizations', 'Organizations', true, true)
-.row
-	+checkboxes('location', 'Locations', true, true)
+	+checkboxes('organizations', 'Organizations', true, true, (object ? object.organizations : null))

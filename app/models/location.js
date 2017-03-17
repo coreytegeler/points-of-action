@@ -7,7 +7,10 @@ var locationSchema = mongoose.Schema({
 		type: String,
 		require: true
 	},
-	slug: String,
+	slug: {
+		type: String,
+		unique: true
+	},
 	parentLocation: String,
 	locationType: String,
 	pointAddress: String,
@@ -18,8 +21,11 @@ var locationSchema = mongoose.Schema({
 	},
 	images: Mixed,
 	description: String,
-	type: String,
-	action: Mixed
+	action: Mixed,
+	model: {
+		type: String,
+		default: 'location'
+	}
 }, { 
 	timestamps: true
 })

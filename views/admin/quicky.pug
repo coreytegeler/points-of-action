@@ -1,9 +1,9 @@
 include ./mixins
-.quicky(data-type=type, class=action)
+.quicky(data-model=model.p, class=action)
 	.horz
 		.vert
-			form(method='post' action='/admin/'+type+'/quicky/'+action)
-				case type
+			form(method='post', action='/admin/'+model.s+'/quicky/'+action+(object ? '/'+object.id : ''), enctype=(model.s == 'image' ? 'multipart/form-data' : ''))
+				case model.s
 					when 'user'
 						include ../admin/forms/user.pug
 					when 'action'
@@ -18,10 +18,18 @@ include ./mixins
 						include ../admin/forms/tactic.pug
 					when 'term'
 						include ../admin/forms/term.pug
+					when 'image'
+						include ../admin/forms/image.pug
+					when 'personType'
+						include ../admin/forms/personType.pug
+					when 'organizationType'
+						include ../admin/forms/organizationType.pug
 					default
 						- var noForm = true
-						| No form for "#{type.s}"
+						| No form for "#{model.s}"
 				.buttons
 					.button.close= 'Cancel'
+					if(object)
+						a.button.delete(href='/admin/image/remove/'+object.id) Delete
 					if(!noForm)
 						input.button.save(type='submit', value=action)

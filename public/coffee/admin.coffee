@@ -35,6 +35,7 @@ $ ->
 		$(form).find('.populate:not(.populated)').each (i, container) ->
 			model = $(container).data('model')
 			type = $(container).data('type')
+			checked = $(container).data('checked')
 			label = $(container).prev('label').text()
 			# addQuicky(model, null, label)
 			$(this).addClass('populated')
@@ -50,7 +51,6 @@ $ ->
 						return
 					listId = model+'-checkboxes'
 					$(objects).each (i, object) ->
-						checked = $(container).data('checked')
 						addCheckbox(container, object, checked)
 					filterList = new List listId,
 						valueNames: ['checkbox']
@@ -60,7 +60,7 @@ $ ->
 		return
 
 	addCheckbox = (container, object, checked) ->
-		if !$.isArray(checked)
+		if checked && !$.isArray(checked)
 			checked = [checked]
 		$checkbox = $(container).find('.empty').clone().removeClass('empty')
 		$checkbox.find('input').attr('checked', false)
@@ -87,7 +87,7 @@ $ ->
 			for checkedVal in checked
 				try
 					checkedVal = JSON.parse(checkedVal).id
-				if valueObject.id == checkedVal.id
+				if checkedVal && valueObject.id == checkedVal.id
 					$input.attr('checked', true)
 		$checkbox.attr('data-slug', slug)
 		$options.prepend($checkbox)
@@ -105,6 +105,7 @@ $ ->
 				$inputJSON.val(json)
 			if(html = editor.root.innerHTML)
 				$inputHTML.val(html)
+			# event.preventDefault()
 			
 	# updateSelectValue = (event) ->
 	# 	option = event.target 
@@ -119,7 +120,6 @@ $ ->
 
 
 	addQuicky = () ->
-		console.log(this)
 		$button = $(this)
 		id = $button.data('id')
 		type = $button.data('type')
@@ -169,15 +169,16 @@ $ ->
 		return
 
 	saveQuicky = (event) ->
-		event.stopPropagation()
 		event.preventDefault()
 		$form = $(this)
 		$quicky = $form.parents('.quicky')
 		id = $quicky.data('id')
-		type = $quicky.data('type')
+		model = $quicky.data('model')
 		data = new FormData()
-		if(type == 'image' && !id.length)
+		console.log model, id
+		if(model == 'images' && !id)
 			image = $form.find('input:file')[0].files[0]
+			console.log image
 			caption = $form.find('input.caption').val()
 			data.set('image', image, image.name)
 			data.set('caption', caption)
@@ -201,12 +202,11 @@ $ ->
 				console.log(postUrl, jqXHR, status, error)
 				alert('Error, check browser console logs')
 			success: (object, status, jqXHR) ->
-				type = $quicky.data('type')
-				checkboxes = $('.checkboxes.'+type)
+				checkboxes = $('main .checkboxes.'+model)
 				checked = {id:object._id}
 				if(checkboxes.length)
 					addCheckbox(checkboxes, object, checked)
-				else if(type == 'image')
+				else if(model == 'images')
 					addImage(object)
 				$quicky.removeClass('saving')
 				closeQuicky($quicky)
@@ -215,7 +215,6 @@ $ ->
 	addImage = (object) ->
 		$imagesWrapper = $('form.main').find('.images')
 		$imagesInput = $imagesWrapper.find('input:text')
-		addQuicky('image', object._id, '')
 		imageObject = {
 			id: object._id,
 			original: object.original,
@@ -237,9 +236,7 @@ $ ->
 				imagesInputVal.push(imageObject)
 		else
 			imagesInputVal = [imageObject]
-		
 		$imagesInput.val(JSON.stringify(imagesInputVal))
-
 		if(!$imagesWrapper.find('.image[data-id="'+object._id+'"]').length)
 			$clone = $imagesWrapper.find('.sample').clone()
 			$clone.removeClass('sample')
@@ -278,9 +275,9 @@ $ ->
 	setupDateSelector = (form) ->
 		$(form).find('.dateselect').each (i, selects) ->
 			$monthOptions = $(selects).find('.checkboxes.month')
-			$null = $monthOptions.find('.checkbox.null')
-
-			checkedMonth = {id:$monthOptions.data('checked').slug}
+			checkedMonth = {id:$monthOptions.data('checked')}
+			if checkedMonth.id
+				checkedMonth.id = checkedMonth.slug
 			for i in [12...0]
 				month = moment.months(i-1)
 				days = moment(i, 'M').daysInMonth()
@@ -289,13 +286,17 @@ $ ->
 				$checkbox.attr('data-days', days)
 
 			$dayOptions = $(selects).find('.checkboxes.day')
-			checkedDay = {id:$dayOptions.data('checked').slug}
+			checkedDay = {id:$dayOptions.data('checked')}
+			if checkedDay.id
+				checkedDay.id = checkedDay.slug
 			for i in [31...0]
 				object = {name: i, slug: i, id: i}
 				$checkbox = addCheckbox($dayOptions, object, checkedDay)
 
 			$yearOptions = $(selects).find('.checkboxes.year')
-			checkedYear = {id:$yearOptions.data('checked').slug}
+			checkedYear = {id:$yearOptions.data('checked')}
+			if checkedYear.id
+				checkedYear.id = checkedYear.slug
 			for i in [moment().year()...1899]
 				object = {name: i, slug: i, id: i}
 				$checkbox = addCheckbox($yearOptions, object, checkedYear)

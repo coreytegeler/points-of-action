@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Merriweather+Sans:300,300i,400,400i,700,700i,800,800i");
 @font-face {
   font-family: 'Bookman Old Style';
   src: url("../fonts/BookmanOldStyle.eot");
@@ -33,20 +34,21 @@ html {
     width: 100%;
     height: 100%;
     margin: 0;
-    font-family: "FranklinCondITCStd", Arial, sans-serif;
-    font-size: 24px;
+    font-family: "Merriweather Sans", Arial, sans-serif;
+    font-size: 18px;
     text-rendering: geometricPrecision; }
 
 section {
   padding: 1em; }
 
 h1, h2, h3, h4 {
-  font-family: "FranklinCondITCStd", Arial, sans-serif;
+  font-family: "Merriweather Sans", Arial, sans-serif;
   margin: 0; }
 
 h1 {
   font-size: 2em;
   line-height: 1em;
+  font-family: "Bookman Old Style", Times, serif;
   font-weight: 900; }
 
 h2 {
@@ -76,6 +78,28 @@ ul {
         position: absolute;
         right: 0px;
         bottom: 0px; }
+  ul.grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex; }
+    ul.grid li {
+      width: 25%;
+      position: relative; }
+      ul.grid li img {
+        width: 100%;
+        display: table; }
+      ul.grid li a {
+        display: table; }
+        ul.grid li a.button {
+          width: 1em;
+          height: 1em;
+          position: absolute;
+          top: .2em;
+          right: .2em;
+          display: block;
+          background-color: #f6f4f6;
+          border-radius: 50%;
+          text-align: center; }
 
 pre {
   white-space: normal; }
@@ -111,44 +135,26 @@ label.checkbox input[type="checkbox"] {
   display: table; }
 
 nav {
-  width: calc(25% - 1em);
   display: block;
-  top: .5em;
-  left: .5em;
   z-index: 600;
   clear: both;
-  font-family: "FranklinCondITCStd", Arial, sans-serif; }
-  nav .title {
-    width: calc(100% - 2em);
-    padding: .25em 1em;
-    background: #feec35;
-    text-align: center;
-    text-transform: uppercase;
-    font-weight: 900;
-    font-size: 24px; }
+  font-family: "Merriweather Sans", Arial, sans-serif; }
   nav .inner {
     padding-top: .5em;
     padding-bottom: .5em; }
-    nav .inner ul {
-      margin: auto;
-      list-style: none;
-      font-size: 24px; }
-      nav .inner ul li {
-        padding: 0 0 5px 0;
-        display: block;
-        list-style: none; }
-        nav .inner ul li a, nav .inner ul li a:visited {
-          color: #333167; }
-          nav .inner ul li a:hover, nav .inner ul li a:visited:hover {
-            color: #64648c; }
 
-.float {
+aside {
   background: rgba(255, 255, 255, 0.97);
-  border: 1px solid rgba(51, 49, 103, 0.2);
-  box-shadow: 1px 0px 0px 0px rgba(51, 49, 103, 0.1);
-  border-radius: 6px;
+  height: 100%;
   position: fixed;
-  display: block;
+  top: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   overflow: hidden;
   -webkit-transition-property: -webkit-transform;
   transition-property: -webkit-transform;
@@ -156,71 +162,97 @@ nav {
   transition-property: transform, -webkit-transform;
   -webkit-transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
           transition-timing-function: cubic-bezier(0, 0, 0.2, 1); }
-  .float .band {
+  aside .title {
+    padding: .4em;
+    font-weight: 900;
+    border-bottom: 1px solid #e6e4e0; }
+  aside .band {
+    width: 1em;
+    height: 100%;
+    position: absolute;
+    top: 0;
     background: #feec35; }
-    .float .band:hover {
+    aside .band:hover {
       cursor: pointer; }
-  .float .scroll {
+  aside .scroll {
     width: 100%;
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-transition: all 400ms cubic-bezier(0, 0, 0.2, 1);
     transition: all 400ms cubic-bezier(0, 0, 0.2, 1); }
-    .float .scroll .inner {
+    aside .scroll .inner {
       display: block;
       padding: .5em;
       height: auto; }
-  .float.top .band {
+  aside ul {
+    margin: auto;
+    list-style: none;
+    font-size: 18px; }
+    aside ul li {
+      list-style: none;
+      display: block;
+      margin: 0;
+      padding: .4em;
+      border-bottom: 1px solid #e6e4e0;
+      color: #333167;
+      -webkit-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+      transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
+      aside ul li.link {
+        padding: 0; }
+      aside ul li a, aside ul li a:visited {
+        width: calc(100% - .8em);
+        display: table;
+        padding: .4em;
+        -webkit-transition: -webkit-transform 200ms cubic-bezier(0, 0, 0.2, 1);
+        transition: -webkit-transform 200ms cubic-bezier(0, 0, 0.2, 1);
+        transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+        transition: transform 200ms cubic-bezier(0, 0, 0.2, 1), -webkit-transform 200ms cubic-bezier(0, 0, 0.2, 1); }
+        aside ul li a:hover, aside ul li a:visited:hover {
+          color: #64648c;
+          -webkit-transform: translateX(0.1em);
+                  transform: translateX(0.1em); }
+  aside.top .band {
     width: 100%;
     height: 1em; }
-  .float.left .scroll, .float.right .scroll {
-    width: calc(100% - 1em); }
-  .float.left .band, .float.right .band {
-    width: 1em;
-    height: 100%;
-    position: absolute;
-    top: 0; }
-  .float.left {
-    width: calc(25vw - 1em);
-    left: .5em;
-    -webkit-transform: translateX(-25vw);
-            transform: translateX(-25vw);
+  aside#left {
+    width: 25vw;
+    left: 0;
     -webkit-transition-duration: 150ms;
             transition-duration: 150ms; }
-    .float.left .scroll {
-      padding-right: 1em; }
-    .float.left .band {
+    aside#left .title {
+      padding-right: 1.5em; }
+    aside#left .band {
       right: 0; }
-    .float.left.show {
-      -webkit-transform: translateX(calc(-25vw + 1.5em));
-              transform: translateX(calc(-25vw + 1.5em)); }
-    .float.left.open {
-      -webkit-transform: translateX(0);
-              transform: translateX(0); }
-  .float.right {
-    width: calc(75vw - 1em);
-    right: .5em;
+  aside#right {
+    width: 75vw;
+    right: 0;
     -webkit-transform: translateX(75vw);
             transform: translateX(75vw);
     -webkit-transition-duration: 250ms;
             transition-duration: 250ms; }
-    .float.right .scroll {
-      padding-left: 1em; }
-    .float.right .band {
+    aside#right .title {
+      padding-left: 1.5em; }
+    aside#right .band {
       left: 0; }
-    .float.right.show {
-      -webkit-transform: translateX(calc(75vw - 1.5em));
-              transform: translateX(calc(75vw - 1.5em)); }
-    .float.right.open {
+    aside#right .scroll {
+      padding-left: 1em; }
+    aside#right.show {
+      -webkit-transform: translateX(calc(75vw - 1em));
+              transform: translateX(calc(75vw - 1em)); }
+    aside#right.open {
       -webkit-transform: translateX(0);
               transform: translateX(0); }
+  aside.static {
+    -webkit-transition: none !important;
+    transition: none !important; }
 
 .buttons .button {
   margin-right: 10px;
   border-width: 0 0 2px 0;
   border-color: #64648c;
-  border-style: solid; }
+  border-style: solid;
+  background-color: transparent; }
   .buttons .button:last-child {
     margin-right: 0; }
 
@@ -266,7 +298,7 @@ form {
   width: 100%; }
   form label {
     display: table;
-    font-family: "FranklinCondITCStd", Arial, sans-serif;
+    font-family: "Merriweather Sans", Arial, sans-serif;
     font-size: 0.7em;
     line-height: 1.1em;
     font-weight: 700;
@@ -295,14 +327,14 @@ form {
       width: 2px;
       height: .5em;
       position: absolute;
-      bottom: 1px;
+      bottom: 2px;
       content: '';
       background: #64648c; }
     form .input::before {
       left: 0; }
     form .input::after {
       right: 0; }
-  form input, form .textarea, form select {
+  form input[type="text"], form input[type="password"], form input[type="email"], form .textarea, form select {
     width: calc(100% - 0.8em);
     padding: 0.1em 0.4em;
     background: transparent;
@@ -314,9 +346,9 @@ form {
     line-height: 1.4em;
     outline: none;
     color: #333167; }
-    form input:-webkit-autofill, form .textarea:-webkit-autofill, form select:-webkit-autofill {
+    form input[type="text"]:-webkit-autofill, form input[type="password"]:-webkit-autofill, form input[type="email"]:-webkit-autofill, form .textarea:-webkit-autofill, form select:-webkit-autofill {
       background: none; }
-    form input.hidden, form .textarea.hidden, form select.hidden {
+    form input[type="text"].hidden, form input[type="password"].hidden, form input[type="email"].hidden, form .textarea.hidden, form select.hidden {
       display: none; }
   form input {
     -webkit-appearance: none;
@@ -328,7 +360,7 @@ form {
     form input[type="submit"] {
       width: auto;
       display: inline-block;
-      font-family: "FranklinCondITCStd", Arial, sans-serif;
+      font-family: "Merriweather Sans", Arial, sans-serif;
       padding: 0; }
   form .textarea {
     width: 100%;
@@ -355,27 +387,28 @@ form {
       width: 50%; }
       form .row.two .cell:first-of-type .input::after {
         display: none; }
+    form .row.header .input input {
+      padding-left: 2px;
+      width: calc(100% - 2px - 1px);
+      font-size: 2em;
+      line-height: 1em;
+      font-family: "Merriweather Sans", Arial, sans-serif;
+      font-weight: 900;
+      border-bottom-width: 2px;
+      padding-bottom: 0; }
   form [data-template] {
     display: none; }
     form [data-template].show {
       display: block; }
-
-.row.header .input input {
-  padding-left: 0.2em;
-  width: calc(100% - 0.2em - 1px);
-  font-size: 2em;
-  line-height: 1em;
-  font-family: "FranklinCondITCStd", Arial, sans-serif;
-  font-weight: 900;
-  border-bottom-width: 2px;
-  padding-bottom: 0; }
+  form.image .row img {
+    width: 100%; }
 
 .checkboxes {
   max-height: 10.5em;
   overflow: auto;
   font-size: 1em;
   line-height: 1.1em;
-  border: 0.1em solid #64648c;
+  border: 2px solid #64648c;
   background: #f6f4f6; }
   .checkboxes.populate .item {
     opacity: 0; }
@@ -442,8 +475,8 @@ form {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  border-bottom: solid #64648c 0.1em;
-  padding: 0.15em 0; }
+  border-bottom: solid #64648c 2px;
+  padding: 2px 0; }
   .selects .select {
     background: transparent;
     position: relative; }
@@ -459,7 +492,7 @@ form {
       max-height: calc(1.8em * 10);
       position: absolute;
       left: 0;
-      top: calc(100% + 0.15em);
+      top: calc(100% + 2px);
       padding: 0 0.5em;
       opacity: 0;
       pointer-events: none;
@@ -498,7 +531,7 @@ form {
         right: 0;
         top: 0;
         background-color: transparent;
-        padding: 0 0.2em; }
+        padding: 0 .2em; }
       .dateselect .selects .select .display {
         width: calc(100% - .6em); }
       .dateselect .selects .select input {
