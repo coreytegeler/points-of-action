@@ -21,12 +21,11 @@ section {
 	padding: 1em;
 }
 h1, h2, h3, h4 {
-	font-family: $sans;
+	font-family: $title;
 	margin: 0;
 }
 h1 {
 	@include largeText;
-	font-family: $serif;
 	font-weight: 900;
 }
 h2 {
@@ -131,11 +130,16 @@ nav {
 	clear: both;
 	font-family: $sans;
 	.scroll {
-
+		
 	}
 	.inner {
 		padding-top: .5em;
 		padding-bottom: .5em;
+	}
+	ul {
+		li {
+			@include mediumText;
+		}
 	}
 }
 aside {
@@ -160,13 +164,41 @@ aside {
 		}
 	}
 	.band {
-		width: 1em;
+		width: $bandWidth;
 		height: 100%;
 		position: absolute;
 		top: 0;
 		background: $yellow;
-		&:hover {
-			cursor: pointer;
+		border: solid $medium;
+		border-width: 0 1px;
+		a {
+			width: 100vh;
+	    height: $bandWidth;
+	    position: absolute;
+	    left: $bandWidth;
+	    text-align: center;
+	    display: flex;
+	    opacity: 0.5;
+	    transition: opacity 150ms $fadeEase;
+	    &:hover {
+    		opacity: 0.8;
+    	}
+    	&:hover, &:hover *, *:hover {
+    		cursor: pointer;
+    	}
+	    .text {
+	    	@include xSmallText;
+	    	display: table;
+	    	margin: auto;
+	    	font-weight: 900;
+	    	color: $darker;
+	    	label {
+	    		color: $dark;
+	    		text-transform: uppercase;
+	    		// font-weight: 400;
+	    		margin-right: .6em;
+	    	}
+	    }
 		}
 	}
 	.scroll {
@@ -208,24 +240,20 @@ aside {
 			}
 		}
 	}
-	&.top {
-		.band {
-			width: 100%;
-			height: 1em;
-		}
-	}
 	&#left {
-		width: 25vw;
+		width: calc(25vw + 1px);
 		left: 0;
 		transition-duration: 150ms;
 		.title {
-			padding-right: 1.5em;
+			padding-right: calc(#{$bandWidth} + .4em);
 		}
 		.band {
 			right: 0;
-		}
-		.scroll {
-			
+			a {
+				top: 0;
+		    transform: rotate(90deg);
+		    transform-origin: left top;
+			}
 		}
 	}
 	&#right {
@@ -234,23 +262,25 @@ aside {
 		transform: translateX(75vw);
 		transition-duration: 250ms;
 		.title {
-			padding-left: 1.5em;
+			padding-left: calc(#{$bandWidth} + .4em);
 		}
 		.band {
 			left: 0;
+			a {
+				bottom: 0;
+		    transform: rotate(-90deg);
+		    transform-origin: left bottom;
+			}
 		}
 		.scroll {
 			padding-left: 1em;
 		}
 		&.show {
-			transform: translateX(calc(75vw - 1em));
+			transform: translateX(calc(75vw - #{$bandWidth}));
 		}
 		&.open {
-			transform: translateX(0);
+			transform: translateX(1px);
 		}
-	}
-	&.hidden {
-		
 	}
 	&.static {
 		transition: none !important

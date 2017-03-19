@@ -12,16 +12,10 @@
   font-weight: 300;
   font-style: normal; }
 @font-face {
-  font-family: 'FranklinGothicStd-ExtraCond';
-  src: url("../fonts/FranklinGothicStd-ExtraCond.eot");
-  src: url("../fonts/FranklinGothicStd-ExtraCond.eot?#iefix") format("embedded-opentype"), url("../fonts/FranklinGothicStd-ExtraCond.woff2") format("woff2"), url("../fonts/FranklinGothicStd-ExtraCond.woff") format("woff"), url("../fonts/FranklinGothicStd-ExtraCond.ttf") format("truetype"), url("../fonts/FranklinGothicStd-ExtraCond.svg#FranklinGothicStd-ExtraCond") format("svg");
+  font-family: 'David';
+  src: url("../fonts/David-Regular.eot");
+  src: url("../fonts/David-Regular.eot?#iefix") format("embedded-opentype"), url("../fonts/David-Regular.woff") format("woff"), url("../fonts/David-Regular.ttf") format("truetype");
   font-weight: normal;
-  font-style: normal; }
-@font-face {
-  font-family: 'FranklinCondITCStd';
-  src: url("../fonts/FranklinCondITCStd-Bold.eot");
-  src: url("../fonts/FranklinCondITCStd-Bold.eot?#iefix") format("embedded-opentype"), url("../fonts/FranklinCondITCStd-Bold.woff2") format("woff2"), url("../fonts/FranklinCondITCStd-Bold.woff") format("woff"), url("../fonts/FranklinCondITCStd-Bold.ttf") format("truetype"), url("../fonts/FranklinCondITCStd-Bold.svg#FranklinCondITCStd-Bold") format("svg");
-  font-weight: bold;
   font-style: normal; }
 html {
   width: 100%;
@@ -42,13 +36,12 @@ section {
   padding: 1em; }
 
 h1, h2, h3, h4 {
-  font-family: "Merriweather Sans", Arial, sans-serif;
+  font-family: "David", Arial, sans-serif;
   margin: 0; }
 
 h1 {
   font-size: 2em;
   line-height: 1em;
-  font-family: "Bookman Old Style", Times, serif;
   font-weight: 900; }
 
 h2 {
@@ -138,6 +131,9 @@ nav {
   nav .inner {
     padding-top: .5em;
     padding-bottom: .5em; }
+  nav ul li {
+    font-size: 1em;
+    line-height: 1.2em; }
 
 aside {
   background: rgba(255, 255, 255, 0.97);
@@ -154,13 +150,37 @@ aside {
     font-weight: 900;
     border-bottom: 1px solid #e6e4e0; }
   aside .band {
-    width: 1em;
+    width: 1.2em;
     height: 100%;
     position: absolute;
     top: 0;
-    background: #feec35; }
-    aside .band:hover {
-      cursor: pointer; }
+    background: #feec35;
+    border: solid #e6e4e0;
+    border-width: 0 1px; }
+    aside .band a {
+      width: 100vh;
+      height: 1.2em;
+      position: absolute;
+      left: 1.2em;
+      text-align: center;
+      display: flex;
+      opacity: 0.5;
+      transition: opacity 150ms cubic-bezier(0.785, 0.135, 0.15, 0.86); }
+      aside .band a:hover {
+        opacity: 0.8; }
+      aside .band a:hover, aside .band a:hover *, aside .band a *:hover {
+        cursor: pointer; }
+      aside .band a .text {
+        font-size: 0.7em;
+        line-height: 1.1em;
+        display: table;
+        margin: auto;
+        font-weight: 900;
+        color: #333167; }
+        aside .band a .text label {
+          color: #64648c;
+          text-transform: uppercase;
+          margin-right: .6em; }
   aside .scroll {
     width: 100%;
     height: 100%;
@@ -193,32 +213,37 @@ aside {
         aside ul li a:hover, aside ul li a:visited:hover {
           color: #64648c;
           transform: translateX(0.1em); }
-  aside.top .band {
-    width: 100%;
-    height: 1em; }
   aside#left {
-    width: 25vw;
+    width: calc(25vw + 1px);
     left: 0;
     transition-duration: 150ms; }
     aside#left .title {
-      padding-right: 1.5em; }
+      padding-right: calc(1.2em + .4em); }
     aside#left .band {
       right: 0; }
+      aside#left .band a {
+        top: 0;
+        transform: rotate(90deg);
+        transform-origin: left top; }
   aside#right {
     width: 75vw;
     right: 0;
     transform: translateX(75vw);
     transition-duration: 250ms; }
     aside#right .title {
-      padding-left: 1.5em; }
+      padding-left: calc(1.2em + .4em); }
     aside#right .band {
       left: 0; }
+      aside#right .band a {
+        bottom: 0;
+        transform: rotate(-90deg);
+        transform-origin: left bottom; }
     aside#right .scroll {
       padding-left: 1em; }
     aside#right.show {
-      transform: translateX(calc(75vw - 1em)); }
+      transform: translateX(calc(75vw - 1.2em)); }
     aside#right.open {
-      transform: translateX(0); }
+      transform: translateX(1px); }
   aside.static {
     transition: none !important; }
 

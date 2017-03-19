@@ -43,11 +43,11 @@ main {
 }
 aside {
 	.scroll {
-		width: calc(100% - 1em);
+		width: calc(100% - #{$bandWidth});
 	}
 }
 nav {
-	max-height: calc(40% - .5em);
+
 }
 #left {
 	bottom: .5em;
@@ -95,7 +95,7 @@ nav {
 		}
 	}
 	&.show {
-		transform: translateX(calc(-25vw + 1em));
+		transform: translateX(calc(-25vw + #{$bandWidth}));
 	}
 	&.open {
 		transform: translateX(0);
@@ -116,7 +116,7 @@ nav {
     .inner {
     	padding: 1em;
 		}
-		.address {
+		h2 {
 			text-align: center;
 		}
 		.image {

@@ -158,6 +158,7 @@
     };
     openLocPanel = function(id, title, response) {
       $right.find('.title h1').html(title);
+      $right.find('.band a .text').html('<label>Location:</label>' + title);
       if (!$.isEmptyObject(markers)) {
         centerPoint(id);
       }
@@ -235,7 +236,7 @@
     };
     listLocs = function(locs) {
       var $leftList;
-      $leftList = $left.find('ul');
+      $leftList = $left.find('.locations ul');
       $leftList.html('');
       $.each(locs, function(id, loc) {
         var $locLink, address, name, slug, url;

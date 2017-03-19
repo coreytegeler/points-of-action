@@ -141,6 +141,7 @@ $ ->
 
 	openLocPanel = (id, title, response) ->
 		$right.find('.title h1').html title
+		$right.find('.band a .text').html '<label>Location:</label>'+title
 		if(!$.isEmptyObject(markers))
 			centerPoint(id)
 		getLocActions(id)
@@ -203,7 +204,7 @@ $ ->
     return uniqueFeatures
 
 	listLocs = (locs) ->
-		$leftList = $left.find('ul')
+		$leftList = $left.find('.locations ul')
 		$leftList.html ''
 		$.each locs, (id, loc) ->
 			id = loc._id

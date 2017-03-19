@@ -23,32 +23,19 @@
 }
 
 @font-face {
-	font-family: 'FranklinGothicStd-ExtraCond';
-	src: url('../fonts/FranklinGothicStd-ExtraCond.eot');
-	src: url('../fonts/FranklinGothicStd-ExtraCond.eot?#iefix') format('embedded-opentype'),
-		url('../fonts/FranklinGothicStd-ExtraCond.woff2') format('woff2'),
-		url('../fonts/FranklinGothicStd-ExtraCond.woff') format('woff'),
-		url('../fonts/FranklinGothicStd-ExtraCond.ttf') format('truetype'),
-		url('../fonts/FranklinGothicStd-ExtraCond.svg#FranklinGothicStd-ExtraCond') format('svg');
+	font-family: 'David';
+	src: url('../fonts/David-Regular.eot');
+	src: url('../fonts/David-Regular.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/David-Regular.woff') format('woff'),
+		url('../fonts/David-Regular.ttf') format('truetype');
 	font-weight: normal;
 	font-style: normal;
 }
 
-@font-face {
-	font-family: 'FranklinCondITCStd';
-	src: url('../fonts/FranklinCondITCStd-Bold.eot');
-	src: url('../fonts/FranklinCondITCStd-Bold.eot?#iefix') format('embedded-opentype'),
-		url('../fonts/FranklinCondITCStd-Bold.woff2') format('woff2'),
-		url('../fonts/FranklinCondITCStd-Bold.woff') format('woff'),
-		url('../fonts/FranklinCondITCStd-Bold.ttf') format('truetype'),
-		url('../fonts/FranklinCondITCStd-Bold.svg#FranklinCondITCStd-Bold') format('svg');
-	font-weight: bold;
-	font-style: normal;
-}
 
 @import url('https://fonts.googleapis.com/css?family=Merriweather+Sans:300,300i,400,400i,700,700i,800,800i');
 
 
 $serif: 'Bookman Old Style', Times, serif;
 $sans: 'Merriweather Sans', Arial, sans-serif;
-$sansCond: 'FranklinGothicStd-ExtraCond', Arial, sans-serif;
+$title: 'David', Arial, sans-serif;
