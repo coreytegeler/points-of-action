@@ -21,16 +21,18 @@ section {
 	padding: 1em;
 }
 h1, h2, h3, h4 {
-	font-family: $title;
 	margin: 0;
+	letter-spacing: .05em;
+	font-weight: normal;
 }
 h1 {
-	@include largeText;
-	font-weight: 900;
+	@include xLargeText;
 }
 h2 {
-	font-size: 1.5em;
-	font-weight: 700;
+	@include largeText;
+}
+h3 {
+	@include mediumText;
 }
 a, a:visited {
 	color: $darker;
@@ -126,24 +128,37 @@ label.checkbox {
 }
 nav {
 	display: block;
+	display: none;
 	z-index: 600;
 	clear: both;
 	font-family: $sans;
 	.scroll {
-		
+
 	}
 	.inner {
 		padding-top: .5em;
 		padding-bottom: .5em;
 	}
 	ul {
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: row;
 		li {
-			@include mediumText;
+			width: 50%;
+			@include smallText;
+			text-align: center;
+			&:nth-child(odd) {
+				width: calc(50% - 1px);
+				border-right: 1px solid $medium;
+			}
+			&.title {
+				@include largeText;
+			}
 		}
 	}
 }
 aside {
-	background: rgba($white, .97);
+	background: rgba($light, .97);
 	height: 100%;
 	// border: 1px solid rgba($darker, 0.2);
 	// box-shadow: 1px 0px 0px 0px rgba($darker, 0.1);
@@ -155,12 +170,26 @@ aside {
 	overflow: hidden;
 	transition-property: transform;
 	transition-timing-function: $slideEase;
-	.title {
-		padding: .4em;
-		font-weight: 900;
-		border-bottom: 1px solid $medium;
-		a {
-			
+	header {
+		// border-bottom: 1px solid $medium;
+		padding: .5em 0;
+		a.title {
+			width: calc(100% - .8em);
+			padding: .4em;
+			display: table;
+			h2 {
+				display: table;
+				margin: auto;
+				font-family: $title;
+				text-transform: uppercase;
+				text-align: center;
+				color: $darker;
+			}
+			&:hover {
+				h2 {
+					opacity: 0.9;
+				}
+			}
 		}
 	}
 	.band {
@@ -168,9 +197,9 @@ aside {
 		height: 100%;
 		position: absolute;
 		top: 0;
-		background: $yellow;
-		border: solid $medium;
-		border-width: 0 1px;
+		background: rgba($dark, 0.1);
+		// border: solid $medium;
+		// border-width: 0 1px;
 		a {
 			width: 100vh;
 	    height: $bandWidth;
@@ -222,7 +251,7 @@ aside {
 			display: block;
 			margin: 0;
 			padding: .4em;
-			border-bottom: 1px solid $medium;
+			// border-bottom: 1px solid $medium;
 			color: $darker;
 			transition: color 200ms $fadeEase;
 			&.link {
@@ -235,17 +264,23 @@ aside {
 				transition: transform 200ms $slideEase;
 				&:hover {
 					color: $dark;
-					transform: translateX(.1em);
+					transform: scale(1.02);
 				}
 			}
 		}
 	}
 	&#left {
-		width: calc(25vw + 1px);
+		width: calc(#{$leftWidth} + 1px);
 		left: 0;
 		transition-duration: 150ms;
-		.title {
-			padding-right: calc(#{$bandWidth} + .4em);
+		header {
+			a {
+				padding-right: calc(#{$bandWidth} + .4em);
+				h2 {
+					display: table;
+					margin: auto;
+				}
+			}
 		}
 		.band {
 			right: 0;
@@ -255,13 +290,64 @@ aside {
 		    transform-origin: left top;
 			}
 		}
+		.contents {
+			.row {
+				display: flex;
+				padding: .7em .7em 0 .7em;
+				.text {
+					flex-grow: 1;
+					h2 {
+						color: $darker;
+						// border-bottom: 1px solid $medium;
+						transition: color 200ms $fadeEase;
+						font-weight: 700;
+						a {
+							&:hover {
+								color: inherit;
+							}
+						}
+					}
+				}
+				.tools {
+					display: flex;
+					.tool {
+						display: table;
+						margin: auto;
+						&.count {
+							opacity: .5;
+						}
+					}
+				}
+			}
+			.bricks {
+		    padding: .7em .7em 0 .7em;
+				.brick {
+					display: inline;
+					padding: .4em;
+					line-height: 2em;
+					-webkit-box-decoration-break: clone;
+				  box-decoration-break: clone;
+				  transition: all 50ms $fadeEase;
+					&:nth-child(odd) {
+						background-color: rgba($dark,0.05);
+					}
+					&:nth-child(even) {
+						background-color: rgba($dark,0.1);	
+					}
+					&:hover {
+						background-color: rgba($dark,0.2);
+						cursor: pointer;
+					}
+				}
+			}
+		}
 	}
 	&#right {
-		width: 75vw;
+		width: $rightWidth;
 		right: 0;
-		transform: translateX(75vw);
+		transform: translateX($rightWidth);
 		transition-duration: 250ms;
-		.title {
+		header {
 			padding-left: calc(#{$bandWidth} + .4em);
 		}
 		.band {
@@ -273,13 +359,13 @@ aside {
 			}
 		}
 		.scroll {
-			padding-left: 1em;
+			padding-left: $bandWidth;
 		}
 		&.show {
-			transform: translateX(calc(75vw - #{$bandWidth}));
+			transform: translateX(calc(#{$rightWidth} - #{$bandWidth}));
 		}
 		&.open {
-			transform: translateX(1px);
+			transform: translateX(0);
 		}
 	}
 	&.static {

@@ -2,40 +2,38 @@ var Async = require('async')
 var tools = require('../tools')
 module.exports = function(app) {
 
-	app.get('/api/json/', function(req, res) {
-    var type = tools.singularize(req.query.type)
+	app.get('/api/json/', function(req, res, next) {
+    var model = tools.singularize(req.query.model)
     var slug = req.query.slug
     var id = req.query.id
     var filter = req.query.filter
-    var format = req.query.format
-    var model = tools.getModel(type)
-    if(!model)
-      return res.json(null)
+    var modelObj = tools.getModel(model)
+    if(!modelObj)
+      return next()
     query = {}
     if(filter) {
       query[filter] = id
     } else if(id) {
       query._id = id
-    } else if(slug){
+    } else if(slug) {
       query.slug = slug
     }
-    model.find(query, function(err, items) {
+    modelObj.find(query, function(err, items) {
       if(err)
         return res.json(err)
       res.json(items)
     })
   })
 
-  app.get('/api/html/', function(req, res) {
-    var type = req.query.type
+  app.get('/api/html/', function(req, res, next) {
+    var model = tools.singularize(req.query.model)
     var slug = req.query.slug
     var id = req.query.id
     var filter = req.query.filter
-    var model = tools.getModel(type)
-    if(!model)
-      return res.json(null)
+    var modelObj = tools.getModel(model)
+    if(!modelObj)
+      return next()
     query = {}
-
     if(filter) {
       query[filter] = id
     } else if(id) {
@@ -44,13 +42,13 @@ module.exports = function(app) {
     else if(slug) {
       query.slug = slug
     }
-    model.find(query, function(err, object) {
+    modelObj.find(query, function(err, object) {
       if(err)
         return res.json(err)
-      res.render('content/'+type+'.pug', {
-        type: {
-          s: tools.singularize(type),
-          p: tools.pluralize(type)
+      res.render('content/'+model+'.pug', {
+        model: {
+          s: tools.singularize(model),
+          p: tools.pluralize(model)
         },
         object: object
       })
@@ -110,10 +108,10 @@ module.exports = function(app) {
   //   function(err, results) { 
   //     if(err)
   //       callback(err)
-  //     res.render('content/'+type+'.pug', {
-  //       type: {
-  //         s: tools.singularize(type),
-  //         p: tools.pluralize(type)
+  //     res.render('content/'+model+'.pug', {
+  //       model: {
+  //         s: tools.singularize(model),
+  //         p: tools.pluralize(model)
   //       },
   //       location: object[0]
   //     })

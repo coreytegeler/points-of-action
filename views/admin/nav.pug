@@ -1,29 +1,41 @@
 aside#left
-	.title
-		a(href='/admin/') Civil Rights Map
+	header
+		a(href='/admin/admin/login/').title
+			h2 Points of Action
 	.scroll
-		nav
-			ul.edit
-				li.link
-					a(href='/admin/actions/') Actions
-				li.link
-					a(href='/admin/locations/') Locations
-				li.link
-					a(href='/admin/organizations/') Organizations
-				li.link
-					a(href='/admin/people/') People
-				li.link
-					a(href='/admin/tactics/') Tactics
-				li.link
-					a(href='/admin/terms/') Terms
-				li.link
-					a(href='/admin/images/') Images
-			ul.account
-				li.link
-					a(href='/admin/profile/') Profile
-				if(user)
-					li.link
-						a(href='/admin/logout/') Logout
-				else
-					li.link
-						a(href='/admin/login/') Login
+		.group.contents
+			.row.actions(data-model='actions')
+				.text
+					h2
+						a.model(href='/admin/actions')='Actions'
+				.tools
+					.tool.count
+			.bricks.actions(data-model='actions')
+			.row.locations(data-model='locations')
+				.text
+					h2
+						a.model(href='/admin/locations')='Locations'
+				.tools
+					.tool.count
+			.bricks.locations(data-model='locations')
+			.row.people(data-model='people')
+				.text
+					h2
+						a.model(href='/admin/people')='People'
+				.tools
+					.tool.count
+			.bricks.people(data-model='people')
+			.row.organization(data-model='organization')
+				.text
+					h2
+						a.model(href='/admin/organization')='Organization'
+				.tools
+					.tool.count
+			.bricks.tactics.organization(data-model='organization')
+			.row(data-model='tactics')
+				.text
+					h2
+						a.model(href='/admin/glossary')='Tactics'
+				.tools
+					.tool.count
+			.bricks.tactics(data-model='tactics')

@@ -3,25 +3,57 @@ aside#left
 		a
 			.text
 				label='='
-	.title
-		a(href='/admin/login/')
-			h2 Civil Rights Map
+	header
+		a(href='/admin/login/').title
+			h2 Points of Action
 	.scroll
-		nav.group
-			ul
-				li.link
-					a(href='/actions') Actions
-				li.link
-					a(href='/locations') Locations
-				li.link
-					a(href='/people') People
-				li.link
-					a(href='/organization') Organization
-				li.link
-					a(href='/glossary') Glossary
-				li.link
-					a(href='/about') About
-				li.link
-					a(href='/api') API
-		//- .locations.group
-			ul
+		//- nav.group
+		//- 	ul
+		//- 		li.link
+		//- 			a(href='/actions') Actions
+		//- 		li.link
+		//- 			a(href='/locations') Locations
+		//- 		li.link
+		//- 			a(href='/people') People
+		//- 		li.link
+		//- 			a(href='/organization') Organization
+		//- 		li.link
+		//- 			a(href='/glossary') Glossary
+		//- 		li.link
+		//- 			a(href='/about') About
+		.group.contents
+			.row.actions(data-model='actions')
+				.text
+					h2
+						a.model(href='/actions')='Actions⟶'
+				.tools
+					.tool.count='(46)'
+			.bricks.actions(data-model='actions')
+			.row.locations(data-model='locations')
+				.text
+					h2
+						a.model(href='/locations')='Locations⟶'
+				.tools
+					.tool.count='(46)'
+			.bricks.locations(data-model='locations')
+			.row.people(data-model='people')
+				.text
+					h2
+						a.model(href='/people')='People⟶'
+				.tools
+					.tool.count='(46)'
+			.bricks.people(data-model='people')
+			.row.organization(data-model='organization')
+				.text
+					h2
+						a.model(href='/organization')='Organization⟶'
+				.tools
+					.tool.count='(46)'
+			.bricks.tactics.organization(data-model='organization')
+			.row(data-model='tactics')
+				.text
+					h2
+						a.model(href='/glossary')='Tactics⟶'
+				.tools
+					.tool.count='(46)'
+			.bricks.tactics(data-model='tactics')

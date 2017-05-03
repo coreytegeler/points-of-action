@@ -1,43 +1,60 @@
+//////////////////////////////////////////////////////////////////
+/////////////////////////////COLORS///////////////////////////////
+//////////////////////////////////////////////////////////////////
+
 $white: #ffffff;
-$light: #f6f4f6;
+// $light: #f6f4f6;
+$light: #ebeaff;
 // $medium: #cdd2d4;
 $medium: #e6e4e0;
-$dark: #64648c;
-$darker: #333167;
+$dark: #333167;
+$darker: #000;
 $black: #000000;
 $yellow: #feec35;
 
-$bandWidth: 1.2em;
+//////////////////////////////////////////////////////////////////
+/////////////////////////////TEXT/////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+$smallBase: 15px;
+$mediumBase: 18px;
 
 @mixin smallBase {
-  font-size: 15px;
+  font-size: $smallBase;
 }
 @mixin mediumBase {
-  font-size: 18px;
+  font-size: $mediumBase;
+}
+
+@mixin xxSmallText {
+  font-size: 0.9em;
+  line-height: 1.3em;
 }
 
 @mixin xSmallText {
-  font-size: 0.7em;
-  line-height: 1.1em;
+  font-size: 0.8em;
+  line-height: 1.2em;
 }
 
 @mixin smallText {
-  font-size: 0.8em;
+  font-size: 1em;
   line-height: 1.4em;
 }
 
 @mixin mediumText {
-  font-size: 1em;
+  font-size: 1.5em;
   line-height: 1.2em;
 }
 
 @mixin largeText {
-  font-size: 2em;
+  font-size: 2.5em;
   line-height: 1em;
 }
 
-$fadeEase: cubic-bezier(0.785, 0.135, 0.15, 0.86);
-$slideEase: cubic-bezier(0.0, 0.0, 0.2, 1);
+@mixin xLargeText {
+  font-size: 6em;
+  line-height: 1em;
+}
 
 
 @mixin noSelect {
@@ -49,17 +66,43 @@ $slideEase: cubic-bezier(0.0, 0.0, 0.2, 1);
   user-select: none;
 }
 
-$tablet-width: 768px;
-$desktop-width: 1024px;
+//////////////////////////////////////////////////////////////////
+///////////////////////////ELEMENT SIZES//////////////////////////
+//////////////////////////////////////////////////////////////////
+
+$bandWidth: 1.2em;
+$leftWidth: 40vw;
+$rightWidth: 60vw;
+
+$maxWidth: 1024px; 
+$paraWidth: #{$smallBase*50};
+
+//////////////////////////////////////////////////////////////////
+///////////////////////////MEDIA QUERIES//////////////////////////
+//////////////////////////////////////////////////////////////////
+
+$tabletWidth: 768px;
+$desktopWidth: 1024px;
 
 @mixin tablet {
-  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+  @media (min-width: #{$tabletWidth}) and (max-width: #{$desktopWidth - 1px}) {
     @content;
   }
 }
 
 @mixin desktop {
-  @media (min-width: #{$desktop-width}) {
+  @media (min-width: #{$desktopWidth}) {
     @content;
   }
 }
+
+//////////////////////////////////////////////////////////////////
+/////////////////////////////MISC/////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+$fadeEase: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+$slideEase: cubic-bezier(0.0, 0.0, 0.2, 1);
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////

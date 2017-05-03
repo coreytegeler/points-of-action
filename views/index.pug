@@ -1,7 +1,14 @@
 extends layout.pug
 block body
 	#intro
-		svg(id="boroughs" xmlns="http://www.w3.org/2000/svg" width="100%" x="0" y="0")
+		.inner
+			.rows
+				.row
+					h1#title= 'Points of Action'
+				.row
+					h4#brief= 'A mapped history of the Civil Rights Movement in the five boroughs.'
+				.row
+					h3#begin= 'Begin The Story'
 	#map
 	.popup.sample
 		.inner
