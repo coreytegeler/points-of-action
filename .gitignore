@@ -6,3 +6,4 @@ npm-debug.log*
 pids
 node_modules
 public/uploads/
+material
